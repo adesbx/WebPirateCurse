@@ -1,11 +1,14 @@
-package fr.univlyon1.m1if.m1if13.users.model;
+package fr.univlyon1.m1if.m1if13.users;
 
 import javax.naming.AuthenticationException;
+
+import fr.univlyon1.m1if.m1if13.users.model.Species;
+import fr.univlyon1.m1if.m1if13.users.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.fail;
-                
+
 class UserTest {
     User anny, francois;
 
