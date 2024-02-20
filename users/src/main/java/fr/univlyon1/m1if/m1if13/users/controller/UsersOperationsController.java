@@ -1,13 +1,25 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
+import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @Controller
 public class UsersOperationsController {
 
-    // TODO récupérer le DAO...
+    private final UserDao userDao =new UserDao();
+
+    /**
+     * Retourne tout les utilisateurs sous forme d'un ensemble de login
+     * @return un ensemble de login
+     */
+    @GetMapping("/users")
+    public Set<String> getAllUsers() {
+        return userDao.getAll();
+    }
 
     /**
      * Procédure de login utilisée par un utilisateur
@@ -29,7 +41,7 @@ public class UsersOperationsController {
 
     /**
      * Méthode destinée au serveur Node pour valider l'authentification d'un utilisateur.
-     * @param token Le token JWT qui se trouve dans le header "Authentication" de la requête
+     * @param jwt Le token JWT qui se trouve dans le header "Authentication" de la requête
      * @param origin L'origine de la requête (pour la comparer avec celle du client, stockée dans le token JWT)
      * @return Une réponse vide avec un code de statut approprié (204, 400, 401).
      */

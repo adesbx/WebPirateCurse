@@ -26,7 +26,7 @@ public interface Dao<T> {
     /**
      * Modifie un utilisateur enregistré
      * @param t L'utilisateur à modifier
-     * @param params Un tableau de 2 Strings : login et password
+     * @param params Un tableau de 2 Strings : Species et password
      */
     void update(T t, String[] params);
 
