@@ -1,6 +1,7 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -10,14 +11,21 @@ import java.util.Set;
 @Controller
 public class UsersOperationsController {
 
-    private final UserDao userDao =new UserDao();
+    @Autowired
+    private UserDao userDao;
 
     /**
      * Retourne tout les utilisateurs sous forme d'un ensemble de login
      * @return un ensemble de login
      */
-    @GetMapping("/users")
+    @GetMapping(value = "/users", produces = {"application/json"})
     public Set<String> getAllUsers() {
+        if (userDao != null) {
+            System.out.println("pas null");
+        } else {
+            System.out.println("null");
+        }
+        System.out.println(userDao.getAll());
         return userDao.getAll();
     }
 
