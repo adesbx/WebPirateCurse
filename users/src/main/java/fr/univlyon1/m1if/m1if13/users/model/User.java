@@ -2,6 +2,9 @@ package fr.univlyon1.m1if.m1if13.users.model;
 
 import javax.naming.AuthenticationException;
 
+/**
+ * User.
+ */
 public class User {
     private final String login;
     private Species species;
@@ -11,13 +14,27 @@ public class User {
     // Nom du fichier image qui représentera l'utilisateur sur la carte
     private String image;
 
-    public User(String login, Species species, String password) {
+    /**
+     * Constructeur User.
+     * @param login Login de l'utilisateur
+     * @param species Species de l'utilisateur
+     * @param password Password de l'utilisateur
+     */
+    public User(final String login, final Species species, final String password) {
         this.login = login;
         this.species = species;
         this.password = password;
     }
 
-    public User(String login, Species species, String password, String image) {
+    /**
+     * Constructeur User.
+     * @param login Login de l'utilisateur
+     * @param species Species de l'utilisateur
+     * @param password Password de l'utilisateur
+     * @param image Image de l'utilisateur
+     */
+    public User(final String login, final Species species,
+                final String password, final String image) {
         this.login = login;
         this.species = species;
         this.password = password;
@@ -32,11 +49,11 @@ public class User {
         return species;
     }
 
-    public void setSpecies(Species species) {
+    public void setSpecies(final Species species) {
         this.species = species;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -44,13 +61,20 @@ public class User {
         return this.connected;
     }
 
-    public void authenticate(String password) throws AuthenticationException {
-        if(!password.equals(this.password)) {
+    /**
+     * Fonction pour s'authentifier.
+     * @param password Password de l'utilisateur
+     */
+    public void authenticate(final String password) throws AuthenticationException {
+        if (!password.equals(this.password)) {
             throw new AuthenticationException("Erroneous password");
         }
         this.connected = true;
     }
 
+    /**
+     * Fonction pour se déconnecter.
+     */
     public void disconnect() {
         this.connected = false;
     }
@@ -59,7 +83,7 @@ public class User {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(final String image) {
         this.image = image;
     }
 }

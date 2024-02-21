@@ -3,6 +3,9 @@ package fr.univlyon1.m1if.m1if13.users.dao;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Dao.
+ */
 public interface Dao<T> {
     /**
      * Récupère un utilisateur enregistré

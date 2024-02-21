@@ -3,8 +3,10 @@ package fr.univlyon1.m1if.m1if13.users.controller;
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import java.util.Set;
 
 @Controller
