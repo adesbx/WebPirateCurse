@@ -1,13 +1,13 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
+import fr.univlyon1.m1if.m1if13.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -20,15 +20,30 @@ public class UsersOperationsController {
      * Retourne tout les utilisateurs sous forme d'un ensemble de login
      * @return un ensemble de login
      */
+    @ResponseBody
     @GetMapping(value = "/users", produces = {"application/json"})
     public Set<String> getAllUsers() {
-        if (userDao != null) {
-            System.out.println("pas null");
-        } else {
-            System.out.println("null");
-        }
-        System.out.println(userDao.getAll());
         return userDao.getAll();
+    }
+
+    /**
+     * Retourne un utilisateur.
+     * @return un ensemble de login
+     */
+    @ResponseBody
+    @GetMapping(value = "/users/{login}", produces = {"application/json"})
+    public Optional<User> getUsers(@PathVariable String login) {
+        return userDao.get(login);
+    }
+
+    /**
+     * Crée un utilisateur.
+     * @return un ensemble de login
+     */
+    @ResponseBody
+    @PostMapping(value = "/users", produces = {"application/json"})
+    public void createUser(@RequestBody User newUser) {
+        userDao.save(newUser);
     }
 
     /**
