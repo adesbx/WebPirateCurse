@@ -2,7 +2,6 @@ package fr.univlyon1.m1if.m1if13.users.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 
 import javax.naming.AuthenticationException;
 
@@ -27,8 +26,8 @@ public class User {
     @JsonCreator
     public User(@JsonProperty("login") final String login,
                 @JsonProperty("species") final Species species,
-                @JsonProperty("password") String password) {
-        this.login = login;     
+                @JsonProperty("password") final String password) {
+        this.login = login;
         this.species = species;
         this.password = password;
     }
