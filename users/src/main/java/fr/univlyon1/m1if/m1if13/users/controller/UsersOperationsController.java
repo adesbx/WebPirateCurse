@@ -1,6 +1,7 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
+import fr.univlyon1.m1if.m1if13.users.model.Species;
 import fr.univlyon1.m1if.m1if13.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestHeader;
-
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.Optional;
 import java.util.Set;
@@ -56,6 +58,35 @@ public class UsersOperationsController {
     public void createUser(@RequestBody final User newUser) {
         userDao.save(newUser);
     }
+
+    /**
+     * Maj d'un utilisateur.
+     * @param login login de l'utilisateur
+     * @param species nouvelle species
+     * @param password nouveau mot de passe
+     */
+    @ResponseBody
+    @PutMapping(value = "/users/{login}", produces = {"application/json"})
+    public void modifyUser(@PathVariable final String login,
+                           @RequestParam("species") final Species species,
+                           @RequestParam("password") final String password) {
+        String[] tab = new String[2];
+        tab[0] = String.valueOf(species);
+        tab[1] = password;
+        Optional<User> user = userDao.get(login);
+        userDao.update(user.get(), tab);
+    }
+
+    /**
+     * Delete un utilisateur.
+     */
+    @ResponseBody
+    @DeleteMapping(value = "/users/{login}", produces = {"application/json"})
+    public void deleteUser(@PathVariable final String login) {
+        Optional<User> user = userDao.get(login);
+        userDao.delete(user.get());
+    }
+
 
     /**
      * Procédure de login utilisée par un utilisateur.
