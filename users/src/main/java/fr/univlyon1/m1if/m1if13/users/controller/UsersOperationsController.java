@@ -1,23 +1,21 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
-import fr.univlyon1.m1if.m1if13.users.model.Species;
 import fr.univlyon1.m1if.m1if13.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
+import javax.naming.AuthenticationException;
 import java.util.Optional;
-import java.util.Set;
+
+import static fr.univlyon1.m1if.m1if13.users.utils.JwtHelper.*;
 
 
 /**
@@ -30,65 +28,6 @@ public class UsersOperationsController {
     private UserDao userDao;
 
     /**
-     * Retourne tout les utilisateurs sous forme d'un ensemble de login.
-     * @return un ensemble de login
-     */
-    @ResponseBody
-    @GetMapping(value = "/users", produces = {"application/json"})
-    public Set<String> getAllUsers() {
-        return userDao.getAll();
-    }
-
-    /**
-     * Retourne un utilisateur.
-     * @return un ensemble de login
-     */
-    @ResponseBody
-    @GetMapping(value = "/users/{login}", produces = {"application/json"})
-    public Optional<User> getUsers(@PathVariable final String login) {
-        return userDao.get(login);
-    }
-
-    /**
-     * Crée un utilisateur.
-     * @param newUser utilisateur qu'il faut crée
-     */
-    @ResponseBody
-    @PostMapping(value = "/users", produces = {"application/json"})
-    public void createUser(@RequestBody final User newUser) {
-        userDao.save(newUser);
-    }
-
-    /**
-     * Maj d'un utilisateur.
-     * @param login login de l'utilisateur
-     * @param species nouvelle species
-     * @param password nouveau mot de passe
-     */
-    @ResponseBody
-    @PutMapping(value = "/users/{login}", produces = {"application/json"})
-    public void modifyUser(@PathVariable final String login,
-                           @RequestParam("species") final Species species,
-                           @RequestParam("password") final String password) {
-        String[] tab = new String[2];
-        tab[0] = String.valueOf(species);
-        tab[1] = password;
-        Optional<User> user = userDao.get(login);
-        userDao.update(user.get(), tab);
-    }
-
-    /**
-     * Delete un utilisateur.
-     */
-    @ResponseBody
-    @DeleteMapping(value = "/users/{login}", produces = {"application/json"})
-    public void deleteUser(@PathVariable final String login) {
-        Optional<User> user = userDao.get(login);
-        userDao.delete(user.get());
-    }
-
-
-    /**
      * Procédure de login utilisée par un utilisateur.
      * @param login Le login de l'utilisateur. L'utilisateur doit avoir été créé
      *             préalablement et son login doit être présent dans le DAO.
@@ -99,16 +38,52 @@ public class UsersOperationsController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestParam("login") final String login,
                                       @RequestParam("password") final String password,
-                                      @RequestHeader("Origin") final String origin) {
-        // TODO
-        return null;
+                                      @RequestHeader("Origin") final String origin)
+            throws AuthenticationException {
+        Optional<User> user = userDao.get(login);
+        if (user.isPresent()) {
+            user.get().authenticate(password);
+            if (user.get().isConnected()) {
+                String token = generateToken(login, origin);
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Authentication", "Bearer " + token);
+                return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-//    /**
-//     * Réalise la déconnexion
-//     */
-//    @PostMapping("/logout")
-    // TODO
+    /**
+     * Réalise la déconnexion.
+     * @param jwt Le token JWT qui se trouve dans le header "Authentication" de la requête
+     * @param origin L'origine de la requête (pour la comparer avec celle du client,
+     * stockée dans le token JWT)
+     *@return Une réponse vide avec un code de statut approprié (204, 400, 401).
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestHeader("Authentication") final String jwt,
+                                       @RequestHeader("origin") final String origin) {
+        String token = jwt.replace("Bearer ", "");
+        String login = verifyToken(token, origin);
+        Optional<User> user = userDao.get(login);
+        if (user.isPresent()) {
+            if (user.get().isConnected()) {
+                user.get().disconnect();
+                String newToken = noLifeTimeToken(login, origin);
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Authentication", "Bearer " + newToken);
+                return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     /**
      * Méthode destinée au serveur Node pour valider l'authentification d'un utilisateur.
@@ -120,7 +95,17 @@ public class UsersOperationsController {
     @GetMapping("/authenticate")
     public ResponseEntity<Void> authenticate(@RequestParam("jwt") final String jwt,
                                              @RequestParam("origin") final String origin) {
-        // TODO
-        return null;
+        String token = jwt.replace("Bearer ", "");
+        String login = verifyToken(token, origin);
+        Optional<User> user = userDao.get(login);
+        if (user.isPresent()) {
+            if (user.get().isConnected()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
