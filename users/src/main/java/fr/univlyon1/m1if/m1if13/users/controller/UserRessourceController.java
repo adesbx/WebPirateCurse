@@ -4,6 +4,7 @@ import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
 import fr.univlyon1.m1if.m1if13.users.model.Species;
 import fr.univlyon1.m1if.m1if13.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -78,8 +79,20 @@ public class UserRessourceController {
      * @param newUser utilisateur qu'il faut crée
      */
     @ResponseBody
-    @PostMapping(value = "/users", produces = {"application/json"})
+    @PostMapping(value = "/users", consumes = {"application/json"})
     public void createUser(@RequestBody final User newUser) {
+        userDao.save(newUser);
+    }
+
+    /**
+     * Crée un utilisateur.
+     */
+    @ResponseBody
+    @PostMapping(value = "/users", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public void createUserURL(@RequestParam("login") final String login,
+                              @RequestParam("species") final Species species,
+                              @RequestParam("species") final String password) {
+        User newUser = new User(login, species, password);
         userDao.save(newUser);
     }
 
@@ -90,7 +103,8 @@ public class UserRessourceController {
      * @param password nouveau mot de passe
      */
     @ResponseBody
-    @PutMapping(value = "/users/{login}", produces = {"application/json"})
+    @PutMapping(value = "/users/{login}", consumes =  {"application/json",
+            MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public void modifyUser(@PathVariable final String login,
                            @RequestParam("species") final Species species,
                            @RequestParam("password") final String password) {
@@ -98,14 +112,15 @@ public class UserRessourceController {
         tab[0] = String.valueOf(species);
         tab[1] = password;
         Optional<User> user = userDao.get(login);
-        userDao.update(user.get(), tab);
+        user.ifPresent(value -> userDao.update(value, tab));
     }
 
     /**
      * Delete un utilisateur.
      */
     @ResponseBody
-    @DeleteMapping(value = "/users/{login}", produces = {"application/json"})
+    @DeleteMapping(value = "/users/{login}", consumes =  {"application/json",
+            MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public void deleteUser(@PathVariable final String login) {
         Optional<User> user = userDao.get(login);
         userDao.delete(user.get());
