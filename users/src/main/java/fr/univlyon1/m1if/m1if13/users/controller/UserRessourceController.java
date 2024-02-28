@@ -91,7 +91,7 @@ public class UserRessourceController {
     @PostMapping(value = "/users", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public void createUserURL(@RequestParam("login") final String login,
                               @RequestParam("species") final Species species,
-                              @RequestParam("species") final String password) {
+                              @RequestParam("password") final String password) {
         User newUser = new User(login, species, password);
         userDao.save(newUser);
     }
@@ -106,11 +106,14 @@ public class UserRessourceController {
     @PutMapping(value = "/users/{login}", consumes =  {"application/json",
             MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public void modifyUser(@PathVariable final String login,
-                           @RequestParam("species") final Species species,
-                           @RequestParam("password") final String password) {
+                           @RequestParam(value = "species", required = false) final String species,
+                           @RequestParam(value = "password", required = false)
+                               final String password) {
         String[] tab = new String[2];
-        tab[0] = String.valueOf(species);
+        tab[0] = species;
         tab[1] = password;
+        System.out.println(tab[0]);
+        System.out.println(tab[1]);
         Optional<User> user = userDao.get(login);
         user.ifPresent(value -> userDao.update(value, tab));
     }
@@ -119,8 +122,7 @@ public class UserRessourceController {
      * Delete un utilisateur.
      */
     @ResponseBody
-    @DeleteMapping(value = "/users/{login}", consumes =  {"application/json",
-            MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @DeleteMapping(value = "/users/{login}")
     public void deleteUser(@PathVariable final String login) {
         Optional<User> user = userDao.get(login);
         userDao.delete(user.get());
