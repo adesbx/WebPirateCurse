@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
 import java.util.Set;
@@ -27,11 +28,23 @@ public class UserRessourceController {
     private UserDao userDao;
 
     /**
+     * TEST DE GET.
+     */
+    @ResponseBody
+    @GetMapping(value = "/test", produces = {"text/html"})
+    public ModelAndView test() {
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("users", userDao.getAll());
+        mav.setViewName("users");
+        return mav;
+    }
+
+    /**
      * Retourne tout les utilisateurs sous forme d'un ensemble de login.
      * @return un ensemble de login
      */
     @ResponseBody
-    @GetMapping(value = "/users", produces = {"application/json"})
+    @GetMapping(value = "/users", produces = {"application/json", "application/xml"})
     public Set<String> getAllUsers() {
         return userDao.getAll();
     }
@@ -41,7 +54,7 @@ public class UserRessourceController {
      * @return un ensemble de login
      */
     @ResponseBody
-    @GetMapping(value = "/users/{login}", produces = {"application/json"})
+    @GetMapping(value = "/users/{login}", produces = {"application/json", "application/xml"})
     public Optional<User> getUsers(@PathVariable final String login) {
         return userDao.get(login);
     }
