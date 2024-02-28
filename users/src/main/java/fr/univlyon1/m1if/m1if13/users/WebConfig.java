@@ -18,7 +18,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void configureContentNegotiation(final ContentNegotiationConfigurer configurer) {
-        System.out.println("DZADZ");
         configurer.defaultContentType(MediaType.APPLICATION_JSON);
     }
 

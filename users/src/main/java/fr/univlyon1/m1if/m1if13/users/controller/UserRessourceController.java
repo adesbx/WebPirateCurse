@@ -28,11 +28,12 @@ public class UserRessourceController {
     private UserDao userDao;
 
     /**
-     * TEST DE GET.
+     * Retourne tout les utilisateurs sous forme d'un ensemble de login.
+     * @return une vue
      */
     @ResponseBody
-    @GetMapping(value = "/test", produces = {"text/html"})
-    public ModelAndView test() {
+    @GetMapping(value = "/users", produces = {"text/html"})
+    public ModelAndView getAllUsersHTML() {
         ModelAndView mav = new ModelAndView();
         mav.addObject("users", userDao.getAll());
         mav.setViewName("users");
@@ -47,6 +48,19 @@ public class UserRessourceController {
     @GetMapping(value = "/users", produces = {"application/json", "application/xml"})
     public Set<String> getAllUsers() {
         return userDao.getAll();
+    }
+
+    /**
+     * Retourne un utilisateur.
+     * @return une vue
+     */
+    @ResponseBody
+    @GetMapping(value = "/users/{login}", produces = {"text/html"})
+    public ModelAndView getUsersHTML(@PathVariable final String login) {
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("user", userDao.get(login).get());
+        mav.setViewName("user");
+        return mav;
     }
 
     /**

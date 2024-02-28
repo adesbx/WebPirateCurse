@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Ceci est la page renvoyé pour un html</title>
+    <title>Ensemble des users</title>
 </head>
 <body>
-
+    <h1>Listes des utiliteurs :</h1>
+    <ul>
+        <li th:each="user : ${users}" th:text="${user}"></li>
+    </ul>
 </body>
 </html>
