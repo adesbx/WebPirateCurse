@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Web config.
  */
-@EnableWebMvc
+//@EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
     @Override

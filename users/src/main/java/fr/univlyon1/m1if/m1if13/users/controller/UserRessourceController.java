@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -99,16 +100,29 @@ public class UserRessourceController {
     /**
      * Maj d'un utilisateur.
      * @param login login de l'utilisateur
-     * @param species nouvelle species
-     * @param password nouveau mot de passe
      */
     @ResponseBody
-    @PutMapping(value = "/users/{login}", consumes =  {"application/json",
-            MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @PutMapping(value = "/users/{login}", consumes =  {"application/json"})
     public void modifyUser(@PathVariable final String login,
+                           @RequestBody Map<String, Object> requestParams) {
+        String species = (String) requestParams.get("species");
+        String password = (String) requestParams.get("password");
+        String[] tab = new String[2];
+        tab[0] = species;
+        tab[1] = password;
+        System.out.println(tab[0]);
+        System.out.println(tab[1]);
+        Optional<User> user = userDao.get(login);
+        user.ifPresent(value -> userDao.update(value, tab));
+    }
+
+    @ResponseBody
+    @PutMapping(value = "/users/{login}", consumes =  {
+            MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public void modifyUserURL(@PathVariable final String login,
                            @RequestParam(value = "species", required = false) final String species,
                            @RequestParam(value = "password", required = false)
-                               final String password) {
+                           final String password) {
         String[] tab = new String[2];
         tab[0] = species;
         tab[1] = password;
