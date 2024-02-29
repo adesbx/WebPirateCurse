@@ -23,7 +23,7 @@ import static fr.univlyon1.m1if.m1if13.users.utils.JwtHelper.noLifeTimeToken;
  * Controller des opérations sur users.
  */
 @Controller
-public class UsersOperationsController {
+public class    UsersOperationsController {
 
     @Autowired
     private UserDao userDao;
@@ -78,10 +78,10 @@ public class UsersOperationsController {
                 headers.add("Authentication", "Bearer " + newToken);
                 return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
             } else {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -103,10 +103,10 @@ public class UsersOperationsController {
             if (user.get().isConnected()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST );
             }
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 }

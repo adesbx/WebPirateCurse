@@ -77,7 +77,7 @@ public class UserRessourceController {
 
     /**
      * Crée un utilisateur.
-     * @param newUser utilisateur qu'il faut crée
+     * @param newUser utilisateur qu'il faut créer
      */
     @ResponseBody
     @PostMapping(value = "/users", consumes = {"application/json"})
@@ -136,7 +136,7 @@ public class UserRessourceController {
      * Delete un utilisateur.
      */
     @ResponseBody
-    @DeleteMapping(value = "/users/{login}")
+    @DeleteMapping(value = "/   /{login}")
     public void deleteUser(@PathVariable final String login) {
         Optional<User> user = userDao.get(login);
         userDao.delete(user.get());
