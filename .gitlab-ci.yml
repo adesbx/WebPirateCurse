@@ -11,8 +11,8 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
 deploy:
-    only:
-        - master
+#    only:
+#        - master
     image: maven:3.9.5-openjdk-21 # docker image with Maven
     before_script:
         - ./ci/setup-mvn-proxy.sh
