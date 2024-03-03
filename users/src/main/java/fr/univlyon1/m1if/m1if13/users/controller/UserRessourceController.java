@@ -104,7 +104,7 @@ public class UserRessourceController {
     @ResponseBody
     @PutMapping(value = "/users/{login}", consumes =  {"application/json"})
     public void modifyUser(@PathVariable final String login,
-                           @RequestBody Map<String, Object> requestParams) {
+                           @RequestBody final Map<String, Object> requestParams) {
         String species = (String) requestParams.get("species");
         String password = (String) requestParams.get("password");
         String[] tab = new String[2];
@@ -116,6 +116,12 @@ public class UserRessourceController {
         user.ifPresent(value -> userDao.update(value, tab));
     }
 
+    /**
+     * methode for login.
+     * @param login
+     * @param species
+     * @param password
+     */
     @ResponseBody
     @PutMapping(value = "/users/{login}", consumes =  {
             MediaType.APPLICATION_FORM_URLENCODED_VALUE})

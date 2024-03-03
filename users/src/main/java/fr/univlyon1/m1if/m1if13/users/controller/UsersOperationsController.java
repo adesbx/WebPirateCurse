@@ -31,7 +31,8 @@ public class    UsersOperationsController {
     /**
      * Procédure de login utilisée par un utilisateur.
      * @param login Le login de l'utilisateur. L'utilisateur doit avoir été créé
-     *             préalablement et son login doit être présent dans le DAO.
+     *             préalablement et son login  private UserDao userDao; doit
+     *              être présent dans le DAO.
      * @param password Le password à vérifier.
      * @return Une ResponseEntity avec le JWT dans le header "Authentication" si le
      * login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
@@ -103,7 +104,7 @@ public class    UsersOperationsController {
             if (user.get().isConnected()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST );
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
