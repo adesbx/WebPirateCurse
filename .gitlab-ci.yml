@@ -15,6 +15,7 @@ deploy:
 #        - master
     image: maven:latest # docker image with Maven
     before_script:
+        - sudo apt-get install openssh-client
         - ./ci/setup-mvn-proxy.sh
         - chmod 400 $CI_SSH_KEY
     script:
