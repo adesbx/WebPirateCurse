@@ -6,14 +6,14 @@ import fr.univlyon1.m1if.m1if13.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
@@ -58,9 +58,10 @@ public class UserRessourceController {
      */
     @ResponseBody
     @GetMapping(value = "/users/{login}", produces = {"text/html"})
-    public ModelAndView getUsersHTML(@PathVariable final String login) {
+    public ModelAndView getUsersHTML(@PathVariable final String login) throws Exception {
         ModelAndView mav = new ModelAndView();
-        mav.addObject("user", userDao.get(login).get());
+        mav.addObject("user", userDao.get(login).orElseThrow(() ->
+                new Exception("Student " + login + " doesn't exist...")));
         mav.setViewName("user");
         return mav;
     }
@@ -71,8 +72,9 @@ public class UserRessourceController {
      */
     @ResponseBody
     @GetMapping(value = "/users/{login}", produces = {"application/json", "application/xml"})
-    public Optional<User> getUsers(@PathVariable final String login) {
-        return userDao.get(login);
+    public User getUsers(@PathVariable final String login) throws Exception {
+        return userDao.get(login).orElseThrow(() ->
+                new Exception("Student " + login + " doesn't exist..."));
     }
 
     /**
