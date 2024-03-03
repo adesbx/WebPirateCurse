@@ -17,6 +17,7 @@ deploy:
     before_script:
         - apt install openssh-client
         - ./ci/setup-mvn-proxy.sh
+        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
         - chmod 400 $CI_SSH_KEY
     script:
         - cd users
