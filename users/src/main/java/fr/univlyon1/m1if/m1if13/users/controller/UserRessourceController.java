@@ -3,6 +3,8 @@ package fr.univlyon1.m1if.m1if13.users.controller;
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
 import fr.univlyon1.m1if.m1if13.users.model.Species;
 import fr.univlyon1.m1if.m1if13.users.model.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -34,7 +36,6 @@ public class UserRessourceController {
      * @return une vue
      */
     @ResponseBody
-    @GetMapping(value = "/users", produces = {"text/html"})
     public ModelAndView getAllUsersHTML() {
         ModelAndView mav = new ModelAndView();
         mav.addObject("users", userDao.getAll());
@@ -48,6 +49,11 @@ public class UserRessourceController {
      */
     @ResponseBody
     @GetMapping(value = "/users", produces = {"application/json", "application/xml"})
+    @Operation(summary = "Get all users in json/xml format",
+            tags = "Operation REST",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful operation")
+            })
     public Set<String> getAllUsers() {
         return userDao.getAll();
     }
@@ -72,6 +78,11 @@ public class UserRessourceController {
      */
     @ResponseBody
     @GetMapping(value = "/users/{login}", produces = {"application/json", "application/xml"})
+    @Operation(summary = "Get one user in json/xml format",
+            tags = "Operation REST",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful operation")
+            })
     public User getUsers(@PathVariable final String login) throws Exception {
         return userDao.get(login).orElseThrow(() ->
                 new Exception("Student " + login + " doesn't exist..."));
@@ -83,6 +94,11 @@ public class UserRessourceController {
      */
     @ResponseBody
     @PostMapping(value = "/users", consumes = {"application/json"})
+    @Operation(summary = "Create a user",
+            tags = "Operation REST",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful operation")
+            })
     public void createUser(@RequestBody final User newUser) {
         userDao.save(newUser);
     }
@@ -92,6 +108,11 @@ public class UserRessourceController {
      */
     @ResponseBody
     @PostMapping(value = "/users", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @Operation(summary = "Create a user",
+            tags = "Operation REST",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful operation")
+            })
     public void createUserURL(@RequestParam("login") final String login,
                               @RequestParam("species") final Species species,
                               @RequestParam("password") final String password) {
@@ -105,6 +126,11 @@ public class UserRessourceController {
      */
     @ResponseBody
     @PutMapping(value = "/users/{login}", consumes =  {"application/json"})
+    @Operation(summary = "Modify a user",
+            tags = "Operation REST",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful operation")
+            })
     public void modifyUser(@PathVariable final String login,
                            @RequestBody final Map<String, Object> requestParams) {
         String species = (String) requestParams.get("species");
@@ -127,6 +153,11 @@ public class UserRessourceController {
     @ResponseBody
     @PutMapping(value = "/users/{login}", consumes =  {
             MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @Operation(summary = "Modify a user",
+            tags = "Operation REST",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful operation")
+            })
     public void modifyUserURL(@PathVariable final String login,
                            @RequestParam(value = "species", required = false) final String species,
                            @RequestParam(value = "password", required = false)
@@ -144,7 +175,12 @@ public class UserRessourceController {
      * Delete un utilisateur.
      */
     @ResponseBody
-    @DeleteMapping(value = "/   /{login}")
+    @DeleteMapping(value = "/users/{login}")
+    @Operation(summary = "Delete a user",
+            tags = "Operation REST",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful operation")
+            })
     public void deleteUser(@PathVariable final String login) {
         Optional<User> user = userDao.get(login);
         userDao.delete(user.get());
