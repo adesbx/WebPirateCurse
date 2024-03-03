@@ -1,3 +1,4 @@
+
 package fr.univlyon1.m1if.m1if13.users.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -29,14 +30,14 @@ class GlobalDefaultExceptionHandler {
      * @throws Exception
      */
     @ExceptionHandler(Exception.class)
-    public ModelAndView handleError(HttpServletRequest req, Exception exception)
+    public ModelAndView handleError(final HttpServletRequest req, final Exception exception)
             throws Exception {
 
         // Rethrow annotated exceptions or they will be processed here instead.
         if (AnnotationUtils.findAnnotation(exception.getClass(),
-                ResponseStatus.class) != null)
+                ResponseStatus.class) != null) {
             throw exception;
-
+        }
         System.out.println("Request: " + req.getRequestURI() + " raised " + exception);
 
         ModelAndView mav = new ModelAndView();
@@ -47,4 +48,5 @@ class GlobalDefaultExceptionHandler {
 
         mav.setViewName(DEFAULT_ERROR_VIEW);
         return mav;
+    }
 }
