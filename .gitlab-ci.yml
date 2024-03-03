@@ -15,7 +15,6 @@ deploy:
 #        - master
     image: maven:3.9.6-amazoncorretto-21 # docker image with Maven
     before_script:
-        - apt install openssh-client
         - ./ci/setup-mvn-proxy.sh
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
         - chmod 400 $CI_SSH_KEY
