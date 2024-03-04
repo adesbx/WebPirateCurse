@@ -3,6 +3,8 @@ package fr.univlyon1.m1if.m1if13.users.controller;
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
 import fr.univlyon1.m1if.m1if13.users.model.User;
 import org.apache.coyote.BadRequestException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -40,6 +42,13 @@ public class UsersOperationsController {
      * login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
      */
     @PostMapping("/login")
+    @Operation(summary = "To let a user connect",
+            tags = "Operation controller",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "No content"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "404", description = "Not found")
+            })
     public ResponseEntity<Void> login(@RequestParam("login") final String login,
                                       @RequestParam("password") final String password,
                                       @RequestHeader("Origin") final String origin)
@@ -68,6 +77,13 @@ public class UsersOperationsController {
      *@return Une réponse vide avec un code de statut approprié (204, 400, 401).
      */
     @PostMapping("/logout")
+    @Operation(summary = "To let a user disconnect",
+            tags = "Operation controller",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "No content"),
+                    @ApiResponse(responseCode = "400", description = "Bad request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+            })
     public ResponseEntity<Void> logout(@RequestHeader("Authentication") final String jwt,
                                        @RequestHeader("origin") final String origin)
             throws AuthenticationException, BadRequestException {
@@ -99,6 +115,13 @@ public class UsersOperationsController {
      * @return Une réponse vide avec un code de statut approprié (204, 400, 401).
      */
     @GetMapping("/authenticate")
+    @Operation(summary = "To let a user authentificate",
+            tags = "Operation controller",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "No content"),
+                    @ApiResponse(responseCode = "400", description = "Bad request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+            })
     public ResponseEntity<Void> authenticate(@RequestParam("jwt") final String jwt,
                                              @RequestParam("origin") final String origin)
             throws AuthenticationException, BadRequestException {
