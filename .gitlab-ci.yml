@@ -11,11 +11,12 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
 deploy:
-#    only:
-#        - master
-    image: maven:3.9.6-amazoncorretto-21 # docker image with Maven
+    # only:
+    #    - master
+    image: maven:3.9.6-eclipse-temurin-21 # docker image with Maven
     before_script:
         - ./ci/setup-mvn-proxy.sh
+        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
         - chmod 400 $CI_SSH_KEY
     script:
         - cd users
