@@ -2,6 +2,7 @@ package fr.univlyon1.m1if.m1if13.users.controller;
 
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
 import fr.univlyon1.m1if.m1if13.users.model.User;
+import org.apache.coyote.BadRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.naming.AuthenticationException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static fr.univlyon1.m1if.m1if13.users.utils.JwtHelper.generateToken;
@@ -25,7 +27,7 @@ import static fr.univlyon1.m1if.m1if13.users.utils.JwtHelper.noLifeTimeToken;
  * Controller des opérations sur users.
  */
 @Controller
-public class    UsersOperationsController {
+public class UsersOperationsController {
 
     @Autowired
     private UserDao userDao;
@@ -63,7 +65,7 @@ public class    UsersOperationsController {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NoSuchElementException("l'utilisateur " + login + " n'existe pas");
         }
     }
 
@@ -83,7 +85,8 @@ public class    UsersOperationsController {
                     @ApiResponse(responseCode = "401", description = "Unauthorized")
             })
     public ResponseEntity<Void> logout(@RequestHeader("Authentication") final String jwt,
-                                       @RequestHeader("origin") final String origin) {
+                                       @RequestHeader("origin") final String origin)
+            throws AuthenticationException, BadRequestException {
         String token = jwt.replace("Bearer ", "");
         String login = verifyToken(token, origin);
         Optional<User> user = userDao.get(login);
@@ -95,10 +98,11 @@ public class    UsersOperationsController {
                 headers.add("Authentication", "Bearer " + newToken);
                 return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
             } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                throw new BadRequestException("L'utilisateur ne devrais "
+                        + "pas pouvoir se déconnecter");
             }
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new AuthenticationException("L'utilisateur n'est pas autorisé");
         }
     }
 
@@ -119,7 +123,8 @@ public class    UsersOperationsController {
                     @ApiResponse(responseCode = "401", description = "Unauthorized")
             })
     public ResponseEntity<Void> authenticate(@RequestParam("jwt") final String jwt,
-                                             @RequestParam("origin") final String origin) {
+                                             @RequestParam("origin") final String origin)
+            throws AuthenticationException, BadRequestException {
         String token = jwt.replace("Bearer ", "");
         String login = verifyToken(token, origin);
         Optional<User> user = userDao.get(login);
@@ -127,10 +132,10 @@ public class    UsersOperationsController {
             if (user.get().isConnected()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                throw new BadRequestException("L'utilisateur devrais être connecté");
             }
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new AuthenticationException("le token à expiré");
         }
     }
 }
