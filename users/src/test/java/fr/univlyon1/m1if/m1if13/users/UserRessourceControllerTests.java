@@ -15,7 +15,6 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
 public class UserRessourceControllerTests {
 //    User anny, francois;
 //    private MockMvc mockMvc;
