@@ -36,6 +36,7 @@ public class UserRessourceController {
      * @return une vue
      */
     @ResponseBody
+    @GetMapping(value = "/users", produces = {"text/html"})
     public ModelAndView getAllUsersHTML() {
         ModelAndView mav = new ModelAndView();
         mav.addObject("users", userDao.getAll());
