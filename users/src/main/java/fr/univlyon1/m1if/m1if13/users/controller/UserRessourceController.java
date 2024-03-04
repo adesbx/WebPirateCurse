@@ -118,9 +118,12 @@ public class UserRessourceController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful operation")
             })
-    public void createUserURL(@RequestParam("login") final String login,
-                              @RequestParam("species") final Species species,
-                              @RequestParam("password") final String password)
+    public void createUserURL(@RequestParam(value = "login", required = false)
+                                  final String login,
+                              @RequestParam(value = "species", required = false)
+                              final Species species,
+                              @RequestParam(value = "password", required = false)
+                                  final String password)
             throws BadRequestException {
         if (login == null || species == null || password == null) {
             throw new BadRequestException("Il manque un paramètre");

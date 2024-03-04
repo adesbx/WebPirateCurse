@@ -109,7 +109,15 @@ public class UserRessourceControllerTests {
                 .andExpect(status().isOk());
     }
 
-    //faire avec une création d'un user avec manque de paramètre
+    @Test
+    void postCreateUserMissParameter() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/users" )
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("login", "Bob")
+                        .param("password", "1234")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 
 
     @Test
