@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -58,10 +59,10 @@ public class UserRessourceController {
      */
     @ResponseBody
     @GetMapping(value = "/users/{login}", produces = {"text/html"})
-    public ModelAndView getUsersHTML(@PathVariable final String login) throws Exception {
+    public ModelAndView getUsersHTML(@PathVariable final String login) {
         ModelAndView mav = new ModelAndView();
         mav.addObject("user", userDao.get(login).orElseThrow(() ->
-                new Exception("Student " + login + " doesn't exist...")));
+                new NoSuchElementException("user " + login + " doesn't exist...")));
         mav.setViewName("user");
         return mav;
     }
@@ -72,12 +73,12 @@ public class UserRessourceController {
      */
     @ResponseBody
     @GetMapping(value = "/users/{login}", produces = {"application/json", "application/xml"})
-    public User getUsers(@PathVariable final String login) throws Exception {
+    public User getUsers(@PathVariable final String login) {
         return userDao.get(login).orElseThrow(() ->
-                new Exception("Student " + login + " doesn't exist..."));
+                new NoSuchElementException("user " + login + " doesn't exist..."));
     }
 
-    /**
+    /**"
      * Crée un utilisateur.
      * @param newUser utilisateur qu'il faut créer
      */
@@ -112,8 +113,6 @@ public class UserRessourceController {
         String[] tab = new String[2];
         tab[0] = species;
         tab[1] = password;
-        System.out.println(tab[0]);
-        System.out.println(tab[1]);
         Optional<User> user = userDao.get(login);
         user.ifPresent(value -> userDao.update(value, tab));
     }
@@ -134,8 +133,6 @@ public class UserRessourceController {
         String[] tab = new String[2];
         tab[0] = species;
         tab[1] = password;
-        System.out.println(tab[0]);
-        System.out.println(tab[1]);
         Optional<User> user = userDao.get(login);
         user.ifPresent(value -> userDao.update(value, tab));
     }
