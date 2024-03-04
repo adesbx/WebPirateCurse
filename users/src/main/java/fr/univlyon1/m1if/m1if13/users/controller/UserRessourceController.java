@@ -5,6 +5,7 @@ import fr.univlyon1.m1if.m1if13.users.model.Species;
 import fr.univlyon1.m1if.m1if13.users.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -102,6 +103,8 @@ public class UserRessourceController {
                     @ApiResponse(responseCode = "200", description = "Successful operation")
             })
     public void createUser(@RequestBody final User newUser) {
+        // newuser déjà présent ?
+        // sinn a til tt les params ?
         userDao.save(newUser);
     }
 
@@ -117,7 +120,11 @@ public class UserRessourceController {
             })
     public void createUserURL(@RequestParam("login") final String login,
                               @RequestParam("species") final Species species,
-                              @RequestParam("password") final String password) {
+                              @RequestParam("password") final String password)
+            throws BadRequestException {
+        if (login == null || species == null || password == null) {
+            throw new BadRequestException("Il manque un paramètre");
+        }
         User newUser = new User(login, species, password);
         userDao.save(newUser);
     }
@@ -141,7 +148,11 @@ public class UserRessourceController {
         tab[0] = species;
         tab[1] = password;
         Optional<User> user = userDao.get(login);
-        user.ifPresent(value -> userDao.update(value, tab));
+        if (user.isPresent()) {
+            userDao.update(user.get(), tab);
+        } else {
+            throw new NoSuchElementException("Utilisateur introuvable");
+        }
     }
 
     /**
@@ -166,7 +177,11 @@ public class UserRessourceController {
         tab[0] = species;
         tab[1] = password;
         Optional<User> user = userDao.get(login);
-        user.ifPresent(value -> userDao.update(value, tab));
+        if (user.isPresent()) {
+            userDao.update(user.get(), tab);
+        } else {
+            throw new NoSuchElementException("Utilisateur introuvable");
+        }
     }
 
     /**

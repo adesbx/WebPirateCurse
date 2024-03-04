@@ -47,7 +47,7 @@ class GlobalDefaultExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadRequestException.class)
     public ModelAndView handleBadRequest(final HttpServletRequest req,
-                                       final AuthenticationException exception) {
+                                       final BadRequestException exception) {
         return generateErrorView(req, exception, HttpStatus.BAD_REQUEST);
     }
 
