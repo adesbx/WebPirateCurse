@@ -4,19 +4,13 @@ import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
 import fr.univlyon1.m1if.m1if13.users.model.Species;
 import fr.univlyon1.m1if.m1if13.users.model.User;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
@@ -52,10 +46,14 @@ public class UserRessourceController {
      */
     @ResponseBody
     @GetMapping(value = "/users", produces = {"application/json", "application/xml"})
-    @Operation(summary = "Get all users in json/xml format",
+    @Operation(summary = "Get all users in json/xml/html format",
             tags = "Operation REST",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful operation")
+                    @ApiResponse(responseCode = "200", description = "Successful operation", content = {
+                            @Content(mediaType = "application/json"),
+                            @Content(mediaType = "application/xml"),
+                            @Content(mediaType = "text/html")
+                    })
             })
     public Set<String> getAllUsers() {
         return userDao.getAll();
@@ -81,12 +79,17 @@ public class UserRessourceController {
      */
     @ResponseBody
     @GetMapping(value = "/users/{login}", produces = {"application/json", "application/xml"})
-    @Operation(summary = "Get one user in json/xml format",
+    @Operation(summary = "Get one user in json/xml/html format",
             tags = "Operation REST",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful operation")
+                    @ApiResponse(responseCode = "200", description = "Successful operation", content = {
+                            @Content(mediaType = "application/json"),
+                            @Content(mediaType = "application/xml"),
+                            @Content(mediaType = "text/html")
+                    }),
+                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content())
             })
-    public User getUsers(@PathVariable final String login) throws Exception {
+    public User getUsers(@PathVariable final String login) {
         return userDao.get(login).orElseThrow(() ->
                 new NoSuchElementException("user " + login + " doesn't exist..."));
     }
@@ -100,7 +103,8 @@ public class UserRessourceController {
     @Operation(summary = "Create a user",
             tags = "Operation REST",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful operation")
+                    @ApiResponse(responseCode = "200", description = "Successful operation"),
+                    @ApiResponse(responseCode = "400", description = "Bad request")
             })
     public void createUser(@RequestBody final User newUser) {
         // newuser déjà présent ?
@@ -116,20 +120,14 @@ public class UserRessourceController {
     @Operation(summary = "Create a user",
             tags = "Operation REST",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful operation")
+                    @ApiResponse(responseCode = "200", description = "Successful operation"),
+                    @ApiResponse(responseCode = "400", description = "Bad request")
             })
-    public void createUserURL(@RequestParam(value = "login", required = false)
-                                  final String login,
-                              @RequestParam(value = "species", required = false)
-                              final Species species,
-                              @RequestParam(value = "password", required = false)
-                                  final String password)
-            throws BadRequestException {
-        if (login == null || species == null || password == null) {
-            throw new BadRequestException("Il manque un paramètre");
-        }
-        User newUser = new User(login, species, password);
-        userDao.save(newUser);
+    public void createUserURL(@ModelAttribute User user) {
+//        if (login == null || species == null || password == null) {
+//            throw new BadRequestException("Il manque un paramètre");
+//        }
+        userDao.save(user);
     }
 
     /**
