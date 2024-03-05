@@ -89,7 +89,7 @@ public class UserRessourceControllerTests {
 
     @Test
     void postCreateUserJson() throws Exception {
-        String jsonData = "{\"login\": \"Bob\", \"species\": \"PIRATE\", \"password\": \"1234\"}";
+        String jsonData = "{\"login\": \"Bobi\", \"species\": \"PIRATE\", \"password\": \"1234\"}";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/users" )
                         .contentType(MediaType.APPLICATION_JSON)
@@ -102,7 +102,7 @@ public class UserRessourceControllerTests {
     void postCreateUserUrlEncoded() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/users" )
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("login", "Bob")
+                        .param("login", "Bobi")
                         .param("species", "PIRATE")
                         .param("password", "1234")
                         .accept(MediaType.APPLICATION_JSON))
