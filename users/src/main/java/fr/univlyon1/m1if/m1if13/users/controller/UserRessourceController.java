@@ -154,7 +154,7 @@ public class UserRessourceController {
                     @ApiResponse(responseCode = "200", description = "Successful operation")
             })
     public void modifyUser(@PathVariable final String login,
-                           @ModelAttribute final UserDto userDto) {
+                           @RequestBody final UserDto userDto) {
         String[] tab = new String[2];
         System.out.println(userDto.getSpecies());
         System.out.println(String.valueOf(userDto.getSpecies()));
