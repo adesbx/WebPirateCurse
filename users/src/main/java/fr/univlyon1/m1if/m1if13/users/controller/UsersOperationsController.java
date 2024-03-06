@@ -1,7 +1,7 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
-import fr.univlyon1.m1if.m1if13.users.dto.UserDto;
+import fr.univlyon1.m1if.m1if13.users.dto.UserLoginDto;
 import fr.univlyon1.m1if.m1if13.users.model.User;
 import org.apache.coyote.BadRequestException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,7 +54,7 @@ public class UsersOperationsController {
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
                     @ApiResponse(responseCode = "404", description = "Not found")
             })
-    public ResponseEntity<Void> loginJson(@RequestBody final UserDto userDto,
+    public ResponseEntity<Void> loginJson(@RequestBody final UserLoginDto userDto,
                                           @RequestHeader("Origin") final String origin)
             throws AuthenticationException, BadRequestException {
         if (userDto.getLogin() == null || userDto.getPassword() == null) {
@@ -93,7 +93,7 @@ public class UsersOperationsController {
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
                     @ApiResponse(responseCode = "404", description = "Not found")
             })
-    public ResponseEntity<Void> loginUrlEncoded(@ModelAttribute final UserDto userDto,
+    public ResponseEntity<Void> loginUrlEncoded(@ModelAttribute final UserLoginDto userDto,
                                       @RequestHeader("Origin") final String origin)
             throws AuthenticationException, BadRequestException {
         if (userDto.getLogin() == null || userDto.getPassword() == null) {

@@ -2,6 +2,7 @@ package fr.univlyon1.m1if.m1if13.users.controller;
 
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
 import fr.univlyon1.m1if.m1if13.users.dto.UserDto;
+import fr.univlyon1.m1if.m1if13.users.dto.UserModifyDto;
 import fr.univlyon1.m1if.m1if13.users.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -154,10 +155,8 @@ public class UserRessourceController {
                     @ApiResponse(responseCode = "200", description = "Successful operation")
             })
     public void modifyUser(@PathVariable final String login,
-                           @RequestBody final UserDto userDto) {
+                           @RequestBody final UserModifyDto userDto) {
         String[] tab = new String[2];
-        System.out.println(userDto.getSpecies());
-        System.out.println(String.valueOf(userDto.getSpecies()));
         tab[0] = String.valueOf(userDto.getSpecies());
         tab[1] = userDto.getPassword();
         Optional<User> user = userDao.get(login);
@@ -181,7 +180,7 @@ public class UserRessourceController {
                     @ApiResponse(responseCode = "200", description = "Successful operation")
             })
     public void modifyUserURL(@PathVariable final String login,
-                              @ModelAttribute final UserDto userDto) {
+                              @ModelAttribute final UserModifyDto userDto) {
         String[] tab = new String[2];
         tab[0] = String.valueOf(userDto.getSpecies());
         tab[1] = userDto.getPassword();

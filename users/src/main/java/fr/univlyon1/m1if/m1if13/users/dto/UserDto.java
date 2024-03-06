@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.univlyon1.m1if.m1if13.users.model.Species;
 
 /**
- * DTO with the data we get from the server.
+ * DTO with the data we get from the server for creation of user.
  */
 public class UserDto {
         private String login;

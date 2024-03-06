@@ -42,10 +42,10 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UserDto'
+              $ref: '#/components/schemas/UserModifyDto'
           application/json:
             schema:
-              $ref: '#/components/schemas/UserDto'
+              $ref: '#/components/schemas/UserModifyDto'
         required: true
       responses:
         "200":
@@ -136,10 +136,10 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UserDto'
+              $ref: '#/components/schemas/UserLoginDto'
           application/json:
             schema:
-              $ref: '#/components/schemas/UserDto'
+              $ref: '#/components/schemas/UserLoginDto'
         required: true
       responses:
         "204":
@@ -176,6 +176,17 @@ paths:
           description: Unauthorized
 components:
   schemas:
+    UserModifyDto:
+      type: object
+      properties:
+        species:
+          type: string
+          enum:
+          - PIRATE
+          - VILLAGEOIS
+          - ADMIN
+        password:
+          type: string
     UserDto:
       type: object
       properties:
@@ -187,5 +198,12 @@ components:
           - PIRATE
           - VILLAGEOIS
           - ADMIN
+        password:
+          type: string
+    UserLoginDto:
+      type: object
+      properties:
+        login:
+          type: string
         password:
           type: string
