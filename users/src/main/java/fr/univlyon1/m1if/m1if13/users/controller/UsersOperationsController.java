@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +45,7 @@ public class UsersOperationsController {
      * @return Une ResponseEntity avec le JWT dans le header "Authentication" si le
      * login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
      */
+    @CrossOrigin(origins = {"http://localhost:8080", "http://192.168.75.73", "https://192.168.75.73"})
     @ResponseBody
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "To let a user connect",
@@ -67,6 +69,7 @@ public class UsersOperationsController {
                 String token = generateToken(userDto.getLogin(), origin);
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Authentication", "Bearer " + token);
+                headers.add("Access-Control-Expose-Headers", "Authentication");
                 return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
             } else {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -84,6 +87,7 @@ public class UsersOperationsController {
      * @return Une ResponseEntity avec le JWT dans le header "Authentication" si le
      * login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
      */
+    @CrossOrigin(origins = {"http://localhost:8080", "http://192.168.75.73", "https://192.168.75.73"})
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     @Operation(summary = "To let a user connect",
             tags = "Operation controller",
@@ -106,6 +110,7 @@ public class UsersOperationsController {
                 String token = generateToken(userDto.getLogin(), origin);
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Authentication", "Bearer " + token);
+                headers.add("Access-Control-Expose-Headers", "Authentication");
                 return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
             } else {
                 throw new AuthenticationException("L'utilisateur n'est pas autorisé");
