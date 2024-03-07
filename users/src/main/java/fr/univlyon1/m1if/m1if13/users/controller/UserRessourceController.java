@@ -11,6 +11,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +73,7 @@ public class UserRessourceController {
      * @return une vue
      */
     @ResponseBody
+    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.73", "https://192.168.75.73"})
     @GetMapping(value = "/users/{login}", produces = {"text/html"})
     public ModelAndView getUsersHTML(@PathVariable final String login) {
         ModelAndView mav = new ModelAndView();
@@ -86,6 +88,7 @@ public class UserRessourceController {
      * @return un ensemble de login
      */
     @ResponseBody
+    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.73", "https://192.168.75.73"})
     @GetMapping(value = "/users/{login}", produces = {"application/json", "application/xml"})
     @Operation(summary = "Get one user in json/xml/html format",
             tags = "Operation REST",
