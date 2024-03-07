@@ -39,7 +39,7 @@ public class UsersOperationsControllerTests {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         .param("login", "Bob")
                         .param("password", "1234")
-                        .header("Origin", "login")
+                        .header("Origin", "http://localhost")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("Authentication"));
@@ -50,7 +50,7 @@ public class UsersOperationsControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         .param("login", "Bob")
-                        .header("Origin", "login")
+                        .header("Origin", "http://localhost")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
@@ -61,17 +61,18 @@ public class UsersOperationsControllerTests {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         .param("login", "Bob")
                         .param("password", "not")
-                        .header("Origin", "login")
+                        .header("Origin", "http://localhost")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 
+    @Test
     void postLoginBadLogin() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         .param("login", "no_one")
                         .param("password", "1234")
-                        .header("Origin", "login")
+                        .header("Origin", "http://localhost")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -82,7 +83,7 @@ public class UsersOperationsControllerTests {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         .param("login", "Bob")
                         .param("password", "1234")
-                        .header("Origin", "login")
+                        .header("Origin", "http://localhost")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("Authentication"))
@@ -91,7 +92,7 @@ public class UsersOperationsControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/logout")
                         .accept(MediaType.APPLICATION_JSON)
                         .header("Authentication", response.getHeader("Authentication"))
-                        .header("Origin", "login"))
+                        .header("Origin", "http://localhost"))
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("Authentication"));
     }
