@@ -3,8 +3,8 @@
 		"_postman_id": "3c60c382-aab6-4b38-a8a7-c89ca74be347",
 		"name": "OpenAPI definition",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30571773",
-		"_collection_link": "https://grey-meteor-431717.postman.co/workspace/Web-pirate-cruse~3d33339d-a4a1-4d2e-b3d3-4fc331b965fa/collection/28309084-3c60c382-aab6-4b38-a8a7-c89ca74be347?action=share&source=collection_link&creator=30571773"
+		"_exporter_id": "28309084",
+		"_collection_link": "https://grey-meteor-431717.postman.co/workspace/Web-pirate-cruse~3d33339d-a4a1-4d2e-b3d3-4fc331b965fa/collection/28309084-3c60c382-aab6-4b38-a8a7-c89ca74be347?action=share&source=collection_link&creator=28309084"
 	},
 	"item": [
 		{
@@ -30,7 +30,9 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"exec": [],
+										"exec": [
+											""
+										],
 										"type": "text/javascript"
 									}
 								}
@@ -45,7 +47,12 @@
 								"header": [
 									{
 										"key": "Accept",
-										"value": "application/xml"
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"value": "{{origin}}",
+										"type": "text"
 									}
 								],
 								"url": {
@@ -137,7 +144,9 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"exec": [],
+								"exec": [
+									""
+								],
 								"type": "text/javascript"
 							}
 						}
@@ -582,7 +591,7 @@
 									{
 										"description": "(Required) ",
 										"key": "Origin",
-										"value": "<string>"
+										"value": "{{origin_vm_http}}"
 									},
 									{
 										"key": "Content-Type",
@@ -779,7 +788,9 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"exec": [],
+								"exec": [
+									""
+								],
 								"type": "text/javascript"
 							}
 						}
@@ -1095,6 +1106,11 @@
 			"value": "http://localhost:8080"
 		},
 		{
+			"key": "baseUrl_vm",
+			"value": "http://192.168.75.73",
+			"type": "string"
+		},
+		{
 			"key": "login",
 			"value": "John",
 			"type": "string"
@@ -1116,7 +1132,12 @@
 		},
 		{
 			"key": "origin",
-			"value": "{{baseUrl}}/login",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "origin_vm_http",
+			"value": "{{baseUrl_vm}}",
 			"type": "string"
 		},
 		{
