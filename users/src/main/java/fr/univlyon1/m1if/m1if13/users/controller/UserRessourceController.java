@@ -1,24 +1,27 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
-import fr.univlyon1.m1if.m1if13.users.model.Species;
+import fr.univlyon1.m1if.m1if13.users.dto.UserDto;
+import fr.univlyon1.m1if.m1if13.users.dto.UserModifyDto;
 import fr.univlyon1.m1if.m1if13.users.model.User;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
@@ -51,10 +54,15 @@ public class UserRessourceController {
      */
     @ResponseBody
     @GetMapping(value = "/users", produces = {"application/json", "application/xml"})
-    @Operation(summary = "Get all users in json/xml format",
+    @Operation(summary = "Get all users in json/xml/html format",
             tags = "Operation REST",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful operation")
+                    @ApiResponse(responseCode = "200",
+                            description = "Successful operation", content = {
+                            @Content(mediaType = "application/json"),
+                            @Content(mediaType = "application/xml"),
+                            @Content(mediaType = "text/html")
+                    })
             })
     public Set<String> getAllUsers() {
         return userDao.getAll();
@@ -62,9 +70,11 @@ public class UserRessourceController {
 
     /**
      * Retourne un utilisateur.
+     * @param login login de l'utilisateur
      * @return une vue
      */
     @ResponseBody
+    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.73", "https://192.168.75.73"})
     @GetMapping(value = "/users/{login}", produces = {"text/html"})
     public ModelAndView getUsersHTML(@PathVariable final String login) {
         ModelAndView mav = new ModelAndView();
@@ -76,55 +86,73 @@ public class UserRessourceController {
 
     /**
      * Retourne un utilisateur.
+     * @param login login de l'utilisateur
      * @return un ensemble de login
      */
     @ResponseBody
+    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.73", "https://192.168.75.73"})
     @GetMapping(value = "/users/{login}", produces = {"application/json", "application/xml"})
-    @Operation(summary = "Get one user in json/xml format",
+    @Operation(summary = "Get one user in json/xml/html format",
             tags = "Operation REST",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful operation")
+                    @ApiResponse(responseCode = "200",
+                            description = "Successful operation", content = {
+                            @Content(mediaType = "application/json"),
+                            @Content(mediaType = "application/xml"),
+                            @Content(mediaType = "text/html")
+                    }),
+                    @ApiResponse(responseCode = "400",
+                            description = "Bad request", content = @Content())
             })
-    public User getUsers(@PathVariable final String login) throws Exception {
+    public User getUsers(@PathVariable final String login) {
         return userDao.get(login).orElseThrow(() ->
                 new NoSuchElementException("user " + login + " doesn't exist..."));
     }
 
     /**"
      * Crée un utilisateur.
-     * @param newUser utilisateur qu'il faut créer
+     * @param userDto utilisateur qu'il faut créer
      */
     @ResponseBody
     @PostMapping(value = "/users", consumes = {"application/json"})
     @Operation(summary = "Create a user",
             tags = "Operation REST",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful operation")
+                    @ApiResponse(responseCode = "200", description = "Successful operation"),
+                    @ApiResponse(responseCode = "400", description = "Bad request")
             })
-    public void createUser(@RequestBody final User newUser) {
-        userDao.save(newUser);
+    public void createUser(@RequestBody final UserDto userDto) throws BadRequestException {
+        if (userDto.getLogin() == null || userDto.getSpecies() == null
+                || userDto.getPassword() == null) {
+            throw new BadRequestException("Il manque un paramètre");
+        }
+        userDao.save(new User(userDto.getLogin(), userDto.getSpecies(), userDto.getPassword()));
     }
 
     /**
      * Crée un utilisateur.
+     * @param userDto l'utilisateur
      */
     @ResponseBody
     @PostMapping(value = "/users", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     @Operation(summary = "Create a user",
             tags = "Operation REST",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful operation")
+                    @ApiResponse(responseCode = "200", description = "Successful operation"),
+                    @ApiResponse(responseCode = "400", description = "Bad request")
             })
-    public void createUserURL(@RequestParam("login") final String login,
-                              @RequestParam("species") final Species species,
-                              @RequestParam("password") final String password) {
-        User newUser = new User(login, species, password);
-        userDao.save(newUser);
+    public void createUserURL(@ModelAttribute final UserDto userDto) throws BadRequestException {
+        if (userDto.getLogin() == null || userDto.getSpecies() == null
+                || userDto.getPassword() == null) {
+            throw new BadRequestException("Il manque un paramètre");
+        }
+        userDao.save(new User(userDto.getLogin(), userDto.getSpecies(), userDto.getPassword()));
     }
 
     /**
      * Maj d'un utilisateur.
      * @param login login de l'utilisateur
+     * @param userDto l'utilisateur
      */
     @ResponseBody
     @PutMapping(value = "/users/{login}", consumes =  {"application/json"})
@@ -134,21 +162,22 @@ public class UserRessourceController {
                     @ApiResponse(responseCode = "200", description = "Successful operation")
             })
     public void modifyUser(@PathVariable final String login,
-                           @RequestBody final Map<String, Object> requestParams) {
-        String species = (String) requestParams.get("species");
-        String password = (String) requestParams.get("password");
+                           @RequestBody final UserModifyDto userDto) {
         String[] tab = new String[2];
-        tab[0] = species;
-        tab[1] = password;
+        tab[0] = String.valueOf(userDto.getSpecies());
+        tab[1] = userDto.getPassword();
         Optional<User> user = userDao.get(login);
-        user.ifPresent(value -> userDao.update(value, tab));
+        if (user.isPresent()) {
+            userDao.update(user.get(), tab);
+        } else {
+            throw new NoSuchElementException("Utilisateur introuvable");
+        }
     }
 
     /**
-     * methode for login.
-     * @param login
-     * @param species
-     * @param password
+     * Maj d'un utilisateur.
+     * @param login login de l'utilisateur
+     * @param userDto l'utilisateur
      */
     @ResponseBody
     @PutMapping(value = "/users/{login}", consumes =  {
@@ -159,18 +188,21 @@ public class UserRessourceController {
                     @ApiResponse(responseCode = "200", description = "Successful operation")
             })
     public void modifyUserURL(@PathVariable final String login,
-                           @RequestParam(value = "species", required = false) final String species,
-                           @RequestParam(value = "password", required = false)
-                           final String password) {
+                              @ModelAttribute final UserModifyDto userDto) {
         String[] tab = new String[2];
-        tab[0] = species;
-        tab[1] = password;
+        tab[0] = String.valueOf(userDto.getSpecies());
+        tab[1] = userDto.getPassword();
         Optional<User> user = userDao.get(login);
-        user.ifPresent(value -> userDao.update(value, tab));
+        if (user.isPresent()) {
+            userDao.update(user.get(), tab);
+        } else {
+            throw new NoSuchElementException("Utilisateur introuvable");
+        }
     }
 
     /**
      * Delete un utilisateur.
+     * @param login de l'utilisateur
      */
     @ResponseBody
     @DeleteMapping(value = "/users/{login}")

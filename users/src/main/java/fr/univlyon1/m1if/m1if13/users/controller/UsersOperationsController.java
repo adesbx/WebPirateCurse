@@ -1,6 +1,7 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
+import fr.univlyon1.m1if.m1if13.users.dto.UserLoginDto;
 import fr.univlyon1.m1if.m1if13.users.model.User;
 import org.apache.coyote.BadRequestException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,12 +9,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.naming.AuthenticationException;
 import java.util.NoSuchElementException;
@@ -33,39 +39,89 @@ public class UsersOperationsController {
     private UserDao userDao;
 
     /**
-     * Procédure de login utilisée par un utilisateur.
-     * @param login Le login de l'utilisateur. L'utilisateur doit avoir été créé
-     *             préalablement et son login  private UserDao userDao; doit
-     *              être présent dans le DAO.
-     * @param password Le password à vérifier.
+     * Procédure de login utilisée par un utilisateur. JSON
+     * @param userDto dto avec les informations de l'utilisateur qui veut se
+     *                connecter (seulement login et password)
+     * @param origin L'origine de la requête (pour la comparer avec celle du client,
+     *               stockée dans le token JWT)
      * @return Une ResponseEntity avec le JWT dans le header "Authentication" si le
      * login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
      */
-    @PostMapping("/login")
+    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.73", "https://192.168.75.73"})
+    @ResponseBody
+    @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "To let a user connect",
             tags = "Operation controller",
             responses = {
                     @ApiResponse(responseCode = "204", description = "No content"),
+                    @ApiResponse(responseCode = "400", description = "Bad request"),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
                     @ApiResponse(responseCode = "404", description = "Not found")
             })
-    public ResponseEntity<Void> login(@RequestParam("login") final String login,
-                                      @RequestParam("password") final String password,
-                                      @RequestHeader("Origin") final String origin)
-            throws AuthenticationException {
-        Optional<User> user = userDao.get(login);
+    public ResponseEntity<Void> loginJson(@RequestBody final UserLoginDto userDto,
+                                          @RequestHeader("Origin") final String origin)
+            throws AuthenticationException, BadRequestException {
+        if (userDto.getLogin() == null || userDto.getPassword() == null) {
+            throw new BadRequestException("Il manque un paramètre");
+        }
+        Optional<User> user = userDao.get(userDto.getLogin());
         if (user.isPresent()) {
-            user.get().authenticate(password);
+            user.get().authenticate(userDto.getPassword());
             if (user.get().isConnected()) {
-                String token = generateToken(login, origin);
+                String token = generateToken(userDto.getLogin(), origin);
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Authentication", "Bearer " + token);
+                headers.add("Access-Control-Expose-Headers", "Authentication");
                 return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
             } else {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         } else {
-            throw new NoSuchElementException("l'utilisateur " + login + " n'existe pas");
+            throw new NoSuchElementException("l'utilisateur "
+                    + userDto.getLogin() + " n'existe pas");
+        }
+    }
+
+    /**
+     * Procédure de login utilisée par un utilisateur. URL-encoded
+     * @param userDto dto avec les informations de l'utilisateur qui veut se
+     *                connecter (seulement login et password)
+     * @param origin L'origine de la requête (pour la comparer avec celle du client,
+     *               stockée dans le token JWT)
+     * @return Une ResponseEntity avec le JWT dans le header "Authentication" si le
+     * login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
+     */
+    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.73", "https://192.168.75.73"})
+    @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @Operation(summary = "To let a user connect",
+            tags = "Operation controller",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "No content"),
+                    @ApiResponse(responseCode = "400", description = "Bad request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "404", description = "Not found")
+            })
+    public ResponseEntity<Void> loginUrlEncoded(@ModelAttribute final UserLoginDto userDto,
+                                      @RequestHeader("Origin") final String origin)
+            throws AuthenticationException, BadRequestException {
+        if (userDto.getLogin() == null || userDto.getPassword() == null) {
+            throw new BadRequestException("Il manque un paramètre");
+        }
+        Optional<User> user = userDao.get(userDto.getLogin());
+        if (user.isPresent()) {
+            user.get().authenticate(userDto.getPassword());
+            if (user.get().isConnected()) {
+                String token = generateToken(userDto.getLogin(), origin);
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Authentication", "Bearer " + token);
+                headers.add("Access-Control-Expose-Headers", "Authentication");
+                return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
+            } else {
+                throw new AuthenticationException("L'utilisateur n'est pas autorisé");
+            }
+        } else {
+            throw new NoSuchElementException("l'utilisateur "
+                    + userDto.getLogin() + " n'existe pas");
         }
     }
 
@@ -76,6 +132,7 @@ public class UsersOperationsController {
      * stockée dans le token JWT)
      *@return Une réponse vide avec un code de statut approprié (204, 400, 401).
      */
+    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.73", "https://192.168.75.73"})
     @PostMapping("/logout")
     @Operation(summary = "To let a user disconnect",
             tags = "Operation controller",

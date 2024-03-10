@@ -3,12 +3,16 @@ package fr.univlyon1.m1if.m1if13.users.utils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
 import jakarta.validation.constraints.NotNull;
+import org.apache.coyote.BadRequestException;
 
+import javax.naming.AuthenticationException;
 import java.util.Date;
 
 /**
@@ -43,17 +47,23 @@ public final class JwtHelper {
      * si l'utilisateur est authentifié
      */
     public static String verifyToken(final String token, @NotNull final String req)
-            throws NullPointerException, JWTVerificationException {
-        JWTVerifier authenticationVerifier = JWT.require(ALGORITHM)
-                .withIssuer(ISSUER)
-                .withAudience(req) // Non-reusable verifier instance
-                .build();
-
-        authenticationVerifier.verify(token); // Lève une NullPointerException si le token
-        // n'existe pas et une JWTVerificationException s'il est invalide
-        DecodedJWT jwt = JWT.decode(token); // Pourrait lever une JWTDecodeException mais
-        // comme le token est vérifié avant, cela ne devrait pas arriver
-        return jwt.getClaim("sub").asString();
+            throws NullPointerException, JWTVerificationException,
+            BadRequestException, AuthenticationException {
+        try {
+            JWTVerifier authenticationVerifier = JWT.require(ALGORITHM)
+                    .withIssuer(ISSUER)
+                    .withAudience(req) // Non-reusable verifier instance
+                    .build();
+            authenticationVerifier.verify(token); // Lève une NullPointerException si le token
+            // n'existe pas et une JWTVerificationException s'il est invalide
+            DecodedJWT jwt = JWT.decode(token); // Pourrait lever une JWTDecodeException mais
+            // comme le token est vérifié avant, cela ne devrait pas arriver
+            return jwt.getClaim("sub").asString();
+        } catch (JWTDecodeException e) {
+            throw new BadRequestException("Token invalide");
+        } catch (TokenExpiredException e) {
+            throw new AuthenticationException("le Token est expirer");
+        }
     }
 
 

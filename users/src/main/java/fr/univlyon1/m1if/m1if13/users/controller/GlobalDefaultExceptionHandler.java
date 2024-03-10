@@ -33,6 +33,7 @@ class GlobalDefaultExceptionHandler {
         mav.addObject("url", req.getRequestURL());
         mav.addObject("timestamp", new Date().toString());
         mav.addObject("status", status);
+        mav.setStatus(status);
         mav.setViewName(DEFAULT_ERROR_VIEW);
         return mav;
     }
@@ -44,10 +45,9 @@ class GlobalDefaultExceptionHandler {
      * @param exception the exception
      * @return the model and view
      */
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadRequestException.class)
     public ModelAndView handleBadRequest(final HttpServletRequest req,
-                                       final AuthenticationException exception) {
+                                       final BadRequestException exception) {
         return generateErrorView(req, exception, HttpStatus.BAD_REQUEST);
     }
 
@@ -58,7 +58,6 @@ class GlobalDefaultExceptionHandler {
      * @param exception the exception
      * @return the model and view
      */
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AuthenticationException.class)
     public ModelAndView handleNotAuthorized(final HttpServletRequest req,
                                        final AuthenticationException exception) {
@@ -72,7 +71,6 @@ class GlobalDefaultExceptionHandler {
      * @param exception the exception
      * @return the model and view
      */
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
     public ModelAndView handleNotFound(final HttpServletRequest req,
                                        final NoSuchElementException exception) {
@@ -89,7 +87,6 @@ class GlobalDefaultExceptionHandler {
      * @return The model and view used by the DispatcherServlet to generate output.
      * @throws Exception the exception
      */
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ModelAndView handleError(final HttpServletRequest req, final Exception exception)
             throws Exception {

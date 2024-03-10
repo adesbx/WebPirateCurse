@@ -52,14 +52,6 @@ public class UserDao implements Dao<User> {
             user.setPassword(params[1]);
         }
         users.put(user.getLogin(), user);
-//        if(params[0] != null && params[1] != null) {
-//            users.put(params[0], new User(params[0], user.getSpecies(), params[1]));
-//        }
-//        else if (params[0] != null && params[1] == null) {
-//            users.put(params[0], new User(params[0], user.getSpecies(), ));
-//        } else if (params[0] == null && params[1] != null) {
-//            users.put(user.getLogin(), new User(user.getLogin(), user.getSpecies(), params[1]));
-//        }
     }
 
     @Override
