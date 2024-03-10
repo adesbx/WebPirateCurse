@@ -42,6 +42,8 @@ public class UsersOperationsController {
      * Procédure de login utilisée par un utilisateur. JSON
      * @param userDto dto avec les informations de l'utilisateur qui veut se
      *                connecter (seulement login et password)
+     * @param origin L'origine de la requête (pour la comparer avec celle du client,
+     *               stockée dans le token JWT)
      * @return Une ResponseEntity avec le JWT dans le header "Authentication" si le
      * login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
      */
@@ -84,6 +86,8 @@ public class UsersOperationsController {
      * Procédure de login utilisée par un utilisateur. URL-encoded
      * @param userDto dto avec les informations de l'utilisateur qui veut se
      *                connecter (seulement login et password)
+     * @param origin L'origine de la requête (pour la comparer avec celle du client,
+     *               stockée dans le token JWT)
      * @return Une ResponseEntity avec le JWT dans le header "Authentication" si le
      * login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
      */

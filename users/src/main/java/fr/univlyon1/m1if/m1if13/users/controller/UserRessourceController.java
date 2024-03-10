@@ -70,6 +70,7 @@ public class UserRessourceController {
 
     /**
      * Retourne un utilisateur.
+     * @param login login de l'utilisateur
      * @return une vue
      */
     @ResponseBody
@@ -85,6 +86,7 @@ public class UserRessourceController {
 
     /**
      * Retourne un utilisateur.
+     * @param login login de l'utilisateur
      * @return un ensemble de login
      */
     @ResponseBody
@@ -129,6 +131,7 @@ public class UserRessourceController {
 
     /**
      * Crée un utilisateur.
+     * @param userDto l'utilisateur
      */
     @ResponseBody
     @PostMapping(value = "/users", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
@@ -149,6 +152,7 @@ public class UserRessourceController {
     /**
      * Maj d'un utilisateur.
      * @param login login de l'utilisateur
+     * @param userDto l'utilisateur
      */
     @ResponseBody
     @PutMapping(value = "/users/{login}", consumes =  {"application/json"})
@@ -171,8 +175,9 @@ public class UserRessourceController {
     }
 
     /**
-     * methode for login.
-     * @param login
+     * Maj d'un utilisateur.
+     * @param login login de l'utilisateur
+     * @param userDto l'utilisateur
      */
     @ResponseBody
     @PutMapping(value = "/users/{login}", consumes =  {
@@ -197,6 +202,7 @@ public class UserRessourceController {
 
     /**
      * Delete un utilisateur.
+     * @param login de l'utilisateur
      */
     @ResponseBody
     @DeleteMapping(value = "/users/{login}")
