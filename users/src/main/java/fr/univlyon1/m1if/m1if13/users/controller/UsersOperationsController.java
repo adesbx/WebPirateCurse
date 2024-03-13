@@ -3,7 +3,6 @@ package fr.univlyon1.m1if.m1if13.users.controller;
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
 import fr.univlyon1.m1if.m1if13.users.dto.UserLoginDto;
 import fr.univlyon1.m1if.m1if13.users.model.User;
-import org.apache.coyote.BadRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +59,9 @@ public class UsersOperationsController {
             })
     public ResponseEntity<Void> loginJson(@RequestBody final UserLoginDto userDto,
                                           @RequestHeader("Origin") final String origin)
-            throws AuthenticationException, BadRequestException {
+            throws AuthenticationException, Exception {
         if (userDto.getLogin() == null || userDto.getPassword() == null) {
-            throw new BadRequestException("Il manque un paramètre");
+            throw new Exception("Il manque un paramètre");
         }
         Optional<User> user = userDao.get(userDto.getLogin());
         if (user.isPresent()) {
@@ -103,9 +102,9 @@ public class UsersOperationsController {
             })
     public ResponseEntity<Void> loginUrlEncoded(@ModelAttribute final UserLoginDto userDto,
                                       @RequestHeader("Origin") final String origin)
-            throws AuthenticationException, BadRequestException {
+            throws AuthenticationException, Exception {
         if (userDto.getLogin() == null || userDto.getPassword() == null) {
-            throw new BadRequestException("Il manque un paramètre");
+            throw new Exception("Il manque un paramètre");
         }
         Optional<User> user = userDao.get(userDto.getLogin());
         if (user.isPresent()) {
@@ -143,7 +142,7 @@ public class UsersOperationsController {
             })
     public ResponseEntity<Void> logout(@RequestHeader("Authentication") final String jwt,
                                        @RequestHeader("origin") final String origin)
-            throws AuthenticationException, BadRequestException {
+            throws AuthenticationException, Exception {
         String token = jwt.replace("Bearer ", "");
         String login = verifyToken(token, origin);
         Optional<User> user = userDao.get(login);
@@ -155,7 +154,7 @@ public class UsersOperationsController {
                 headers.add("Authentication", "Bearer " + newToken);
                 return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
             } else {
-                throw new BadRequestException("L'utilisateur ne devrais "
+                throw new Exception("L'utilisateur ne devrais "
                         + "pas pouvoir se déconnecter");
             }
         } else {
@@ -181,7 +180,7 @@ public class UsersOperationsController {
             })
     public ResponseEntity<Void> authenticate(@RequestParam("jwt") final String jwt,
                                              @RequestParam("origin") final String origin)
-            throws AuthenticationException, BadRequestException {
+            throws AuthenticationException, Exception {
         String token = jwt.replace("Bearer ", "");
         String login = verifyToken(token, origin);
         Optional<User> user = userDao.get(login);
@@ -189,7 +188,7 @@ public class UsersOperationsController {
             if (user.get().isConnected()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                throw new BadRequestException("L'utilisateur devrais être connecté");
+                throw new Exception("L'utilisateur devrais être connecté");
             }
         } else {
             throw new AuthenticationException("le token à expiré");

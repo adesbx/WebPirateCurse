@@ -7,7 +7,6 @@ import fr.univlyon1.m1if.m1if13.users.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -121,10 +120,10 @@ public class UserRessourceController {
                     @ApiResponse(responseCode = "200", description = "Successful operation"),
                     @ApiResponse(responseCode = "400", description = "Bad request")
             })
-    public void createUser(@RequestBody final UserDto userDto) throws BadRequestException {
+    public void createUser(@RequestBody final UserDto userDto) throws Exception {
         if (userDto.getLogin() == null || userDto.getSpecies() == null
                 || userDto.getPassword() == null) {
-            throw new BadRequestException("Il manque un paramètre");
+            throw new Exception("Il manque un paramètre");
         }
         userDao.save(new User(userDto.getLogin(), userDto.getSpecies(), userDto.getPassword()));
     }
@@ -141,10 +140,10 @@ public class UserRessourceController {
                     @ApiResponse(responseCode = "200", description = "Successful operation"),
                     @ApiResponse(responseCode = "400", description = "Bad request")
             })
-    public void createUserURL(@ModelAttribute final UserDto userDto) throws BadRequestException {
+    public void createUserURL(@ModelAttribute final UserDto userDto) throws Exception {
         if (userDto.getLogin() == null || userDto.getSpecies() == null
                 || userDto.getPassword() == null) {
-            throw new BadRequestException("Il manque un paramètre");
+            throw new Exception("Il manque un paramètre");
         }
         userDao.save(new User(userDto.getLogin(), userDto.getSpecies(), userDto.getPassword()));
     }
