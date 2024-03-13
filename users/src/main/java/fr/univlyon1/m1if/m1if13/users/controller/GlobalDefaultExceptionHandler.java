@@ -1,7 +1,6 @@
 
 package fr.univlyon1.m1if.m1if13.users.controller;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.coyote.BadRequestException;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,19 +36,22 @@ class GlobalDefaultExceptionHandler {
         mav.setViewName(DEFAULT_ERROR_VIEW);
         return mav;
     }
-
-    /**
-     * Handle bad request model and view.
-     *
-     * @param req       the req
-     * @param exception the exception
-     * @return the model and view
-     */
-    @ExceptionHandler(BadRequestException.class)
-    public ModelAndView handleBadRequest(final HttpServletRequest req,
-                                       final BadRequestException exception) {
-        return generateErrorView(req, exception, HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ModelAndView handleBadRequest(final HttpServletRequest req, final Exception ex) {
+//        return handleBadRequest(req, ex, HttpStatus.BAD_REQUEST);
+//    }
+//    /**
+//     * Handle bad request model and view.
+//     *
+//     * @param req       the req
+//     * @param exception the exception
+//     * @return the model and view
+//     */
+//    @ExceptionHandler(BadRequestException.class)
+//    public ModelAndView handleBadRequest(final HttpServletRequest req,
+//                                       final BadRequestException exception) {
+//        return generateErrorView(req, exception, HttpStatus.BAD_REQUEST);
+//    }
 
     /**
      * Handle not authorized model and view.
@@ -96,6 +98,6 @@ class GlobalDefaultExceptionHandler {
                 ResponseStatus.class) != null) {
             throw exception;
         }
-        return generateErrorView(req, exception, HttpStatus.INTERNAL_SERVER_ERROR);
+        return generateErrorView(req, exception, HttpStatus.BAD_REQUEST);
     }
 }
