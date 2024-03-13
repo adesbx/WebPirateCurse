@@ -22,4 +22,4 @@ deploy:
         - cd users
         - mvn clean package
         - which scp
-        - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY target/users.war gitlabci@192.168.75.36:/opt/tomcat/webapps/v1.war
+        - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY target/users.war gitlabci@192.168.75.36:/opt/tomcat/webapps/users.war
