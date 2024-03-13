@@ -33,5 +33,8 @@ build/
 ### VS Code ###
 .vscode/
 
+### node-module ###
+node-module
+
 ### OpenAPI ###
 src/main/gen/
