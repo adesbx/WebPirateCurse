@@ -24,7 +24,6 @@ class GlobalDefaultExceptionHandler {
      */
     public static final String DEFAULT_ERROR_VIEW = "error";
 
-    @ResponseBody
     private ModelAndView generateErrorView(final HttpServletRequest req,
                               final Exception exception,
                               final HttpStatus status) {
