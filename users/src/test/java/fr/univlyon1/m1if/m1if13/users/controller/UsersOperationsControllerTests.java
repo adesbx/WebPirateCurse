@@ -33,6 +33,9 @@ public class UsersOperationsControllerTests {
         userDao.save(new User("Bob", Species.PIRATE, "1234"));
     }
 
+    /**
+     * Test du post login
+     */
     @Test
     void postLogin() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
@@ -45,6 +48,10 @@ public class UsersOperationsControllerTests {
                 .andExpect(header().exists("Authentication"));
     }
 
+    /**
+     * Test du post login avec un paramÃ¨tre en moins
+     * on devrait avoir une erreur Bad Request
+     */
     @Test
     void postLoginMissingParam() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
@@ -55,6 +62,10 @@ public class UsersOperationsControllerTests {
                 .andExpect(status().isBadRequest());
     }
 
+    /**
+     * Test du post login avec un mauvais mdp
+     * on devrait avoir une erreur Unauthorized
+     */
     @Test
     void postLoginBadPassword() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
@@ -66,6 +77,10 @@ public class UsersOperationsControllerTests {
                 .andExpect(status().isUnauthorized());
     }
 
+    /**
+     * Test du post login avec un mauvais login
+     * on devrait avoir une erreur NotFound
+     */
     @Test
     void postLoginBadLogin() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
@@ -77,6 +92,9 @@ public class UsersOperationsControllerTests {
                 .andExpect(status().isNotFound());
     }
 
+    /**
+     * Test du post logout
+     */
     @Test
     void postLogout() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post("/login")
@@ -96,5 +114,4 @@ public class UsersOperationsControllerTests {
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("Authentication"));
     }
-
 }
