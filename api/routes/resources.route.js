@@ -1,14 +1,18 @@
-const express = require('express');
-const resources = require('../services/resources');
-const router = new express.Router();
- 
+import { Router } from 'express';
+import express from 'express'
+import { getResources, postResourceId, putResourceIdPosition } from '../services/resources.js';
+const router = new Router();
+
+//pour avoir le body
+router.use(express.json());
+
 router.get('/', async (req, res, next) => {
   let options = { 
   };
 
 
   try {
-    const result = await resources.getResources(options);
+    const result = await getResources(options);
     res.status(result.status || 200).send(result.data);
   }
   catch (err) {
@@ -26,7 +30,7 @@ router.post('/:resourceId', async (req, res, next) => {
   options.operationType = req.body;
 
   try {
-    const result = await resources.postResourceId(options);
+    const result = await postResourceId(options);
     res.status(result.status || 200).send(result.data);
   }
   catch (err) {
@@ -42,9 +46,9 @@ router.put('/:resourceId/position', async (req, res, next) => {
   };
 
   options.latLng = req.body;
-
+  
   try {
-    const result = await resources.putResourceIdPosition(options);
+    const result = await putResourceIdPosition(options);
     res.status(result.status || 200).send(result.data);
   }
   catch (err) {
@@ -54,4 +58,4 @@ router.put('/:resourceId/position', async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export default router;

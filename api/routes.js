@@ -1,8 +1,11 @@
-module.exports = function (app) {
+import resources from './routes/resources.route.js'
+import zrr from './routes/zrr.route.js'
+
+export default function (app) {
   /*
   * Routes
   */
-  app.use('/resources', require('./routes/resources.route'));
-  app.use('/zrr', require('./routes/zrr.route'));
+  app.use('/resources', resources);
+  app.use('/zrr', zrr);
 
 };

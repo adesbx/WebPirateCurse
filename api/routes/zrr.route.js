@@ -1,6 +1,6 @@
-const express = require('express');
-const zrr = require('../services/zrr');
-const router = new express.Router();
+import { Router } from 'express';
+import { getZrr } from '../services/zrr.js';
+const router = new Router();
  
 router.get('/', async (req, res, next) => {
   let options = { 
@@ -8,7 +8,7 @@ router.get('/', async (req, res, next) => {
 
 
   try {
-    const result = await zrr.getZrr(options);
+    const result = await getZrr(options);
     res.status(result.status || 200).send(result.data);
   }
   catch (err) {
@@ -18,4 +18,4 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export default router;
