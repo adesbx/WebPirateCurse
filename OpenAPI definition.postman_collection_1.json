@@ -1107,7 +1107,7 @@
 		},
 		{
 			"key": "baseUrl_vm",
-			"value": "http://192.168.75.73",
+			"value": "http://192.168.75.36",
 			"type": "string"
 		},
 		{
