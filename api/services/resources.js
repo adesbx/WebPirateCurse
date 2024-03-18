@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { Console } from 'console';
+import fs from 'fs';
 export async function getResources(options) {
   // Implement your business logic here...
   //
@@ -44,6 +46,69 @@ export async function postResourceId(options) {
   // throw new Error('<Error message>'); // this will result in a 500
   var data = {}, status = '204';
 
+  switch(options.operationType) {
+    case "grab potion flask":
+      fs.readFile('./data/data.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error('Erreur lors de la lecture du fichier :', err);
+            return;
+        }
+    
+        let users = JSON.parse(data);
+        console.log(options.resourceId);
+        const user = users.find(user => user.id === options.resourceId);
+    
+        if (!user) {
+            console.error('user non trouvé');
+            return;
+        }
+    
+        user.potions++ ;
+    
+        let newUser = JSON.stringify(users, null, 4);
+    
+        fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
+            if (err) {
+                console.error('Erreur écriture dans le fichier :', err);
+                return;
+            }
+        });
+      });
+      break
+    case "terminate pirate":
+      console.log("pas fait");
+      break
+    case "turn villager into pirate":
+      fs.readFile('./data/data.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error('Erreur lors de la lecture du fichier :', err);
+            return;
+        }
+    
+        let users = JSON.parse(data);
+        console.log(options.resourceId);
+        const user = users.find(user => user.id === options.resourceId);
+    
+        if (!user) {
+            console.error('user non trouvé');
+            return;
+        }
+    
+        user.role = "PIRATE";
+        user.terminated = 0; // on le transforme en pirate donc le nombre de d'utilisateurs modifé repasse a 0 ?
+    
+        let newUser = JSON.stringify(users, null, 4);
+    
+        fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
+            if (err) {
+                console.error('Erreur écriture dans le fichier :', err);
+                return;
+            }
+        });
+      });
+      break
+  }
+
   return {
     status: status,
     data: data
@@ -66,21 +131,48 @@ export async function putResourceIdPosition(options) {
 
   var data = {}, status = '204';
 
-  axios.get(`http://192.168.75.36:8080/users/users/${options.resourceId}`)
-  .then(function (response) {
-    const user = {
-      "id": response.data.login,
-      "position": options.latLng,
-      "role": {
-        "species": response.data.species,
-        "nombreDeFioles": 0
-      }
-    }
+  // axios.get(`http://192.168.75.36:8080/users/users/${options.resourceId}`)
+  // .then(function (response) {
+  //   const user = {
+  //     "id": response.data.login,
+  //     "position": options.latLng,
+  //     "role": {
+  //       "species": response.data.species,
+  //       "nombreDeFioles": 0
+  //     }
+  //   }
   
-    console.log(user);
-  })
-  .catch(function (error) {
-    console.error(error);
+  //   console.log(user);
+  // })
+  // .catch(function (error) {
+  //   console.error(error);
+  // });
+
+  fs.readFile('./data/data.json', 'utf8', (err, data) => {
+    if (err) {
+        console.error('Erreur lors de la lecture du fichier :', err);
+        return;
+    }
+
+    let users = JSON.parse(data);
+    console.log(options.resourceId);
+    const user = users.find(user => user.id === options.resourceId);
+
+    if (!user) {
+        console.error('user non trouvé');
+        return;
+    }
+
+    user.position = options.latLng; 
+
+    let newUser = JSON.stringify(users, null, 4);
+
+    fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
+        if (err) {
+            console.error('Erreur écriture dans le fichier :', err);
+            return;
+        }
+    });
   });
 
   return {

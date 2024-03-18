@@ -1,0 +1,26 @@
+[
+    {
+        "id": "toto",
+        "position": [
+            "24",
+            "24"
+        ],
+        "role": "PIRATE",
+        "ttl": 0,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 1
+    },
+    {
+        "id": "titi",
+        "position": [
+            "4",
+            "2"
+        ],
+        "role": "VILLAGEOIS",
+        "ttl": 0,
+        "potions": 0,
+        "terminated": 1,
+        "turned": 0
+    }
+]
