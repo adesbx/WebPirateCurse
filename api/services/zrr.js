@@ -1,3 +1,4 @@
+import fs from 'fs';
 export async function getZrr(options) {
   // Implement your business logic here...
   //
@@ -15,6 +16,28 @@ export async function getZrr(options) {
   var data = [{}
   ], status = '200';
 
+  fs.readFile('./data/zrrdata.json', 'utf8', (err, json) => {
+
+    if (err) {
+        console.error('Erreur lors de la lecture du fichier :', err);
+        return;
+    }
+
+    let zrr = JSON.parse(json);
+    console.log(zrr);
+    if (!zrr) {
+        console.error('zrr vide');
+        return;
+    }
+
+    console.log(`ZRR-NO ${zrr.positionNO}`);
+    console.log(`ZRR-NE ${zrr.positionNE}`);
+    console.log(`ZRR-SO ${zrr.positionSO}`);
+    console.log(`ZRR-SE ${zrr.positionSE}`);
+    
+  data = zrr;
+  });
+  console.log(data);
   return {
     status: status,
     data: data

@@ -6,7 +6,6 @@ router.get('/', async (req, res, next) => {
   let options = { 
   };
 
-
   try {
     const result = await getZrr(options);
     res.status(result.status || 200).send(result.data);
