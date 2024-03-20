@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.naming.AuthenticationException;
@@ -178,8 +177,8 @@ public class UsersOperationsController {
                     @ApiResponse(responseCode = "400", description = "Bad request"),
                     @ApiResponse(responseCode = "401", description = "Unauthorized")
             })
-    public ResponseEntity<String> authenticate(@RequestParam("jwt") final String jwt,
-                                             @RequestParam("origin") final String origin)
+    public ResponseEntity<String> authenticate(@RequestHeader("Authentication") final String jwt,
+                                             @RequestHeader("origin") final String origin)
             throws AuthenticationException, Exception {
         String token = jwt.replace("Bearer ", "");
         String login = verifyToken(token, origin);
