@@ -12,6 +12,17 @@
         "turned": 1
     },
     {
+        "id": "John",
+        "position": [
+            "24",
+            "24"
+        ],
+        "role": "PIRATE",
+        "ttl": 0,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 1
+    },{
         "id": "titi",
         "position": [
             "6",
@@ -25,8 +36,7 @@
     },
     {
         "id": "badUser",
-        "position": [
-        ],
+        "position": [],
         "role": "VILLAGEOIS",
         "ttl": 0,
         "potions": 0,

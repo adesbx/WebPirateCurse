@@ -29,6 +29,99 @@ function getAllRessources() {
   })  
 }
 
+function grabPotion() {
+  //ICI il faut changer le option.ressourceID c'est celui de la potion pas de l'user
+  fs.readFile('./data/data.json', 'utf8', (err, data) => {
+    if (err) {
+        console.error('Erreur lors de la lecture du fichier :', err);
+        return;
+    }
+
+    let users = JSON.parse(data);
+    console.log(options.resourceId);
+    const user = users.find(user => user.id === options.resourceId);
+
+    if (!user) {
+        console.error('user non trouvé');
+        return;
+    }
+
+    user.potions++ ;
+
+    let newUser = JSON.stringify(users, null, 4);
+
+    fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
+        if (err) {
+            console.error('Erreur écriture dans le fichier :', err);
+            return;
+        }
+    });
+  });
+}
+
+function villagerIntoPirate() {
+  //faut vérifier ici pour l'id
+  fs.readFile('./data/data.json', 'utf8', (err, data) => {
+    if (err) {
+        console.error('Erreur lors de la lecture du fichier :', err);
+        return;
+    }
+
+    let users = JSON.parse(data);
+    console.log(options.resourceId);
+    const user = users.find(user => user.id === options.resourceId);
+
+    if (!user) {
+        console.error('user non trouvé');
+        return;
+    }
+
+    user.role = "PIRATE";
+    user.terminated = 0; // on le transforme en pirate donc le nombre de d'utilisateurs modifé repasse a 0 ?
+
+    let newUser = JSON.stringify(users, null, 4);
+
+    fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
+        if (err) {
+            console.error('Erreur écriture dans le fichier :', err);
+            return;
+        }
+    });
+  });
+}
+
+function modifyPosition(id, position) {
+  fs.readFile('./data/data.json', 'utf8', (err, data) => {
+    if (err) {
+        console.error('Erreur lors de la lecture du fichier :', err);
+        return;
+    }
+
+    let users = JSON.parse(data);
+    const user = users.find(user => user.id === id);
+
+    if (!user) {
+        throw new Error('User non trouvé');
+        return;
+    }
+
+    try {
+      user.position = position; 
+
+      let newUser = JSON.stringify(users, null, 4);
+  
+      fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
+          if (err) {
+              console.error('Erreur écriture dans le fichier :', err);
+              return;
+          }
+      });
+    } catch(error) {
+      reject(error);
+    }
+  });
+}
+
 export async function getResources(options) {
   try {
     //faire la vérification de authentification
@@ -46,6 +139,7 @@ export async function getResources(options) {
     };
   }
 }
+
 export async function postResourceId(options) {
   // Implement your business logic here...
   //
@@ -64,64 +158,13 @@ export async function postResourceId(options) {
 
   switch(options.operationType) {
     case "grab potion flask":
-      fs.readFile('./data/data.json', 'utf8', (err, data) => {
-        if (err) {
-            console.error('Erreur lors de la lecture du fichier :', err);
-            return;
-        }
-    
-        let users = JSON.parse(data);
-        console.log(options.resourceId);
-        const user = users.find(user => user.id === options.resourceId);
-    
-        if (!user) {
-            console.error('user non trouvé');
-            return;
-        }
-    
-        user.potions++ ;
-    
-        let newUser = JSON.stringify(users, null, 4);
-    
-        fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
-            if (err) {
-                console.error('Erreur écriture dans le fichier :', err);
-                return;
-            }
-        });
-      });
+      grabPotion();
       break
     case "terminate pirate":
       console.log("pas fait");
       break
     case "turn villager into pirate":
-      fs.readFile('./data/data.json', 'utf8', (err, data) => {
-        if (err) {
-            console.error('Erreur lors de la lecture du fichier :', err);
-            return;
-        }
-    
-        let users = JSON.parse(data);
-        console.log(options.resourceId);
-        const user = users.find(user => user.id === options.resourceId);
-    
-        if (!user) {
-            console.error('user non trouvé');
-            return;
-        }
-    
-        user.role = "PIRATE";
-        user.terminated = 0; // on le transforme en pirate donc le nombre de d'utilisateurs modifé repasse a 0 ?
-    
-        let newUser = JSON.stringify(users, null, 4);
-    
-        fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
-            if (err) {
-                console.error('Erreur écriture dans le fichier :', err);
-                return;
-            }
-        });
-      });
+      villagerIntoPirate();
       break
   }
 
@@ -145,54 +188,27 @@ export async function putResourceIdPosition(options) {
   //
   // throw new Error('<Error message>'); // this will result in a 500
 
-  var data = {}, status = '204';
-
-  // axios.get(`http://192.168.75.36:8080/users/users/${options.resourceId}`)
-  // .then(function (response) {
-  //   const user = {
-  //     "id": response.data.login,
-  //     "position": options.latLng,
-  //     "role": {
-  //       "species": response.data.species,
-  //       "nombreDeFioles": 0
-  //     }
-  //   }
-  
-  //   console.log(user);
-  // })
-  // .catch(function (error) {
-  //   console.error(error);
-  // });
-
-  fs.readFile('./data/data.json', 'utf8', (err, data) => {
-    if (err) {
-        console.error('Erreur lors de la lecture du fichier :', err);
-        return;
-    }
-
-    let users = JSON.parse(data);
-    console.log(options.resourceId);
-    const user = users.find(user => user.id === options.resourceId);
-
-    if (!user) {
-        console.error('user non trouvé');
-        return;
-    }
-
-    user.position = options.latLng; 
-
-    let newUser = JSON.stringify(users, null, 4);
-
-    fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
-        if (err) {
-            console.error('Erreur écriture dans le fichier :', err);
-            return;
-        }
-    });
+  axios.get(`http://192.168.75.36:8080/users/authenticate}`)
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.error(error);
   });
 
-  return {
-    status: status,
-    data: data
-  };
+  try {
+    //faire la vérification de authentification
+    modifyPosition(options.resourceId, options.latLng);
+
+    return {
+      status: '204',
+      data: 'Position modifié'
+    };
+
+  } catch(error){
+    return {
+      status: '400',
+      data: error
+    };
+  }
 }
