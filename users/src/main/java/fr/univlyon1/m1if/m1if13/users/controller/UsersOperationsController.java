@@ -174,11 +174,11 @@ public class UsersOperationsController {
     @Operation(summary = "To let a user authentificate",
             tags = "Operation controller",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "No content"),
+                    @ApiResponse(responseCode = "200", description = "Successful operation"),
                     @ApiResponse(responseCode = "400", description = "Bad request"),
                     @ApiResponse(responseCode = "401", description = "Unauthorized")
             })
-    public ResponseEntity<Void> authenticate(@RequestParam("jwt") final String jwt,
+    public ResponseEntity<String> authenticate(@RequestParam("jwt") final String jwt,
                                              @RequestParam("origin") final String origin)
             throws AuthenticationException, Exception {
         String token = jwt.replace("Bearer ", "");
@@ -186,7 +186,7 @@ public class UsersOperationsController {
         Optional<User> user = userDao.get(login);
         if (user.isPresent()) {
             if (user.get().isConnected()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<String>(user.get().getLogin(), HttpStatus.OK);
             } else {
                 throw new Exception("L'utilisateur devrais être connecté");
             }
