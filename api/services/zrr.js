@@ -1,45 +1,52 @@
 import fs from 'fs';
-export async function getZrr(options) {
-  // Implement your business logic here...
-  //
-  // Return all 2xx and 4xx as follows:
-  //
-  // return {
-  //   status: 'statusCode',
-  //   data: 'response'
-  // }
+import { resolve } from 'path';
 
-  // If an error happens during your business logic implementation,
-  // you can throw it as follows:
-  //
-  // throw new Error('<Error message>'); // this will result in a 500
+function getAllPosition() {
+  return new Promise((resolve, reject) => {
+    fs.readFile('./data/zrrdata.json', 'utf8', (err, json) => {
+
+      if (err) {
+          console.error('Erreur lors de la lecture du fichier :', err);
+          return;
+      }
+      
+      try {
+
+        let zrr = JSON.parse(json);
+
+        if (!zrr || zrr.positionNO == null) {
+            throw new Error('Zrr vide');
+        }
+
+        // console.log(`ZRR-NO ${zrr.positionNO}`);
+        // console.log(`ZRR-NE ${zrr.positionNE}`);
+        // console.log(`ZRR-SO ${zrr.positionSO}`);
+        // console.log(`ZRR-SE ${zrr.positionSE}`);
+
+        resolve(zrr)
+
+      } catch(error) {
+        reject(error);
+      }
+    });
+  })  
+}
+
+export async function getZrr(options) {
   var data = [{}
   ], status = '200';
+  try {
+    const zrr = await getAllPosition();
 
-  fs.readFile('./data/zrrdata.json', 'utf8', (err, json) => {
+    return {
+      status: status,
+      data: zrr
+    };
 
-    if (err) {
-        console.error('Erreur lors de la lecture du fichier :', err);
-        return;
-    }
-
-    let zrr = JSON.parse(json);
-    console.log(zrr);
-    if (!zrr) {
-        console.error('zrr vide');
-        return;
-    }
-
-    console.log(`ZRR-NO ${zrr.positionNO}`);
-    console.log(`ZRR-NE ${zrr.positionNE}`);
-    console.log(`ZRR-SO ${zrr.positionSO}`);
-    console.log(`ZRR-SE ${zrr.positionSE}`);
-    
-  data = zrr;
-  });
-  console.log(data);
-  return {
-    status: status,
-    data: data
-  };
+  } catch(error){
+    return {
+      status: 404,
+      data: "Zrr vide"
+    };
+  }
 }
