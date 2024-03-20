@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -177,8 +178,8 @@ public class UsersOperationsController {
                     @ApiResponse(responseCode = "400", description = "Bad request"),
                     @ApiResponse(responseCode = "401", description = "Unauthorized")
             })
-    public ResponseEntity<String> authenticate(@RequestHeader("Authentication") final String jwt,
-                                             @RequestHeader("origin") final String origin)
+    public ResponseEntity<String> authenticate(@RequestParam("jwt") final String jwt,
+                                             @RequestParam("origin") final String origin)
             throws AuthenticationException, Exception {
         String token = jwt.replace("Bearer ", "");
         String login = verifyToken(token, origin);
