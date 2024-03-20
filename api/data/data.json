@@ -22,5 +22,15 @@
         "potions": 0,
         "terminated": 1,
         "turned": 0
+    },
+    {
+        "id": "badUser",
+        "position": [
+        ],
+        "role": "VILLAGEOIS",
+        "ttl": 0,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
     }
 ]

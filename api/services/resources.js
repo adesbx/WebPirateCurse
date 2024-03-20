@@ -1,34 +1,50 @@
 import axios from 'axios';
 import { Console } from 'console';
 import fs from 'fs';
+
+function getAllRessources() {
+  return new Promise((resolve, reject) => {
+    fs.readFile('./data/data.json', 'utf8', (err, json) => {
+
+      if (err) {
+          console.error('Erreur lors de la lecture du fichier :', err);
+          return;
+      }
+      
+      try {
+
+        let ressources = JSON.parse(json);
+
+        if (!ressources) {
+            throw new Error('Ressources vide');
+        }
+
+        ressources = ressources.filter(ressource => ressource.position && ressource.position.length > 0);
+
+        resolve(ressources)
+      } catch(error) {
+        reject(error);
+      }
+    });
+  })  
+}
+
 export async function getResources(options) {
-  // Implement your business logic here...
-  //
-  // Return all 2xx and 4xx as follows:
-  //
-  // return {
-  //   status: 'statusCode',
-  //   data: 'response'
-  // }
+  try {
+    //faire la vérification de authentification
+    const ressources = await getAllRessources();
 
-  // If an error happens during your business logic implementation,
-  // you can throw it as follows:
-  //
-  // throw new Error('<Error message>'); // this will result in a 500
-  var data = [{
-    "id": "<string>",
-    "position": "<LatLng>",
-    "potions": "<integer>",
-    "role": "<string>",
-    "terminated": "<integer>",
-    "ttl": "<integer>",
-    "turned": "<integer>",
-  }], status = '200';
+    return {
+      status: '200',
+      data: ressources
+    };
 
-  return {
-    status: status,
-    data: data
-  };
+  } catch(error){
+    return {
+      status: '401',
+      data: 'Utilisateur non authentifié'
+    };
+  }
 }
 export async function postResourceId(options) {
   // Implement your business logic here...

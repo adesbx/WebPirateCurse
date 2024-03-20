@@ -33,19 +33,17 @@ function getAllPosition() {
 }
 
 export async function getZrr(options) {
-  var data = [{}
-  ], status = '200';
   try {
     const zrr = await getAllPosition();
 
     return {
-      status: status,
+      status: '200',
       data: zrr
     };
 
   } catch(error){
     return {
-      status: 404,
+      status: '404',
       data: "Zrr vide"
     };
   }
