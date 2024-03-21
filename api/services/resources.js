@@ -190,7 +190,7 @@ export async function putResourceIdPosition(options) {
 
   axios.get(`http://192.168.75.36:8080/users/authenticate}`)
   .then(function (response) {
-    console.log(response);
+    console.log(response.data);
   })
   .catch(function (error) {
     console.error(error);
