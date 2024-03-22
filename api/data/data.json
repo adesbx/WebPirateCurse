@@ -1,7 +1,10 @@
 [
     {
         "id": "toto",
-        "position": {},
+        "position": [
+            "6",
+            "2"
+        ],
         "role": "PIRATE",
         "ttl": 0,
         "potions": 0,
@@ -11,8 +14,8 @@
     {
         "id": "John",
         "position": [
-            "24",
-            "24"
+            "6",
+            "2"
         ],
         "role": "PIRATE",
         "ttl": 0,

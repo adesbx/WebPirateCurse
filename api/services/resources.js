@@ -93,15 +93,14 @@ function villagerIntoPirate() {
 function modifyPosition(id, position) {
   fs.readFile('./data/data.json', 'utf8', (err, data) => {
     if (err) {
-        console.error('Erreur lors de la lecture du fichier :', err);
-        return;
+      throw new Error(400);
     }
 
     let users = JSON.parse(data);
     const user = users.find(user => user.id === id);
 
     if (!user) {
-        throw new Error('User non trouvé');
+      throw new Error(404);
     }
 
     try {
@@ -173,56 +172,64 @@ export async function postResourceId(options) {
   };
 }
 export async function putResourceIdPosition(options, origin, token) {
-  // try {
-  //   modifyPosition(options.resourceId, options.latLng);
-
-  //   return {
-  //     status: '204',
-  //     data: 'Position modifié'
-  //   };
-
-  // } catch(error){
-  //   return {
-  //     status: '400',
-  //     data: error
-  //   };
+  // Implement your business logic here...
+  //
+  // Return all 2xx and 4xx as follows:
+  //
+  // return {
+  //   status: 'statusCode',
+  //   data: 'response'
   // }
 
+  // If an error happens during your business logic implementation,
+  // you can throw it as follows:
+  //
+  // throw new Error('<Error message>'); // this will result in a 500
 
+  try {
+    const login = await axios.get(`http://localhost:8080/authenticate`, {
+      params: {
+        jwt: token,
+        origin: origin
+      }
+    })
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function() {
+      throw new Error(401);
+    });
 
-  axios.get(`http://localhost:8080/authenticate`, {
-    params: {
-      jwt: token,
-      origin: origin
-    }
-  })
-  .then(function (response) {
-   if(response.data == options.resourceId) {
-    try {
+    if (login === options.resourceId) {
       modifyPosition(options.resourceId, options.latLng);
-  
       return {
         status: '204',
         data: 'Position modifié'
       };
-  
-    } catch(error){
+    } else {
       return {
-        status: '400',
-        data: error
+        status: '403',
+        data: 'Pas authorisé'
       };
     }
-   } else {
-    return {
-      status: '403',
-      data: 'Vous n\'êtes pas autorisé'
-    };
-   }
-  })
-  .catch(function (error) {
-    return {
-      status: '401',
-      data: 'Authentication failed'
-    };
-  });
+  } catch(error){
+    let statusCode = parseInt(error.message);
+    switch(statusCode){
+      case 401:
+        return {
+          status: '401',
+          data: 'Authentification failed'
+        };
+      case 404:
+        return {
+          status: '404',
+          data: 'User pas trouvé'
+        };
+      default:
+        return {
+          status: '400',
+          data: error.message
+        };
+    }
+  }
 }
