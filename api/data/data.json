@@ -1,10 +1,7 @@
 [
     {
         "id": "toto",
-        "position": [
-            "24",
-            "24"
-        ],
+        "position": {},
         "role": "PIRATE",
         "ttl": 0,
         "potions": 0,
@@ -22,7 +19,8 @@
         "potions": 0,
         "terminated": 0,
         "turned": 1
-    },{
+    },
+    {
         "id": "titi",
         "position": [
             "6",

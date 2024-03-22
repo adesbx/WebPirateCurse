@@ -102,7 +102,6 @@ function modifyPosition(id, position) {
 
     if (!user) {
         throw new Error('User non trouvé');
-        return;
     }
 
     try {
@@ -173,42 +172,57 @@ export async function postResourceId(options) {
     data: data
   };
 }
-export async function putResourceIdPosition(options) {
-  // Implement your business logic here...
-  //
-  // Return all 2xx and 4xx as follows:
-  //
-  // return {
-  //   status: 'statusCode',
-  //   data: 'response'
+export async function putResourceIdPosition(options, origin, token) {
+  // try {
+  //   modifyPosition(options.resourceId, options.latLng);
+
+  //   return {
+  //     status: '204',
+  //     data: 'Position modifié'
+  //   };
+
+  // } catch(error){
+  //   return {
+  //     status: '400',
+  //     data: error
+  //   };
   // }
 
-  // If an error happens during your business logic implementation,
-  // you can throw it as follows:
-  //
-  // throw new Error('<Error message>'); // this will result in a 500
 
-  axios.get(`http://192.168.75.36:8080/users/authenticate}`)
+
+  axios.get(`http://localhost:8080/authenticate`, {
+    params: {
+      jwt: token,
+      origin: origin
+    }
+  })
   .then(function (response) {
-    console.log(response.data);
+   if(response.data == options.resourceId) {
+    try {
+      modifyPosition(options.resourceId, options.latLng);
+  
+      return {
+        status: '204',
+        data: 'Position modifié'
+      };
+  
+    } catch(error){
+      return {
+        status: '400',
+        data: error
+      };
+    }
+   } else {
+    return {
+      status: '403',
+      data: 'Vous n\'êtes pas autorisé'
+    };
+   }
   })
   .catch(function (error) {
-    console.error(error);
+    return {
+      status: '401',
+      data: 'Authentication failed'
+    };
   });
-
-  try {
-    //faire la vérification de authentification
-    modifyPosition(options.resourceId, options.latLng);
-
-    return {
-      status: '204',
-      data: 'Position modifié'
-    };
-
-  } catch(error){
-    return {
-      status: '400',
-      data: error
-    };
-  }
 }
