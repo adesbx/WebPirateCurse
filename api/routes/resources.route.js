@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
 
 
   try {
-    const result = await getResources(options);
+    const result = await getResources(options, req.headers.origin, req.headers.authentication);
     res.status(result.status || 200).send(result.data);
   }
   catch (err) {
@@ -30,7 +30,7 @@ router.post('/:resourceId', async (req, res, next) => {
   options.operationType = req.body;
 
   try {
-    const result = await postResourceId(options);
+    const result = await postResourceId(options, req.headers.origin, req.headers.authentication);
     res.status(result.status || 200).send(result.data);
   }
   catch (err) {

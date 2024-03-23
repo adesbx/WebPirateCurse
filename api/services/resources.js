@@ -140,9 +140,21 @@ function modifyPosition(id, position) {
   });
 }
 
-export async function getResources(options) {
+export async function getResources(options, origin, token) {
   try {
-    //faire la vérification de authentification
+    const login = await axios.get(`http://localhost:8080/authenticate`, {
+      params: {
+        jwt: token,
+        origin: origin
+      }
+    })
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function() {
+      throw new Error(401);
+    });
+    
     const ressources = await getAllRessources();
 
     return {
@@ -151,10 +163,19 @@ export async function getResources(options) {
     };
 
   } catch(error){
-    return {
-      status: '401',
-      data: 'Utilisateur non authentifié'
-    };
+    let statusCode = parseInt(error.message);
+    switch(statusCode){
+      case 401:
+        return {
+          status: '401',
+          data: 'Authentification failed'
+        };
+      default:
+        return {
+          status: '400',
+          data: error.message
+        };
+    }
   }
 }
 
@@ -191,6 +212,7 @@ export async function postResourceId(options) {
     data: data
   };
 }
+
 export async function putResourceIdPosition(options, origin, token) {
   try {
     const login = await axios.get(`http://localhost:8080/authenticate`, {
@@ -205,7 +227,7 @@ export async function putResourceIdPosition(options, origin, token) {
     .catch(function() {
       throw new Error(401);
     });
-    
+
     if(verifyUserExist(options.resourceId)){
       if (login === options.resourceId) {
         modifyPosition(options.resourceId, options.latLng);

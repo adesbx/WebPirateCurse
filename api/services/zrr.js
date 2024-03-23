@@ -44,7 +44,7 @@ export async function getZrr(options) {
   } catch(error){
     return {
       status: '404',
-      data: "Zrr vide"
+      data: "Zrr non défini"
     };
   }
 }
