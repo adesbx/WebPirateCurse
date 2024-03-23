@@ -3,19 +3,22 @@ import { Console } from 'console';
 import fs from 'fs';
 
 function verifyUserExist(id) {
-  fs.readFile('./data/data.json', 'utf8', (err, data) => {
-    if (err) {
-      throw new Error(400);
-    }
+  return new Promise((resolve, reject) => {
 
-    let users = JSON.parse(data);
-    const user = users.find(user => user.id === id);
+    fs.readFile('./data/data.json', 'utf8', (err, data) => {
+      if (err) {
+        throw new Error(400);
+      }
 
-    if (!user) {
-      return false;
-    } else {
-      return true;
-    }
+      let users = JSON.parse(data);
+      const user = users.find(user => user.id === id);
+      
+      if (!user) {
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    });
   });
 }
 
@@ -202,6 +205,7 @@ export async function putResourceIdPosition(options, origin, token) {
     .catch(function() {
       throw new Error(401);
     });
+    
     if(verifyUserExist(options.resourceId)){
       if (login === options.resourceId) {
         modifyPosition(options.resourceId, options.latLng);
