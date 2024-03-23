@@ -31,7 +31,7 @@ router.post('/:resourceId', async (req, res, next) => {
 
   try {
     const result = await postResourceId(options, req.headers.origin, req.headers.authentication);
-    res.status(result.status || 200).send(result.data);
+    return res.status(result.status|| 200).send(result.data);
   }
   catch (err) {
     return res.status(500).send({
@@ -48,7 +48,7 @@ router.put('/:resourceId/position', async (req, res, next) => {
   options.latLng = req.body;
   try {
     const result = await putResourceIdPosition(options, req.headers.origin, req.headers.authentication);
-    res.status(result.status || 200).send(result.data);
+    return res.status(result.status).send(result.data);
   }
   catch (err) {
     return res.status(500).send({

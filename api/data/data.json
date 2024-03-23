@@ -9,19 +9,19 @@
         "ttl": 0,
         "potions": 0,
         "terminated": 0,
-        "turned": 1
+        "turned": 0
     },
     {
         "id": "John",
         "position": [
-            "1",
+            "3",
             "2"
         ],
-        "role": "PIRATE",
+        "role": "VILLAGEOIS",
         "ttl": 0,
-        "potions": 0,
+        "potions": 2,
         "terminated": 0,
-        "turned": 1
+        "turned": 0
     },
     {
         "id": "titi",
@@ -29,10 +29,10 @@
             "6",
             "2"
         ],
-        "role": "VILLAGEOIS",
+        "role": "PIRATE",
         "ttl": 0,
-        "potions": 0,
-        "terminated": 1,
+        "potions": 1,
+        "terminated": 10,
         "turned": 0
     },
     {
@@ -40,6 +40,18 @@
         "position": [],
         "role": "VILLAGEOIS",
         "ttl": 0,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "potion1",
+        "position": [
+            "6",
+            "2"
+        ],
+        "role": "FLASK",
+        "ttl": 50,
         "potions": 0,
         "terminated": 0,
         "turned": 0
