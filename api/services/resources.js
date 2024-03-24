@@ -55,54 +55,61 @@ function getAllRessources() {
 }
 
 function grabPotion(userSource, potion) {
-  fs.readFile('./data/data.json', 'utf8', (err, data) => {
-    if (err) {
-      throw new Error(400);
-    }
-    try {
-      let users = JSON.parse(data);
-      const userS = users.find(user => user.id === userSource);
-      const userD = users.find(user => user.id === potion);
-
-      if (!userS || !userD) {
-        throw new Error(404);
+  return new Promise((resolve, reject) => {
+    fs.readFile('./data/data.json', 'utf8', (err, data) => {
+      if (err) {
+        throw new Error(400);
       }
+      try {
+        let users = JSON.parse(data);
+        const userS = users.find(user => user.id === userSource);
+        const userD = users.find(user => user.id === potion);
 
-      const [x1, y1] = userS.position.map(Number);
-      const [x2, y2] = userD.position.map(Number);
-      
-      const dist = distance(x1, y1, x2, y2);
+        if (!userS || !userD) {
+          throw new Error(404);
+        }
 
-      if(userD.role == "FLASK" && dist <= 5) {
-        userS.potions += 1;
+        const [x1, y1] = userS.position.map(Number);
+        const [x2, y2] = userD.position.map(Number);
+        
+        const dist = distance(x1, y1, x2, y2);
 
-        //l'utilisateur prends le ttl de la potion
-        userS.ttl = userD.ttl;
+        if(userD.role == "FLASK") {
+          if (dist <= 5) {
+            userS.potions += 1;
 
-        //supprimer la potion
-        const userDIndex = users.findIndex(user => user.id === potion);
-        users.splice(userDIndex, 1);
-      } else {
-        //TODO mal géré stop le programme
-        throw new Error(400)
-      }
-
-      let newUser = JSON.stringify(users, null, 4);
-
-      fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
-          if (err) {
-              console.error('Erreur écriture dans le fichier :', err);
-              return;
+            //l'utilisateur prends le ttl de la potion
+            userS.ttl = userD.ttl;
+    
+            //supprimer la potion
+            const userDIndex = users.findIndex(user => user.id === potion);
+            users.splice(userDIndex, 1);
+          } else {
+            throw new Error(403);
           }
-      });
-    } catch(error) {
-      reject(error);
-    }
+        } else {
+          throw new Error(400)
+        }
+
+        let newUser = JSON.stringify(users, null, 4);
+
+        fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
+            if (err) {
+                console.error('Erreur écriture dans le fichier :', err);
+                return;
+            }
+        });
+        resolve();
+      } catch(error) {
+        reject(error);
+      }
+    });
   });
 }
 
 function terminatePirate(userSource, userDestine) {
-  fs.readFile('./data/data.json', 'utf8', (err, data) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile('./data/data.json', 'utf8', (err, data) => {
     if (err) {
       throw new Error(400);
     }
@@ -115,15 +122,14 @@ function terminatePirate(userSource, userDestine) {
         throw new Error(404);
       }
 
-      if(userD.role == "PIRATE" && userS.potions > 0) {
+      if(userS.role == "VILLAGEOIS" && userD.role == "PIRATE" && userS.potions > 0) {
         userS.potions -= 1;
         userS.terminated += 1;
 
-        //supprimer la potion
+        //supprimer le pirate
         const userDIndex = users.findIndex(user => user.id === userDestine);
         users.splice(userDIndex, 1);
       } else {
-        //TODO mal géré stop le programme
         throw new Error(400)
       }
 
@@ -135,78 +141,86 @@ function terminatePirate(userSource, userDestine) {
               return;
           }
       });
+      resolve();
     } catch(error) {
       reject(error);
     }
   });
+ });
 }
 
 function villagerIntoPirate(userSource, userDestine) {
-  fs.readFile('./data/data.json', 'utf8', (err, data) => {
-    if (err) {
-      throw new Error(400);
-    }
-    try {
-      let users = JSON.parse(data);
-      const userS = users.find(user => user.id === userSource);
-      const userD = users.find(user => user.id === userDestine);
-
-      if (!userS || !userD) {
-        throw new Error(404);
+  return new Promise((resolve, reject) => {
+    fs.readFile('./data/data.json', 'utf8', (err, data) => {
+      if (err) {
+        throw new Error(400);
       }
+      try {
+        let users = JSON.parse(data);
+        const userS = users.find(user => user.id === userSource);
+        const userD = users.find(user => user.id === userDestine);
 
-      if(userD.role == "VILLAGEOIS" && userS.potions > 0) {
-        userS.potions -= 1;
-        userS.turned += 1;
-    
-        userD.role = "PIRATE";
-        userD.terminated = 0;
-      } else {
-        //TODO mal géré stop le programme
-        throw new Error(400)
+        if (!userS || !userD) {
+          throw new Error(404);
+        }
+
+        if(userS.role == "PIRATE" && userD.role == "VILLAGEOIS" && userS.potions > 0) {
+          userS.potions -= 1;
+          userS.turned += 1;
+      
+          userD.role = "PIRATE";
+          userD.terminated = 0;
+        } else {
+          //TODO mal géré stop le programme
+          throw new Error(400)
+        }
+
+        let newUser = JSON.stringify(users, null, 4);
+
+        fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
+            if (err) {
+                console.error('Erreur écriture dans le fichier :', err);
+                return;
+            }
+        });
+        resolve();
+      } catch(error) {
+        reject(error);
       }
-
-      let newUser = JSON.stringify(users, null, 4);
-
-      fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
-          if (err) {
-              console.error('Erreur écriture dans le fichier :', err);
-              return;
-          }
-      });
-    } catch(error) {
-      reject(error);
-    }
+    });
   });
 }
 
 function modifyPosition(id, position) {
-  fs.readFile('./data/data.json', 'utf8', (err, data) => {
-    if (err) {
-      throw new Error(400);
-    }
+  return new Promise((resolve, reject) => {
+    fs.readFile('./data/data.json', 'utf8', (err, data) => {
+      if (err) {
+        throw new Error(400);
+      }
 
-    let users = JSON.parse(data);
-    const user = users.find(user => user.id === id);
+      let users = JSON.parse(data);
+      const user = users.find(user => user.id === id);
 
-    if (!user) {
-      throw new Error(404);
-    }
+      if (!user) {
+        throw new Error(404);
+      }
 
-    try {
-      user.position = position; 
+      try {
+        user.position = position; 
 
-      let newUser = JSON.stringify(users, null, 4);
-  
-      fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
-          if (err) {
-              console.error('Erreur écriture dans le fichier :', err);
-              return;
-          }
-      });
-    } catch(error) {
-      reject(error);
-    }
+        let newUser = JSON.stringify(users, null, 4);
+    
+        fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
+            if (err) {
+                console.error('Erreur écriture dans le fichier :', err);
+                return;
+            }
+        });
+        resolve();
+      } catch(error) {
+        reject(error);
+      }
+    });
   });
 }
 
@@ -265,26 +279,31 @@ export async function postResourceId(options, origin, token) {
     });
 
     console.log(options.operationType.operationType);
-    
-    switch(options.operationType.operationType) {
-      case "grab potion flask":
-        grabPotion(login, options.resourceId);
-        break
-      case "terminate pirate":
-        terminatePirate(login, options.resourceId);
-        break
-      case "turn villager into pirate":
-        villagerIntoPirate(login, options.resourceId);
-        break
-      default:
-        console.log("default");
-        break
-    }
+    if(verifyUserExist(options.resourceId)){
 
-    return {
-      status: '204',
-      data: 'Opération réalisé'
-    };
+      switch(options.operationType.operationType) {
+        case "grab potion flask":
+          await grabPotion(login, options.resourceId);
+          break
+        case "terminate pirate":
+          await terminatePirate(login, options.resourceId);
+          break
+        case "turn villager into pirate":
+          await villagerIntoPirate(login, options.resourceId);
+          break
+        default:
+          console.log("default");
+          break
+      }
+
+      return {
+        status: '204',
+        data: 'Opération réalisé'
+      };
+
+    } else {
+      throw new Error(404);
+    }
 
   } catch(error) {
     let statusCode = parseInt(error.message);
@@ -297,18 +316,18 @@ export async function postResourceId(options, origin, token) {
       case 403: {
         return {
           status: '403',
-          data: 'Pas authorisé'
+          data: 'User trop loin'
         };
       }
       case 404:
         return {
           status: '404',
-          data: 'User pas trouvé'
+          data: 'Ressource pas trouvé'
         };
       default:
         return {
           status: '400',
-          data: error.message
+          data: 'Problème sur l\'opération'
         };
     }
   }
@@ -331,7 +350,7 @@ export async function putResourceIdPosition(options, origin, token) {
 
     if(verifyUserExist(options.resourceId)){
       if (login === options.resourceId) {
-        modifyPosition(options.resourceId, options.latLng);
+        await modifyPosition(options.resourceId, options.latLng);
         return {
           status: '204',
           data: 'Position modifié'
