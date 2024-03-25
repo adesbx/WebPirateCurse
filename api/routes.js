@@ -1,5 +1,6 @@
 import resources from './routes/resources.route.js'
 import zrr from './routes/zrr.route.js'
+import admin from './routes/admin.route.js'
 
 export default function (app) {
   /*
@@ -7,5 +8,6 @@ export default function (app) {
   */
   app.use('/resources', resources);
   app.use('/zrr', zrr);
+  app.use('/admin', admin);
 
 };
