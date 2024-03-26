@@ -11,42 +11,35 @@
         <link rel="stylesheet" href="css/style.css"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
     <script>		
-    	async function authenticateAdmin() {
-			const url = 'http://localhost:8080/login';
-            const password = document.getElementById('pass').value;
-            const login = 'ADMIN';
-            const body = {
-                login: login,
-                password: password
-            };
-
-            const headers = {
-                'Content-Type': 'application/json',
-            }
-
-            const requestConfig = {
-                method: "POST",
-                headers: headers,
-                body: JSON.stringify(body),
-                mode: "cors"
-            };
-
-            try {
-                const response = await fetch(url, requestConfig);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                } else {
-                    //console.log(response.headers.get('Authorization'));
-                    const token = response.headers.get('Authorization');
-                    localStorage.setItem('token', token);
-                    window.location.href = 'admin.html';
-                    return true;
-                }
-
-            } catch (error) {
-                console.error('Error:', error);
-                return false;
-            }
+    	async function authenticateAdmin(e) {
+			e.preventDefault();
+			const body = {
+				login: "ADMIN",
+				password: document.getElementById("pass").value
+    		};
+			const headers = new Headers();
+			headers.append("Content-Type", "application/json");
+			const requestConfig = {
+				method: "POST",
+				headers: headers,
+				body: JSON.stringify(body),
+				mode: "cors"
+			};
+			const response = await fetch(apiBase + "/login", requestConfig)
+				.then((response) => {
+					if (response.headers.get("Authentication")) {
+						const token = response.headers.get("Authentication");
+						localStorage.setItem('token', token);
+						window.location.href = 'admin.html';
+						return true;
+					} else {
+						console.log("Mauvais mot de passe");
+						return false;
+					}
+				})
+			.catch((err) => {
+				console.error("In post login: " + err);
+			})
     	}
     </script>
     </head>
@@ -59,8 +52,7 @@
 		<section>
 			<h2>Page de connexion. Réservée aux Sages et à Merlini.</h2>
 			<div class="content">
-				<p><strong>TODO:</strong> mettre en place le script de connexion en tant que fonction de validation du formulaire. Si un token est récupéré dans la réponse, elle renverra <code>true</code> et le changement de page sera déclenché.</p>
-				<form onsubmit="return authenticateAdmin();" class="pure-form">
+				<form onsubmit="return authenticateAdmin(event);" class="pure-form">
 					<fieldset style="display: flow-root;">
 						<label for="pass" class="first">Mot de passe </label> <input type="password" id="pass">&nbsp;&nbsp;
 						<input type="submit" value="&#x1F52E;" class="iconic">
