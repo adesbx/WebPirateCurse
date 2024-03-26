@@ -12,20 +12,41 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
     <script>		
     	async function authenticateAdmin() {
-			var pass = document.getElementById("pass").value;
-			await axios.get(apiBase + `/login`, {
-			params: {
-				login: "ADMIN",
-				password: pass 
-			}
-			})
-			.then(function (response) {
-				console.log(response.headers);
-				return false;
-			})
-			.catch(function() {
-				return false;
-			});
+			const url = 'http://localhost:8080/login';
+            const password = document.getElementById('pass').value;
+            const login = 'ADMIN';
+            const body = {
+                login: login,
+                password: password
+            };
+
+            const headers = {
+                'Content-Type': 'application/json',
+            }
+
+            const requestConfig = {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(body),
+                mode: "cors"
+            };
+
+            try {
+                const response = await fetch(url, requestConfig);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                } else {
+                    //console.log(response.headers.get('Authorization'));
+                    const token = response.headers.get('Authorization');
+                    localStorage.setItem('token', token);
+                    window.location.href = 'admin.html';
+                    return true;
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                return false;
+            }
     	}
     </script>
     </head>
