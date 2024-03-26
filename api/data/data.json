@@ -14,7 +14,7 @@
     {
         "id": "John",
         "position": [
-            "3",
+            "30",
             "2"
         ],
         "role": "VILLAGEOIS",
@@ -52,6 +52,30 @@
         ],
         "role": "FLASK",
         "ttl": 50,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "potion2",
+        "position": [
+            "1",
+            "2"
+        ],
+        "role": "FLASK",
+        "ttl": 60,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "potion3",
+        "position": [
+            "1",
+            "2"
+        ],
+        "role": "FLASK",
+        "ttl": 60,
         "potions": 0,
         "terminated": 0,
         "turned": 0
