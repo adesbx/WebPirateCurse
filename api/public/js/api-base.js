@@ -5,4 +5,4 @@
  * il faut rajouter l'origine du client dans les paramètres du filtre CORS (fichier <code>web.xml</code> du TP4).
  * @type {string}
  */
-const apiBase = "http://localhost:3000";
+const apiBase = "http://localhost:8080";
