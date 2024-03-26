@@ -73,7 +73,7 @@ public class UserRessourceController {
      * @return une vue
      */
     @ResponseBody
-    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.36", "https://192.168.75.36"})
+    @CrossOrigin(origins = {"http://localhost:8080","http://localhost:3000", "http://192.168.75.36", "https://192.168.75.36"})
     @GetMapping(value = "/users/{login}", produces = {"text/html"})
     public ModelAndView getUsersHTML(@PathVariable final String login) {
         ModelAndView mav = new ModelAndView();
@@ -89,7 +89,7 @@ public class UserRessourceController {
      * @return un ensemble de login
      */
     @ResponseBody
-    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.36", "https://192.168.75.36"})
+    @CrossOrigin(origins = {"http://localhost:8080","http://localhost:3000", "http://192.168.75.36", "https://192.168.75.36"})
     @GetMapping(value = "/users/{login}", produces = {"application/json", "application/xml"})
     @Operation(summary = "Get one user in json/xml/html format",
             tags = "Operation REST",
