@@ -79,5 +79,29 @@
         "potions": 0,
         "terminated": 0,
         "turned": 0
+    },
+    {
+        "id": "potion4",
+        "position": [
+            1,
+            2
+        ],
+        "role": "FLASK",
+        "ttl": 60,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "potion5",
+        "position": [
+            1,
+            2
+        ],
+        "role": "FLASK",
+        "ttl": "20",
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
     }
 ]

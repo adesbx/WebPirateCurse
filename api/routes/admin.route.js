@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import express from 'express';
-import { postInitZRR, postSpawnFlask } from '../services/admin.js';
+import { postInitZRR, postSpawnFlask, putTTL } from '../services/admin.js';
 
 const router = new Router();
 //pour avoir le body
@@ -13,6 +13,26 @@ router.post('/initZRR', async (req, res, next) => {
   
   try {
     const result = await postInitZRR(options, req.headers.origin, req.headers.authentication);
+    if (result.status == 204) {
+      return res.status(result.status).send();
+    } else {
+      return res.status(result.status).send(result.data);
+    }
+  }
+  catch (err) {
+    return res.status(500).send({
+      error: err || 'Something went wrong.'
+    });
+
+  }
+});
+
+router.put('/modifyTTL', async (req, res, next) => {
+  let options = { }
+  options.ttl = req.body.ttl;
+  
+  try {
+    const result = await putTTL(options, req.headers.origin, req.headers.authentication);
     if (result.status == 204) {
       return res.status(result.status).send();
     } else {
