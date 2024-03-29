@@ -27,7 +27,19 @@ function initMap() {
 	// Clic sur la carte
 	mymap.on('click', e => {
 		updateMap([e.latlng.lat, e.latlng.lng], mymap.getZoom());
+		document.getElementById("lat").value = e.latlng.lat;
+		document.getElementById("lon").value = e.latlng.lng;
+		document.getElementById("zoom").value = mymap.getZoom();
 	});
+
+	//Modif du formulaire
+	document.getElementById("setLatLonZoom").addEventListener("change", function () {
+        let tempLat = document.getElementById("lat").value;	
+		let tempLon = document.getElementById("lon").value;
+		let zoom = document.getElementById("zoom").value;
+
+		updateMap([tempLat, tempLon], zoom);
+    });
 
 	return mymap;
 }
