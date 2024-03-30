@@ -224,6 +224,56 @@ function modifyPosition(id, position) {
   });
 }
 
+function createNewUser(newUser) {
+  return new Promise((resolve, reject) => {
+    fs.readFile('./data/data.json', 'utf8', (err, data) => {
+      if (err) {
+        throw new Error(400);
+      }
+
+      let users = JSON.parse(data);
+      if (!users) {
+        throw new Error(404);
+      }
+
+      try {
+        users.push(newUser)
+
+        let newUsers = JSON.stringify(users, null, 4);
+    
+        fs.writeFile('./data/data.json', newUsers, 'utf8', (err) => {
+            if (err) {
+                console.error('Erreur écriture dans le fichier :', err);
+                return;
+            }
+        });
+        resolve();
+      } catch(error) {
+        reject(error);
+      }
+    });
+  });
+}
+
+async function getNewUser(origin, login) {
+  try {
+    const newUser = await axios.get(`http://localhost:8080/users/`+login, {
+      params: {
+        origin: origin
+      }
+    })
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function() {
+      throw new Error(404);
+    });
+      createNewUser(newUser);
+  } catch(e) {
+    throw new Error(e);
+  }
+}
+
 export async function getResources(options, origin, token) {
   try {
     const login = await axios.get(`http://localhost:8080/authenticate`, {
@@ -359,7 +409,7 @@ export async function putResourceIdPosition(options, origin, token) {
         throw new Error(403);
       }
     } else {
-      throw new Error(404);
+      getNewUser(origin, login);
     }
   } catch(error) {
     let statusCode = parseInt(error.message);
