@@ -1,5 +1,4 @@
 import fs from 'fs';
-import { resolve } from 'path';
 
 function getAllPosition() {
   return new Promise((resolve, reject) => {

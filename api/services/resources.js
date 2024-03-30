@@ -27,7 +27,7 @@ function verifyUserExist(id) {
   });
 }
 
-function getAllRessources() {
+function getAllresources() {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, json) => {
 
@@ -38,15 +38,15 @@ function getAllRessources() {
       
       try {
 
-        let ressources = JSON.parse(json);
+        let resources = JSON.parse(json);
 
-        if (!ressources) {
-            throw new Error('Ressources vide');
+        if (!resources) {
+            throw new Error('resources vide');
         }
 
-        ressources = ressources.filter(ressource => ressource.position && ressource.position.length > 0);
+        resources = resources.filter(resource => resource.position && resource.position.length > 0);
 
-        resolve(ressources)
+        resolve(resources)
       } catch(error) {
         reject(error);
       }
@@ -239,11 +239,11 @@ export async function getResources(options, origin, token) {
       throw new Error(401);
     });
     
-    const ressources = await getAllRessources();
+    const resources = await getAllresources();
 
     return {
       status: '200',
-      data: ressources
+      data: resources
     };
 
   } catch(error){
@@ -322,7 +322,7 @@ export async function postResourceId(options, origin, token) {
       case 404:
         return {
           status: '404',
-          data: 'Ressource pas trouvé'
+          data: 'resource pas trouvé'
         };
       default:
         return {
