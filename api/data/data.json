@@ -103,5 +103,29 @@
         "potions": 0,
         "terminated": 0,
         "turned": 0
+    },
+    {
+        "id": "ADMIN",
+        "position": [
+            "30",
+            "2"
+        ],
+        "role": "ADMIN",
+        "ttl": 0,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "potion6",
+        "position": [
+            1,
+            2
+        ],
+        "role": "FLASK",
+        "ttl": 60,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
     }
 ]

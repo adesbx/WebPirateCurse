@@ -7,7 +7,7 @@ function distance(x1, y1, x2, y2) {
   return Math.sqrt(X * X + Y * Y);
 }
 
-function verifyUserExist(id) {
+async function verifyUserExist(id) {
   return new Promise((resolve, reject) => {
 
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
@@ -17,8 +17,8 @@ function verifyUserExist(id) {
 
       let users = JSON.parse(data);
       const user = users.find(user => user.id === id);
-      
-      if (!user) {
+
+      if (!user || user === undefined ) {
         resolve(false);
       } else {
         resolve(true);
@@ -224,7 +224,7 @@ function modifyPosition(id, position) {
   });
 }
 
-function createNewUser(newUser) {
+async function createNewUser(user, position) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
@@ -237,7 +237,17 @@ function createNewUser(newUser) {
       }
 
       try {
-        users.push(newUser)
+        let newUser = {
+          "id": user.login,
+          "position": position,
+          "role": user.species,
+          "ttl": 0,
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+        };
+
+        users.push(newUser);
 
         let newUsers = JSON.stringify(users, null, 4);
     
@@ -255,20 +265,17 @@ function createNewUser(newUser) {
   });
 }
 
-async function getNewUser(origin, login) {
+async function getNewUser(login, position) {
   try {
-    const newUser = await axios.get(`http://localhost:8080/users/`+login, {
-      params: {
-        origin: origin
-      }
-    })
+    const newUser = await axios.get(`http://localhost:8080/users/`+ login)
     .then(function (response) {
-      return response.data;
+      return response.data;      
     })
     .catch(function() {
       throw new Error(404);
     });
-      createNewUser(newUser);
+
+    await createNewUser(newUser, position);
   } catch(e) {
     throw new Error(e);
   }
@@ -329,7 +336,7 @@ export async function postResourceId(options, origin, token) {
     });
 
     console.log(options.operationType.operationType);
-    if(verifyUserExist(options.resourceId)){
+    if(await verifyUserExist(options.resourceId)){
 
       switch(options.operationType.operationType) {
         case "grab potion flask":
@@ -398,7 +405,7 @@ export async function putResourceIdPosition(options, origin, token) {
       throw new Error(401);
     });
 
-    if(verifyUserExist(options.resourceId)){
+    if(await verifyUserExist(options.resourceId)) {
       if (login === options.resourceId) {
         await modifyPosition(options.resourceId, options.latLng);
         return {
@@ -409,7 +416,11 @@ export async function putResourceIdPosition(options, origin, token) {
         throw new Error(403);
       }
     } else {
-      getNewUser(origin, login);
+      getNewUser(login, options.latLng);
+      return {
+        status: '204',
+        data: 'Position modifié'
+      };
     }
   } catch(error) {
     let statusCode = parseInt(error.message);
