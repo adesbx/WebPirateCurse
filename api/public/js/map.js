@@ -32,7 +32,7 @@ function initMap() {
 		document.getElementById("zoom").value = mymap.getZoom();
 	});
 
-	//Modif du formulaire
+	//Modif du formulairee
 	document.getElementById("setLatLonZoom").addEventListener("change", function () {
         let tempLat = document.getElementById("lat").value;	
 		let tempLon = document.getElementById("lon").value;
