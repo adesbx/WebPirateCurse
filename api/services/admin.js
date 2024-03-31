@@ -88,13 +88,13 @@ async function newFlaskId() {
 
 async function verifyRole(login, origin) {
   return new Promise(async (resolve, reject) => {
-    await axios.get(`https://192.168.75.36:8443/users/users/${login}`, {
+    await axios.get(`http://192.168.75.36:8080/users/users/${login}`, {
       headers: {
         Origin: origin
       }
     })
     .then(function(response) {
-      if(response.data.species == 'ADMIN') {
+      if(response.data.species === 'ADMIN') {
         resolve(true);
       } else {
         resolve(false);
