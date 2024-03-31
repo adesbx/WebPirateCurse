@@ -88,18 +88,17 @@ async function newFlaskId() {
 
 async function verifyRole(login, origin) {
   return new Promise(async (resolve, reject) => {
-    await axios.get(`http://192.168.75.36:8080/users/${login}`, {
+    await axios.get(`http://192.168.75.36:8080/users/users/${login}`, {
     })
     .then(function(response) {
-      console.log(response.data.species);
       if(response.data.species === 'ADMIN') {
         resolve(true);
       } else {
         resolve(false);
       }
     })
-    .catch(function() {
-      reject(new Error(404));
+    .catch(function(e) {
+      reject(new Error(e));
     })
   })
 }

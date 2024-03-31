@@ -127,5 +127,17 @@
         "potions": 0,
         "terminated": 0,
         "turned": 0
+    },
+    {
+        "id": "potion7",
+        "position": [
+            1,
+            2
+        ],
+        "role": "FLASK",
+        "ttl": "20",
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
     }
 ]
