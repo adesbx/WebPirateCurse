@@ -5,7 +5,7 @@ let globalTtl=60;
 
 async function authenticate(token, origin) {
   return new Promise(async (resolve, reject) => {
-  await axios.get(`https://192.168.75.36/api/authenticate`, {
+  await axios.get(`https://192.168.75.36:8443/users/authenticate`, {
       params: {
         jwt: token,
         origin: origin
@@ -88,7 +88,7 @@ async function newFlaskId() {
 
 async function verifyRole(login, origin) {
   return new Promise(async (resolve, reject) => {
-    await axios.get(`https://192.168.75.36/api/users/${login}`, {
+    await axios.get(`https://192.168.75.36:8443/users/users/${login}`, {
       headers: {
         Origin: origin
       }

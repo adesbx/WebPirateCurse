@@ -226,7 +226,7 @@ async function modifyPosition(id, position) {
 
 export async function getResources(options, origin, token) {
   try {
-    const login = await axios.get(`https://192.168.75.36/api/authenticate`, {
+    const login = await axios.get(`https://192.168.75.36:8443/users/authenticate`, {
       params: {
         jwt: token,
         origin: origin
@@ -265,7 +265,7 @@ export async function getResources(options, origin, token) {
 
 export async function postResourceId(options, origin, token) {
   try {
-    const login = await axios.get(`https://192.168.75.36/api/authenticate`, {
+    const login = await axios.get(`https://192.168.75.36:8443/users/authenticate`, {
       params: {
         jwt: token,
         origin: origin
@@ -334,7 +334,7 @@ export async function postResourceId(options, origin, token) {
 
 export async function putResourceIdPosition(options, origin, token) {
   try {
-    const login = await axios.get(`https://192.168.75.36/api/authenticate`, {
+    const login = await axios.get(`https://192.168.75.36:8443/users/authenticate`, {
       params: {
         jwt: token,
         origin: origin
