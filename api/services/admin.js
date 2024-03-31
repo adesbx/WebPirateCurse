@@ -14,8 +14,8 @@ async function authenticate(token, origin) {
     .then(function (response) {
       resolve(response.data);
     })
-    .catch(function() {
-      reject(new Error(401));
+    .catch(function(e) {
+      reject(new Error(e));
     });
   })
 }
