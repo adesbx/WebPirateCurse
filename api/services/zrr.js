@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-function getAllPosition() {
+async function getAllPosition() {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/zrrdata.json', 'utf8', (err, json) => {
 
@@ -16,11 +16,6 @@ function getAllPosition() {
         if (!zrr || zrr.positionNO == null) {
             throw new Error('Zrr vide');
         }
-
-        // console.log(`ZRR-NO ${zrr.positionNO}`);
-        // console.log(`ZRR-NE ${zrr.positionNE}`);
-        // console.log(`ZRR-SO ${zrr.positionSO}`);
-        // console.log(`ZRR-SE ${zrr.positionSE}`);
 
         resolve(zrr)
 

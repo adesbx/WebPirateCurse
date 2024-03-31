@@ -27,7 +27,7 @@ async function verifyUserExist(id) {
   });
 }
 
-function getAllresources() {
+async function getAllresources() {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, json) => {
 
@@ -54,7 +54,7 @@ function getAllresources() {
   })  
 }
 
-function grabPotion(userSource, potion) {
+async function grabPotion(userSource, potion) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
@@ -107,7 +107,7 @@ function grabPotion(userSource, potion) {
   });
 }
 
-function terminatePirate(userSource, userDestine) {
+async function terminatePirate(userSource, userDestine) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
     if (err) {
@@ -149,7 +149,7 @@ function terminatePirate(userSource, userDestine) {
  });
 }
 
-function villagerIntoPirate(userSource, userDestine) {
+async function villagerIntoPirate(userSource, userDestine) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
@@ -191,7 +191,7 @@ function villagerIntoPirate(userSource, userDestine) {
   });
 }
 
-function modifyPosition(id, position) {
+async function modifyPosition(id, position) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
@@ -222,63 +222,6 @@ function modifyPosition(id, position) {
       }
     });
   });
-}
-
-async function createNewUser(user, position) {
-  return new Promise((resolve, reject) => {
-    fs.readFile('./data/data.json', 'utf8', (err, data) => {
-      if (err) {
-        throw new Error(400);
-      }
-
-      let users = JSON.parse(data);
-      if (!users) {
-        throw new Error(404);
-      }
-
-      try {
-        let newUser = {
-          "id": user.login,
-          "position": position,
-          "role": user.species,
-          "ttl": 0,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-        };
-
-        users.push(newUser);
-
-        let newUsers = JSON.stringify(users, null, 4);
-    
-        fs.writeFile('./data/data.json', newUsers, 'utf8', (err) => {
-            if (err) {
-                console.error('Erreur écriture dans le fichier :', err);
-                return;
-            }
-        });
-        resolve();
-      } catch(error) {
-        reject(error);
-      }
-    });
-  });
-}
-
-async function getNewUser(login, position) {
-  try {
-    const newUser = await axios.get(`http://localhost:8080/users/`+ login)
-    .then(function (response) {
-      return response.data;      
-    })
-    .catch(function() {
-      throw new Error(404);
-    });
-
-    await createNewUser(newUser, position);
-  } catch(e) {
-    throw new Error(e);
-  }
 }
 
 export async function getResources(options, origin, token) {
@@ -335,7 +278,6 @@ export async function postResourceId(options, origin, token) {
       throw new Error(401);
     });
 
-    console.log(options.operationType.operationType);
     if(await verifyUserExist(options.resourceId)){
 
       switch(options.operationType.operationType) {
@@ -416,11 +358,7 @@ export async function putResourceIdPosition(options, origin, token) {
         throw new Error(403);
       }
     } else {
-      getNewUser(login, options.latLng);
-      return {
-        status: '204',
-        data: 'Position modifié'
-      };
+      throw new Error(404);
     }
   } catch(error) {
     let statusCode = parseInt(error.message);

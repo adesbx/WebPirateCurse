@@ -3,7 +3,7 @@ import fs from 'fs';
 
 let globalTtl=60;
 
-function authenticate(token, origin) {
+async function authenticate(token, origin) {
   return new Promise(async (resolve, reject) => {
   await axios.get(`http://localhost:8080/authenticate`, {
       params: {
@@ -21,7 +21,7 @@ function authenticate(token, origin) {
 }
 
 
-function setZRR(dataZRR) {
+async function setZRR(dataZRR) {
   return new Promise((resolve, reject) => {
     try {
       const jsonDataZRR = JSON.stringify(dataZRR, null, 4);
@@ -39,7 +39,7 @@ function setZRR(dataZRR) {
 }
 
 
-function spawnFlask(dataFlask) {
+async function spawnFlask(dataFlask) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
@@ -64,7 +64,7 @@ function spawnFlask(dataFlask) {
 }
 
 
-function newFlaskId() {
+async function newFlaskId() {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
@@ -86,7 +86,7 @@ function newFlaskId() {
   });
 }
 
-function verifyRole(login, origin) {
+async function verifyRole(login, origin) {
   return new Promise(async (resolve, reject) => {
     await axios.get(`http://localhost:8080/users/${login}`, {
       headers: {
@@ -106,7 +106,7 @@ function verifyRole(login, origin) {
   })
 }
 
-function verifyPositionInZRR(position) {
+async function verifyPositionInZRR(position) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/zrrdata.json', 'utf8', (err, data) => {
       if (err) {
@@ -114,12 +114,6 @@ function verifyPositionInZRR(position) {
       }
       try {
         const zrrdata = JSON.parse(data);
-        console.log(zrrdata.positionNE);
-        console.log(position);
-        console.log(position[0] < zrrdata.positionNE[0]);
-        console.log(position[0] > zrrdata.positionSO[0]);
-        console.log(position[1] < zrrdata.positionNE[1]);
-        console.log(position[1] > zrrdata.positionSO[1]);
         if(position[0] < zrrdata.positionNE[0] && position[0] > zrrdata.positionSO[0]
           && position[1] < zrrdata.positionNE[1] && position[1] > zrrdata.positionSO[1]) {
             resolve(true);
@@ -136,7 +130,7 @@ function verifyPositionInZRR(position) {
 export async function postInitZRR(options, origin, token) {
   try {
    const login = await authenticate(token, origin);
-   if(verifyRole(login, origin)) {
+   if(await verifyRole(login, origin)) {
     let SO,NE,SE,NO;
     if(options.latLng1[0]<options.latLng2[0]) { // c'est O
       if(options.latLng1[1]<options.latLng2[1]) { // c'est SO
@@ -210,7 +204,7 @@ export async function postInitZRR(options, origin, token) {
 export async function putTTL(options, origin, token) {
   try {
     const login = await authenticate(token, origin);
-    if(verifyRole(login, origin)) {
+    if(await verifyRole(login, origin)) {
       if(options.ttl >= 3) {
         globalTtl = options.ttl;
         return {
@@ -253,8 +247,8 @@ export async function putTTL(options, origin, token) {
 export async function postSpawnFlask(options, origin, token) {
   try {
     const login = await authenticate(token, origin);
-    if(verifyRole(login, origin)) {
-      if(verifyPositionInZRR(options.latLng)) {
+    if(await verifyRole(login, origin)) {
+      if(await verifyPositionInZRR(options.latLng)) {
         const newId = await newFlaskId();
         const dataFlask = {
             "id": "potion"+newId,
