@@ -46,7 +46,9 @@ public class UsersOperationsController {
      * @return Une ResponseEntity avec le JWT dans le header "Authentication" si le
      * login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
      */
-    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.36", "https://192.168.75.36"})
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3376", "http://192.168.75.36:8080",
+            "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
+            "https://192.168.75.36/game", "https://192.168.75.36/api"})
     @ResponseBody
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "To let a user connect",
@@ -90,7 +92,9 @@ public class UsersOperationsController {
      * @return Une ResponseEntity avec le JWT dans le header "Authentication" si le
      * login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
      */
-    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.36", "https://192.168.75.36"})
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3376", "http://192.168.75.36:8080",
+            "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
+            "https://192.168.75.36/game", "https://192.168.75.36/api"})
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     @Operation(summary = "To let a user connect",
             tags = "Operation controller",
@@ -131,7 +135,9 @@ public class UsersOperationsController {
      * stockée dans le token JWT)
      *@return Une réponse vide avec un code de statut approprié (204, 400, 401).
      */
-    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.36", "https://192.168.75.36"})
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3376", "http://192.168.75.36:8080",
+            "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
+            "https://192.168.75.36/game", "https://192.168.75.36/api"})
     @PostMapping("/logout")
     @Operation(summary = "To let a user disconnect",
             tags = "Operation controller",
