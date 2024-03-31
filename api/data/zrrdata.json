@@ -1,0 +1,18 @@
+{
+    "positionNO": [
+        0,
+        5
+    ],
+    "positionNE": [
+        5,
+        5
+    ],
+    "positionSE": [
+        5,
+        0
+    ],
+    "positionSO": [
+        0,
+        0
+    ]
+}

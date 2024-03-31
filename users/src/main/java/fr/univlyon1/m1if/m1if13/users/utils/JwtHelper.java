@@ -10,7 +10,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
 import jakarta.validation.constraints.NotNull;
-import org.apache.coyote.BadRequestException;
+//import org.apache.coyote.BadRequestException;
 
 import javax.naming.AuthenticationException;
 import java.util.Date;
@@ -48,7 +48,7 @@ public final class JwtHelper {
      */
     public static String verifyToken(final String token, @NotNull final String req)
             throws NullPointerException, JWTVerificationException,
-            BadRequestException, AuthenticationException {
+            Exception, AuthenticationException {
         try {
             JWTVerifier authenticationVerifier = JWT.require(ALGORITHM)
                     .withIssuer(ISSUER)
@@ -60,7 +60,7 @@ public final class JwtHelper {
             // comme le token est vérifié avant, cela ne devrait pas arriver
             return jwt.getClaim("sub").asString();
         } catch (JWTDecodeException e) {
-            throw new BadRequestException("Token invalide");
+            throw new Exception("Token invalide");
         } catch (TokenExpiredException e) {
             throw new AuthenticationException("le Token est expirer");
         }

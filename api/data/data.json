@@ -1,0 +1,143 @@
+[
+    {
+        "id": "toto",
+        "position": [
+            "6",
+            "2"
+        ],
+        "role": "PIRATE",
+        "ttl": 0,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "John",
+        "position": [
+            "30",
+            "2"
+        ],
+        "role": "VILLAGEOIS",
+        "ttl": 0,
+        "potions": 2,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "titi",
+        "position": [
+            "6",
+            "2"
+        ],
+        "role": "PIRATE",
+        "ttl": 0,
+        "potions": 1,
+        "terminated": 10,
+        "turned": 0
+    },
+    {
+        "id": "badUser",
+        "position": [],
+        "role": "VILLAGEOIS",
+        "ttl": 0,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "potion1",
+        "position": [
+            "6",
+            "2"
+        ],
+        "role": "FLASK",
+        "ttl": 50,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "potion2",
+        "position": [
+            "1",
+            "2"
+        ],
+        "role": "FLASK",
+        "ttl": 60,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "potion3",
+        "position": [
+            "1",
+            "2"
+        ],
+        "role": "FLASK",
+        "ttl": 60,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "potion4",
+        "position": [
+            1,
+            2
+        ],
+        "role": "FLASK",
+        "ttl": 60,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "potion5",
+        "position": [
+            1,
+            2
+        ],
+        "role": "FLASK",
+        "ttl": "20",
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "ADMIN",
+        "position": [
+            "30",
+            "2"
+        ],
+        "role": "ADMIN",
+        "ttl": 0,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "potion6",
+        "position": [
+            1,
+            2
+        ],
+        "role": "FLASK",
+        "ttl": 60,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "potion7",
+        "position": [
+            1,
+            2
+        ],
+        "role": "FLASK",
+        "ttl": "20",
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    }
+]
