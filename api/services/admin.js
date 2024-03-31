@@ -5,7 +5,7 @@ let globalTtl=60;
 
 async function authenticate(token, origin) {
   return new Promise(async (resolve, reject) => {
-  await axios.get(`https://192.168.75.36:8443/users/authenticate`, {
+  await axios.get(`http://192.168.75.36:8080/users/authenticate`, {
       params: {
         jwt: token,
         origin: origin
