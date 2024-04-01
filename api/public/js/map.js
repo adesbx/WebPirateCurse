@@ -53,6 +53,11 @@ function updateMap(latlng, zoom) {
 	return false;
 }
 
+//getBounds
+function getBounds() {
+	return mymap.getBounds();
+}
+
 //affichage ZRR
 function ZRRDraw(bounds) {
 	// create an orange rectangle
@@ -62,5 +67,5 @@ function ZRRDraw(bounds) {
 	mymap.fitBounds(bounds);
 }
 
-export { updateMap, ZRRDraw };
+export { updateMap, ZRRDraw, getBounds };
 export default initMap;

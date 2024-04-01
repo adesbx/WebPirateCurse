@@ -1,11 +1,11 @@
-import { ZRRDraw } from "./map.js";
+import { ZRRDraw, getBounds } from "./map.js";
 
 // Initialisation
 function initListeners(mymap) {
 	console.log("TODO: add more event listeners...");
 
 	document.getElementById("setZrrButton").addEventListener("click", () => {
-		setZrr(L.latLng(document.getElementById("lat").value, document.getElementById("lon").value));
+		setZrr(getBounds());
 	});
 
 	document.getElementById("sendZrrButton").addEventListener("click", () => {
@@ -30,23 +30,12 @@ function updateZoomValue(zoom) {
 	document.getElementById("zoom").value = zoom;
 }
 
-function setZrr(latLng) {
-	if ( document.getElementById("lat1").value === "" 
-		 && document.getElementById("lon1").value === "") {
-		document.getElementById("lat1").value = latLng.lat;
-		document.getElementById("lon1").value = latLng.lng;
-	} else if (document.getElementById("lat2").value === "" 
-			   && document.getElementById("lon2").value === ""
-			   && document.getElementById("lat1") != latLng.lat
-			   && document.getElementById("lon1").value != latLng.lng) {
-		document.getElementById("lat2").value = latLng.lat;
-		document.getElementById("lon2").value = latLng.lng;
-	} else {
-		document.getElementById("lat1").value = latLng.lat;
-		document.getElementById("lon1").value = latLng.lng;
-		document.getElementById("lat2").value = "";
-		document.getElementById("lon2").value = ""; 
-	} 
+function setZrr(bounds) {
+	console.log(bounds);
+	document.getElementById("lat1").value = bounds.getSouthWest().lat;
+	document.getElementById("lon1").value = bounds.getSouthWest().lng;
+	document.getElementById("lat2").value = bounds.getNorthEast().lat;
+	document.getElementById("lon2").value = bounds.getNorthEast().lng;
 }
 
 // Requêtes asynchrones
