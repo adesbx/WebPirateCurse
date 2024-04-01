@@ -129,29 +129,29 @@ export async function postInitZRR(options, origin, token) {
    const login = await authenticate(token, origin);
    if(await verifyRole(login, origin)) {
     let SO,NE,SE,NO;
-    if(options.latLng1[0]<options.latLng2[0]) { // c'est O
-      if(options.latLng1[1]<options.latLng2[1]) { // c'est SO
+    if(options.latLng1.lat<options.latLng2.lat) { // c'est O
+      if(options.latLng1.lng<options.latLng2.lng) { // c'est SO
         SO = options.latLng1;
         NE = options.latLng2;
-        SE = [options.latLng2[0], options.latLng1[1]];
-        NO = [options.latLng1[0], options.latLng2[1]];
+        SE = {"lat": options.latLng1.lat, "lng": options.latLng2.lng};
+        NO = {"lat": options.latLng2.lat, "lng": options.latLng1.lng};
       } else { // c'est NO
-        SO = [options.latLng1[0], options.latLng2[1]];
-        NE = [options.latLng2[0], options.latLng1[1]];
+        SO = {"lat": options.latLng2.lat, "lng": options.latLng1.lng};
+        NE = {"lat": options.latLng1.lat, "lng": options.latLng2.lng};
         SE = options.latLng2;
         NO = options.latLng1;
       }
     } else { // c'est E
-      if(options.latLng1[1]<options.latLng2[1]) { // c'est SE
-        SO = [options.latLng2[0], options.latLng1[1]];
-        NE = [options.latLng1[0], options.latLng2[1]];
+      if(options.latLng1.lng<options.latLng2.lng) { // c'est SE
+        SO = {"lat": options.latLng1.lat, "lng": options.latLng2.lng};
+        NE = {"lat": options.latLng2.lat, "lng": options.latLng1.lng};
         SE = options.latLng1;
         NO = options.latLng2;
       } else { // c'est NE
         SO = options.latLng2;
         NE = options.latLng1;
-        SE = [options.latLng1[0], options.latLng2[1]];
-        NO = [options.latLng2[0], options.latLng1[1]];
+        SE = {"lat": options.latLng2.lat, "lng": options.latLng1.lng};
+        NO = {"lat": options.latLng1.lat, "lng": options.latLng2.lng};
       }
     }
 

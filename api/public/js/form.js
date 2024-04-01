@@ -1,3 +1,5 @@
+import { ZRRDraw } from "./map.js";
+
 // Initialisation
 function initListeners(mymap) {
 	console.log("TODO: add more event listeners...");
@@ -48,8 +50,45 @@ function setZrr(latLng) {
 }
 
 // Requêtes asynchrones
-function sendZrr() {
+async function sendZrr() {
 	console.log("send fetch request...");
+	if (document.getElementById("lat1").value !== "" 
+	&& document.getElementById("lon1").value !== ""
+	&& document.getElementById("lat2").value !== "" 
+	&& document.getElementById("lon2").value !== "") {
+		var corner1 = L.latLng(document.getElementById("lat1").value,
+							   document.getElementById("lon1").value),
+		corner2 = L.latLng(document.getElementById("lat2").value,
+						   document.getElementById("lon2").value),
+		bounds = L.latLngBounds(corner1, corner2);
+		const body = {
+			"latLng1": corner1,
+			"latLng2": corner2
+		};
+		const headers = new Headers();
+		headers.append("Content-Type", "application/json");
+		headers.append("authentication", localStorage.getItem('token'));
+		const requestConfig = {
+			method: "POST",
+			headers: headers,
+			body: JSON.stringify(body),
+			mode: "cors"
+		};
+		const response = await fetch("http://localhost:3376/admin/initZRR", requestConfig)
+			.then((response) => {
+				if (response.ok) {
+					return true;
+				} else {
+					return false;
+				}
+			})
+		.catch((err) => {
+			console.error("In post initZRR: " + err);
+		})
+		if (response) {
+			ZRRDraw(bounds);
+		}
+	}
 }
 
 function setTtl() {

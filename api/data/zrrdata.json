@@ -1,18 +1,18 @@
 {
-    "positionNO": [
-        0,
-        5
-    ],
-    "positionNE": [
-        5,
-        5
-    ],
-    "positionSE": [
-        5,
-        0
-    ],
-    "positionSO": [
-        0,
-        0
-    ]
+    "positionNO": {
+        "lat": 45.78187137182475,
+        "lng": 0
+    },
+    "positionNE": {
+        "lat": 45.78187137182475,
+        "lng": 4.86447036266327
+    },
+    "positionSE": {
+        "lat": 0,
+        "lng": 4.86447036266327
+    },
+    "positionSO": {
+        "lat": 0,
+        "lng": 0
+    }
 }
