@@ -73,7 +73,13 @@ public class UserRessourceController {
      * @return une vue
      */
     @ResponseBody
+<<<<<<< HEAD
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "http://192.168.75.36", "https://192.168.75.36"})
+=======
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3376", "http://192.168.75.36:8080",
+            "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
+            "https://192.168.75.36/game", "https://192.168.75.36/api"})
+>>>>>>> 3056611b55e561176b1b623fe8374fc64849733a
     @GetMapping(value = "/users/{login}", produces = {"text/html"})
     public ModelAndView getUsersHTML(@PathVariable final String login) {
         ModelAndView mav = new ModelAndView();
@@ -89,7 +95,13 @@ public class UserRessourceController {
      * @return un ensemble de login
      */
     @ResponseBody
+<<<<<<< HEAD
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "http://192.168.75.36", "https://192.168.75.36"})
+=======
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3376", "http://192.168.75.36:8080",
+            "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
+            "https://192.168.75.36/game", "https://192.168.75.36/api"})
+>>>>>>> 3056611b55e561176b1b623fe8374fc64849733a
     @GetMapping(value = "/users/{login}", produces = {"application/json", "application/xml"})
     @Operation(summary = "Get one user in json/xml/html format",
             tags = "Operation REST",

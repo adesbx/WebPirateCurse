@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { json } from 'express';
 import fs from 'fs';
-import { resolve } from 'path';
 
-function authenticate(token, origin) {
+let globalTtl=60;
+
+async function authenticate(token, origin) {
   return new Promise(async (resolve, reject) => {
-  await axios.get(`http://localhost:8080/authenticate`, {
+  await axios.get(`http://192.168.75.36:8080/users/authenticate`, {
       params: {
         jwt: token,
         origin: origin
@@ -14,14 +14,14 @@ function authenticate(token, origin) {
     .then(function (response) {
       resolve(response.data);
     })
-    .catch(function() {
-      reject(new Error(401));
+    .catch(function(e) {
+      reject(new Error(e));
     });
   })
 }
 
 
-function setZRR(dataZRR) {
+async function setZRR(dataZRR) {
   return new Promise((resolve, reject) => {
     try {
       const jsonDataZRR = JSON.stringify(dataZRR, null, 4);
@@ -39,7 +39,7 @@ function setZRR(dataZRR) {
 }
 
 
-function spawnFlask(dataFlask) {
+async function spawnFlask(dataFlask) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
@@ -64,7 +64,7 @@ function spawnFlask(dataFlask) {
 }
 
 
-function newFlaskId() {
+async function newFlaskId() {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
@@ -86,30 +86,48 @@ function newFlaskId() {
   });
 }
 
-function verifyRole(login, origin) {
+async function verifyRole(login, origin) {
   return new Promise(async (resolve, reject) => {
-    await axios.get(`http://localhost:8080/users/${login}`, {
-      headers: {
-        Origin: origin
-      }
+    await axios.get(`http://192.168.75.36:8080/users/users/${login}`, {
     })
     .then(function(response) {
-      if(response.data.species == 'ADMIN') {
+      if(response.data.species === 'ADMIN') {
         resolve(true);
       } else {
         resolve(false);
       }
     })
-    .catch(function() {
-      reject(new Error(404));
+    .catch(function(e) {
+      reject(new Error(e));
     })
   })
+}
+
+async function verifyPositionInZRR(position) {
+  return new Promise((resolve, reject) => {
+    fs.readFile('./data/zrrdata.json', 'utf8', (err, data) => {
+      if (err) {
+        throw new Error(400);
+      }
+      try {
+        const zrrdata = JSON.parse(data);
+        if(position[0] < zrrdata.positionNE[0] && position[0] > zrrdata.positionSO[0]
+          && position[1] < zrrdata.positionNE[1] && position[1] > zrrdata.positionSO[1]) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+      } catch(error) {
+        reject(error);
+      }
+    });
+  });
 }
 
 export async function postInitZRR(options, origin, token) {
   try {
    const login = await authenticate(token, origin);
-   if(verifyRole(login, origin)) {
+   if(await verifyRole(login, origin)) {
     let SO,NE,SE,NO;
     if(options.latLng1[0]<options.latLng2[0]) { // c'est O
       if(options.latLng1[1]<options.latLng2[1]) { // c'est SO
@@ -183,8 +201,16 @@ export async function postInitZRR(options, origin, token) {
 export async function putTTL(options, origin, token) {
   try {
     const login = await authenticate(token, origin);
-    if(verifyRole(login, origin)) {
-
+    if(await verifyRole(login, origin)) {
+      if(options.ttl >= 3) {
+        globalTtl = options.ttl;
+        return {
+          status: '204',
+          data: 'nouveau ttl'
+        };
+      } else {
+        throw new Error("le ttl doit être supérieur à 3 secondes");
+      }
     }
   } catch(error) {
     let statusCode = parseInt(error.message);
@@ -218,25 +244,29 @@ export async function putTTL(options, origin, token) {
 export async function postSpawnFlask(options, origin, token) {
   try {
     const login = await authenticate(token, origin);
-    if(verifyRole(login, origin)) {
-      const newId = await newFlaskId();
-      const dataFlask = {
-          "id": "potion"+newId,
-          "position": [
-              options.latLng[0],
-              options.latLng[1]
-          ],
-          "role": "FLASK",
-          "ttl": 60,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      };
-      await spawnFlask(dataFlask);
-      return {
-        status: '204',
-        data: 'nouvelle potion créer'
-      };
+    if(await verifyRole(login, origin)) {
+      if(await verifyPositionInZRR(options.latLng)) {
+        const newId = await newFlaskId();
+        const dataFlask = {
+            "id": "potion"+newId,
+            "position": [
+                options.latLng[0],
+                options.latLng[1]
+            ],
+            "role": "FLASK",
+            "ttl": globalTtl,
+            "potions": 0,
+            "terminated": 0,
+            "turned": 0
+        };
+        await spawnFlask(dataFlask);
+        return {
+          status: '204',
+          data: 'nouvelle potion créer'
+        };
+      } else {
+        throw new Error("out of range");
+      }
     }
   } catch(error) {
     let statusCode = parseInt(error.message);

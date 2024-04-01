@@ -7,7 +7,7 @@ function distance(x1, y1, x2, y2) {
   return Math.sqrt(X * X + Y * Y);
 }
 
-function verifyUserExist(id) {
+async function verifyUserExist(id) {
   return new Promise((resolve, reject) => {
 
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
@@ -17,8 +17,8 @@ function verifyUserExist(id) {
 
       let users = JSON.parse(data);
       const user = users.find(user => user.id === id);
-      
-      if (!user) {
+
+      if (!user || user === undefined ) {
         resolve(false);
       } else {
         resolve(true);
@@ -27,7 +27,7 @@ function verifyUserExist(id) {
   });
 }
 
-function getAllRessources() {
+async function getAllresources() {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, json) => {
 
@@ -38,15 +38,15 @@ function getAllRessources() {
       
       try {
 
-        let ressources = JSON.parse(json);
+        let resources = JSON.parse(json);
 
-        if (!ressources) {
-            throw new Error('Ressources vide');
+        if (!resources) {
+            throw new Error('resources vide');
         }
 
-        ressources = ressources.filter(ressource => ressource.position && ressource.position.length > 0);
+        resources = resources.filter(resource => resource.position && resource.position.length > 0);
 
-        resolve(ressources)
+        resolve(resources)
       } catch(error) {
         reject(error);
       }
@@ -54,7 +54,7 @@ function getAllRessources() {
   })  
 }
 
-function grabPotion(userSource, potion) {
+async function grabPotion(userSource, potion) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
@@ -107,7 +107,7 @@ function grabPotion(userSource, potion) {
   });
 }
 
-function terminatePirate(userSource, userDestine) {
+async function terminatePirate(userSource, userDestine) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
     if (err) {
@@ -149,7 +149,7 @@ function terminatePirate(userSource, userDestine) {
  });
 }
 
-function villagerIntoPirate(userSource, userDestine) {
+async function villagerIntoPirate(userSource, userDestine) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
@@ -191,7 +191,7 @@ function villagerIntoPirate(userSource, userDestine) {
   });
 }
 
-function modifyPosition(id, position) {
+async function modifyPosition(id, position) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
@@ -226,7 +226,7 @@ function modifyPosition(id, position) {
 
 export async function getResources(options, origin, token) {
   try {
-    const login = await axios.get(`http://localhost:8080/authenticate`, {
+    const login = await axios.get(`http://192.168.75.36:8080/users/authenticate`, {
       params: {
         jwt: token,
         origin: origin
@@ -239,11 +239,11 @@ export async function getResources(options, origin, token) {
       throw new Error(401);
     });
     
-    const ressources = await getAllRessources();
+    const resources = await getAllresources();
 
     return {
       status: '200',
-      data: ressources
+      data: resources
     };
 
   } catch(error){
@@ -265,7 +265,7 @@ export async function getResources(options, origin, token) {
 
 export async function postResourceId(options, origin, token) {
   try {
-    const login = await axios.get(`http://localhost:8080/authenticate`, {
+    const login = await axios.get(`http://192.168.75.36:8080/users/authenticate`, {
       params: {
         jwt: token,
         origin: origin
@@ -278,8 +278,7 @@ export async function postResourceId(options, origin, token) {
       throw new Error(401);
     });
 
-    console.log(options.operationType.operationType);
-    if(verifyUserExist(options.resourceId)){
+    if(await verifyUserExist(options.resourceId)){
 
       switch(options.operationType.operationType) {
         case "grab potion flask":
@@ -322,7 +321,7 @@ export async function postResourceId(options, origin, token) {
       case 404:
         return {
           status: '404',
-          data: 'Ressource pas trouvé'
+          data: 'resource pas trouvé'
         };
       default:
         return {
@@ -335,7 +334,7 @@ export async function postResourceId(options, origin, token) {
 
 export async function putResourceIdPosition(options, origin, token) {
   try {
-    const login = await axios.get(`http://localhost:8080/authenticate`, {
+    const login = await axios.get(`http://192.168.75.36:8080/users/authenticate`, {
       params: {
         jwt: token,
         origin: origin
@@ -348,7 +347,7 @@ export async function putResourceIdPosition(options, origin, token) {
       throw new Error(401);
     });
 
-    if(verifyUserExist(options.resourceId)){
+    if(await verifyUserExist(options.resourceId)) {
       if (login === options.resourceId) {
         await modifyPosition(options.resourceId, options.latLng);
         return {

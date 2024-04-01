@@ -6,8 +6,8 @@ export default function (app) {
   /*
   * Routes
   */
-  app.use('/resources', resources);
-  app.use('/zrr', zrr);
+  app.use('/api/resources', resources);
+  app.use('/api/zrr', zrr);
   app.use('/admin', admin);
 
 };
