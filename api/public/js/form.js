@@ -3,7 +3,7 @@ function initListeners(mymap) {
 	console.log("TODO: add more event listeners...");
 
 	document.getElementById("setZrrButton").addEventListener("click", () => {
-		setZrr(null);
+		setZrr(L.latLng(document.getElementById("lat").value, document.getElementById("lon").value));
 	});
 
 	document.getElementById("sendZrrButton").addEventListener("click", () => {
@@ -28,13 +28,28 @@ function updateZoomValue(zoom) {
 	document.getElementById("zoom").value = zoom;
 }
 
-function setZrr(bounds) {
-	console.log("TODO: update input values...");
+function setZrr(latLng) {
+	if ( document.getElementById("lat1").value === "" 
+		 && document.getElementById("lon1").value === "") {
+		document.getElementById("lat1").value = latLng.lat;
+		document.getElementById("lon1").value = latLng.lng;
+	} else if (document.getElementById("lat2").value === "" 
+			   && document.getElementById("lon2").value === ""
+			   && document.getElementById("lat1") != latLng.lat
+			   && document.getElementById("lon1").value != latLng.lng) {
+		document.getElementById("lat2").value = latLng.lat;
+		document.getElementById("lon2").value = latLng.lng;
+	} else {
+		document.getElementById("lat1").value = latLng.lat;
+		document.getElementById("lon1").value = latLng.lng;
+		document.getElementById("lat2").value = "";
+		document.getElementById("lon2").value = ""; 
+	} 
 }
 
 // Requêtes asynchrones
 function sendZrr() {
-	console.log("TODO: send fetch request...");
+	console.log("send fetch request...");
 }
 
 function setTtl() {
