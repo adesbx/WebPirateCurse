@@ -10,7 +10,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
 import jakarta.validation.constraints.NotNull;
-//import org.apache.coyote.BadRequestException;
 
 import javax.naming.AuthenticationException;
 import java.util.Date;
@@ -102,38 +101,5 @@ public final class JwtHelper {
                 .withExpiresAt(new Date(new Date().getTime()))
                 .sign(ALGORITHM);
     }
-//
-//    /**
-//     * Renvoie l'URL d'origine du client, en fonction des headers de proxy (si existants)
-//     ou de l'URL de la requête sinon.
-//     *
-//     * @param request la requête HTTP
-//     * @return une String qui sera passée aux éléments de l'application pour générer les
-//     URL absolues.
-//     */
-//    private static String getOrigin(@NotNull HttpServletRequest request) {
-//        String origin = String.valueOf(request.getRequestURL()).substring(0,
-//        request.getRequestURL().lastIndexOf(request.getRequestURI()));
-//        if (request.getHeader("X-Forwarded-Host") != null &&
-//        request.getHeader("X-Forwarded-Proto") != null &&
-//        request.getHeader("X-Forwarded-Path") != null) {
-//            switch (request.getHeader("X-Forwarded-Proto")) {
-//                case "http":
-//                    origin = request.getHeader("X-Forwarded-Proto") + "://" +
-//                            (request.getHeader("X-Forwarded-Host").endsWith(":80")
-//                            ? request.getHeader("X-Forwarded-Host").replace(":80", "") :
-//                                    request.getHeader("X-Forwarded-Host"));
-//                    break;
-//                case "https":
-//                    origin = request.getHeader("X-Forwarded-Proto") + "://" +
-//                            (request.getHeader("X-Forwarded-Host").endsWith(":443")
-//                            ? request.getHeader("X-Forwarded-Host").replace(":443", "") :
-//                                    request.getHeader("X-Forwarded-Host"));
-//                default:
-//            }
-//            origin = origin + request.getHeader("X-Forwarded-Path");
-//        }
-//        return origin + request.getContextPath();
-//    }
 }
 
