@@ -6,3 +6,5 @@
  * @type {string}
  */
 const apiBase = "http://localhost:3376";
+
+export default apiBase;

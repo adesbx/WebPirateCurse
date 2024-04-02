@@ -1,4 +1,5 @@
 import { ZRRDraw, getBounds } from "./map.js";
+import apiBase from "./api-base.js";
 
 // Initialisation
 function initListeners(mymap) {
@@ -63,7 +64,7 @@ async function sendZrr() {
 			body: JSON.stringify(body),
 			mode: "cors"
 		};
-		const response = await fetch("http://localhost:3376/admin/initZRR", requestConfig)
+		const response = await fetch(`${apiBase}/admin/initZRR`, requestConfig)
 			.then((response) => {
 				if (response.ok) {
 					return true;
@@ -80,8 +81,34 @@ async function sendZrr() {
 	}
 }
 
-function setTtl() {
-	console.log("TODO: send fetch request...");
+async function setTtl() {
+	console.log("send fetch request...");
+	if (document.getElementById("ttl").value !== null) {
+		const body = {
+			"ttl": document.getElementById("ttl").value
+		};
+		const headers = new Headers();
+		headers.append("Content-Type", "application/json");
+		headers.append("authentication", localStorage.getItem('token'));
+		const requestConfig = {
+			method: "PUT",
+			headers: headers,
+			body: JSON.stringify(body),
+			mode: "cors"
+		};
+		const response = await fetch(`${apiBase}/admin/modifyTTL`, requestConfig)
+			.then((response) => {
+				if (response.ok) {
+					return true;
+				} else {
+					return false;
+				}
+			})
+		.catch((err) => {
+			console.error("In post initZRR: " + err);
+		})
+		console.log(`ttl set comme il faut`);
+	}
 }
 
 export { updateLatValue, updateLonValue, updateZoomValue };
