@@ -1,3 +1,5 @@
+import apiBase from "./api-base.js";
+
 // initialisation de la map
 const lat = 45.782, lng = 4.8656, zoom = 19;
 
@@ -23,6 +25,8 @@ function initMap() {
 
 	// Ajout d'un marker
 	L.marker([45.78207, 4.86559]).addTo(mymap).bindPopup('Entrée du bâtiment<br>Nautibus.').openPopup();
+
+	getAllRessources();
 
 	// Clic sur la carte
 	mymap.on('click', e => {
@@ -67,5 +71,23 @@ function ZRRDraw(bounds) {
 	mymap.fitBounds(bounds);
 }
 
+async function getAllRessources() {
+	const headers = new Headers();
+	headers.append("Authentication", localStorage.getItem('token'));
+	headers.append("Content-Type", "application/json");
+	headers.append("Accept", "application/json");
+	const requestConfig = {
+		method: "GET",
+		headers: headers,
+	};
+	await fetch(`${apiBase}/api/resources`, requestConfig)
+		.then((response) => {
+			console.log(response);
+			console.log(response.data);
+		})
+	.catch((err) => {
+		console.error("In get ressources: " + err);
+	})
+}
 export { updateMap, ZRRDraw, getBounds };
 export default initMap;
