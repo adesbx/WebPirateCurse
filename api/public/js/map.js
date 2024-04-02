@@ -74,20 +74,22 @@ function ZRRDraw(bounds) {
 async function getAllRessources() {
 	const headers = new Headers();
 	headers.append("Authentication", localStorage.getItem('token'));
-	headers.append("Content-Type", "application/json");
 	headers.append("Accept", "application/json");
 	const requestConfig = {
 		method: "GET",
 		headers: headers,
 	};
-	await fetch(`${apiBase}/api/resources`, requestConfig)
+
+	const result = await fetch(`${apiBase}/api/resources`, requestConfig)
 		.then((response) => {
-			console.log(response);
-			console.log(response.data);
+			return response;
 		})
 	.catch((err) => {
 		console.error("In get ressources: " + err);
 	})
+
+	console.log(await result.json());
 }
+
 export { updateMap, ZRRDraw, getBounds };
 export default initMap;

@@ -240,7 +240,6 @@ export async function getResources(options, origin, token) {
     });
     
     const resources = await getAllresources();
-
     return {
       status: '200',
       data: resources
