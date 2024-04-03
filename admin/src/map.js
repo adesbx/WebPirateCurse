@@ -1,3 +1,5 @@
+import apiBase from "./api-base.js";
+
 // initialisation de la map
 const lat = 45.782, lng = 4.8656, zoom = 19;
 
@@ -5,6 +7,9 @@ let mymap = L.map('map', {
     center: [lat, lng],
     zoom: zoom
 });
+
+let groupMarker = [];
+
 
 // Initialisation de la map
 function initMap() {
@@ -23,6 +28,8 @@ function initMap() {
 
 	// Ajout d'un marker
 	L.marker([45.78207, 4.86559]).addTo(mymap).bindPopup('Entrée du bâtiment<br>Nautibus.').openPopup();
+
+	getAllRessources();
 
 	// Clic sur la carte
 	mymap.on('click', e => {
@@ -67,5 +74,38 @@ function ZRRDraw(bounds) {
 	mymap.fitBounds(bounds);
 }
 
+async function getAllRessources() {
+	const headers = new Headers();
+	headers.append("Authentication", localStorage.getItem('token'));
+	headers.append("Accept", "application/json");
+	const requestConfig = {
+		method: "GET",
+		headers: headers,
+	};
+
+	const result = await fetch(`${apiBase}/api/resources`, requestConfig)
+		.then((response) => {
+			return response;
+		})
+	.catch((err) => {
+		console.error("In get ressources: " + err);
+	})
+
+	const ressources = await result.json();
+	let previousMapCenter = mymap.getCenter();
+	let previousMapZoom = mymap.getZoom();
+
+	while (groupMarker.length > 0) {
+		let layer = groupMarker.pop();
+		mymap.removeLayer(layer);	
+	}
+	ressources.forEach(ressource => {
+		// console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
+		groupMarker.push(L.marker([ressource.position[0], ressource.position[1]]).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
+	});
+	mymap.setView(previousMapCenter, previousMapZoom);
+}
+
+setInterval(getAllRessources, 5000);
 export { updateMap, ZRRDraw, getBounds };
 export default initMap;

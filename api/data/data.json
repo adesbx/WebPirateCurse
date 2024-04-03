@@ -19,7 +19,7 @@
         ],
         "role": "VILLAGEOIS",
         "ttl": 0,
-        "potions": 2,
+        "potions": 0,
         "terminated": 0,
         "turned": 0
     },
@@ -31,17 +31,8 @@
         ],
         "role": "PIRATE",
         "ttl": 0,
-        "potions": 1,
-        "terminated": 10,
-        "turned": 0
-    },
-    {
-        "id": "badUser",
-        "position": [],
-        "role": "VILLAGEOIS",
-        "ttl": 0,
         "potions": 0,
-        "terminated": 0,
+        "terminated": 10,
         "turned": 0
     },
     {
