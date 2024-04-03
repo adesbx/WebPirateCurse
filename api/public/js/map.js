@@ -88,7 +88,13 @@ async function getAllRessources() {
 		console.error("In get ressources: " + err);
 	})
 
-	console.log(await result.json());
+	const ressources = await result.json();
+	console.log(ressources);
+	ressources.forEach(ressource => {
+		console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
+		L.marker([ressource.position[0], ressource.position[1]]).addTo(mymap).bindPopup(ressource.id).openPopup();
+	});
+
 }
 
 export { updateMap, ZRRDraw, getBounds };
