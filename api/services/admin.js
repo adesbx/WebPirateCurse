@@ -295,3 +295,5 @@ export async function postSpawnFlask(options, origin, token) {
     }
   }
 }
+
+export default globalTtl;

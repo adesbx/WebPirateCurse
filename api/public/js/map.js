@@ -8,6 +8,9 @@ let mymap = L.map('map', {
     zoom: zoom
 });
 
+let groupMarker = [];
+
+
 // Initialisation de la map
 function initMap() {
 	// Création d'un "tile layer" (permet l'affichage sur la carte)
@@ -89,13 +92,20 @@ async function getAllRessources() {
 	})
 
 	const ressources = await result.json();
-	console.log(ressources);
-	ressources.forEach(ressource => {
-		console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
-		L.marker([ressource.position[0], ressource.position[1]]).addTo(mymap).bindPopup(ressource.id).openPopup();
-	});
+	let previousMapCenter = mymap.getCenter();
+	let previousMapZoom = mymap.getZoom();
 
+	while (groupMarker.length > 0) {
+		let layer = groupMarker.pop();
+		mymap.removeLayer(layer);	
+	}
+	ressources.forEach(ressource => {
+		// console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
+		groupMarker.push(L.marker([ressource.position[0], ressource.position[1]]).addTo(mymap).bindPopup(ressource.id));
+	});
+	mymap.setView(previousMapCenter, previousMapZoom);
 }
 
+setInterval(getAllRessources, 5000);
 export { updateMap, ZRRDraw, getBounds };
 export default initMap;

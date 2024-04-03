@@ -1,5 +1,6 @@
 import axios from 'axios';
 import fs from 'fs';
+import globalTtl from './admin.js';
 
 function distance(x1, y1, x2, y2) {
   const X = x2 - x1;
@@ -386,3 +387,34 @@ export async function putResourceIdPosition(options, origin, token) {
     }
   }
 }
+
+async function decreaseTTL() {
+  const ressources = await getAllresources();
+
+  ressources.forEach(ressource => {
+    if(ressource.role === "PIRATE" || ressource.role === "VILLAGEOIS" ) {
+      if(ressource.ttl >= 5) {
+        ressource.ttl = ressource.ttl - 5;
+      }
+      else {
+        ressource.ttl = 0;
+        if (ressource.potions >= 1) {
+          ressource.potions = ressource.potions - 1;
+          ressource.ttl = globalTtl;
+        }
+      }
+    }
+  });
+
+  let newRessources = JSON.stringify(ressources, null, 4);
+  
+  fs.writeFile('./data/data.json', newRessources, 'utf8', (err) => {
+      if (err) {
+          console.error('Erreur écriture dans le fichier :', err);
+          return;
+      }
+  });
+  
+}
+
+setInterval(decreaseTTL, 5000);
