@@ -82,28 +82,31 @@ async function getAllRessources() {
 		method: "GET",
 		headers: headers,
 	};
-
-	const result = await fetch(`${apiBase}/api/resources`, requestConfig)
+	try{
+		const result = await fetch(`${apiBase}/api/resources`, requestConfig)
 		.then((response) => {
 			return response;
 		})
-	.catch((err) => {
-		console.error("In get ressources: " + err);
-	})
+		.catch((err) => {
+			console.error("In get ressources: " + err);
+		})
 
-	const ressources = await result.json();
-	let previousMapCenter = mymap.getCenter();
-	let previousMapZoom = mymap.getZoom();
+		const ressources = await result.json();
+		let previousMapCenter = mymap.getCenter();
+		let previousMapZoom = mymap.getZoom();
 
-	while (groupMarker.length > 0) {
-		let layer = groupMarker.pop();
-		mymap.removeLayer(layer);	
-	}
-	ressources.forEach(ressource => {
-		// console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
-		groupMarker.push(L.marker([ressource.position[0], ressource.position[1]]).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
-	});
-	mymap.setView(previousMapCenter, previousMapZoom);
+		while (groupMarker.length > 0) {
+			let layer = groupMarker.pop();
+			mymap.removeLayer(layer);	
+		}
+		ressources.forEach(ressource => {
+			// console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
+			groupMarker.push(L.marker([ressource.position[0], ressource.position[1]]).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
+		});
+		mymap.setView(previousMapCenter, previousMapZoom);
+	} catch (err) {
+        console.error("In get ressources: " + err);
+    }
 }
 
 setInterval(getAllRessources, 5000);
