@@ -101,7 +101,7 @@ async function getAllRessources() {
 	}
 	ressources.forEach(ressource => {
 		// console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
-		groupMarker.push(L.marker([ressource.position[0], ressource.position[1]]).addTo(mymap).bindPopup(ressource.id));
+		groupMarker.push(L.marker([ressource.position[0], ressource.position[1]]).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
 	});
 	mymap.setView(previousMapCenter, previousMapZoom);
 }
