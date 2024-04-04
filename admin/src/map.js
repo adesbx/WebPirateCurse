@@ -82,7 +82,7 @@ async function getAllRessources() {
 		method: "GET",
 		headers: headers,
 	};
-	try{
+	try {
 		const result = await fetch(`${apiBase}/api/resources`, requestConfig)
 		.then((response) => {
 			return response;
