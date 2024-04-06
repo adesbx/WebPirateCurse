@@ -2,13 +2,13 @@ import axios from 'axios';
 import fs from 'fs';
 import globalTtl from './admin.js';
 
-function distance(x1, y1, x2, y2) {
+export function distance(x1, y1, x2, y2) {
   const X = x2 - x1;
   const Y = y2 - y1;
   return Math.sqrt(X * X + Y * Y);
 }
 
-async function verifyUserExist(id) {
+export async function verifyUserExist(id) {
   return new Promise((resolve, reject) => {
 
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
@@ -28,7 +28,7 @@ async function verifyUserExist(id) {
   });
 }
 
-async function getAllresources() {
+export async function getAllresources() {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, json) => {
 

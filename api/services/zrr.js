@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-async function getAllPosition() {
+export async function getAllPosition() {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/zrrdata.json', 'utf8', (err, json) => {
 

@@ -1,5 +1,4 @@
-import apiBase from "./api-base.js";
-
+const apiBase = process.env.PATHAPI;
 // initialisation de la map
 const lat = 45.782, lng = 4.8656, zoom = 19;
 

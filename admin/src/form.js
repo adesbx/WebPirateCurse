@@ -1,5 +1,5 @@
 import { ZRRDraw, getBounds } from "./map.js";
-import apiBase from "./api-base.js";
+const apiBase = process.env.PATHAPI;
 
 // Initialisation
 function initListeners(mymap) {

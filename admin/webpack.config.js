@@ -4,16 +4,17 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const isProduction = process.env.NODE_ENV == 'production';
-
-
+var webpack = require('webpack');
 const stylesHandler = 'style-loader';
 
 
 
 const config = {
     entry: {
-        "main": './src/index.js',
-        "api": './src/api-base.js',
+        index: './index.html',
+        admin: './admin.html',
+        main: './src/index.js',
+        admin: './src/admin.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -25,9 +26,18 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: 'index.html',
+            chunks: ['main']
+        }),
+        new HtmlWebpackPlugin({
+            template: 'admin.html',
+            filename: 'admin.html',
+            chunks: ['admin']
         }),
         new ESLintPlugin(),
         // Add your plugins here
+        new webpack.DefinePlugin({
+            'process.env.PATHAPI': 'http://localhost:3376',//Surement ça mais ça fonctionne pas pour le moment
+        }),
         // Learn more about plugins from https://webpack.js.org/configuration/plugins/
     ],
     module: {
@@ -35,6 +45,10 @@ const config = {
             {
                 test: /\.(js|jsx)$/i,
                 loader: 'babel-loader',
+            },
+            {
+                test: /\.html$/i,
+                loader: "html-loader",
             },
             {
                 test: /\.css$/i,
@@ -54,7 +68,6 @@ const config = {
 module.exports = () => {
     if (isProduction) {
         config.mode = 'production';
-        
         
     } else {
         config.mode = 'development';

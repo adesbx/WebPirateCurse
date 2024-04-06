@@ -21,7 +21,7 @@ async function authenticate(token, origin) {
 }
 
 
-async function setZRR(dataZRR) {
+export async function setZRR(dataZRR) {
   return new Promise((resolve, reject) => {
     try {
       const jsonDataZRR = JSON.stringify(dataZRR, null, 4);
@@ -39,7 +39,7 @@ async function setZRR(dataZRR) {
 }
 
 
-async function spawnFlask(dataFlask) {
+export async function spawnFlask(dataFlask) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
