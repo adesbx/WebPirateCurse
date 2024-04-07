@@ -31,14 +31,11 @@ deploy-api:
     stage: api
     image: node:21
     before_script:
-      - ./ci/setup-mvn-proxy.sh
-      - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-      - chmod 400 $CI_SSH_KEY
       - cd admin
       - npm install && npm run build
     script:
       - cd ../api
-      - npm install
+      - npm install && npm test
       - cd ..
       - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r api/ gitlabci@192.168.75.36:~/
-      - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@192.168.75.36 'cd api && npm i && cp -r public/* /usr/share/nginx/html/secret/  && pm2 delete all &&  pm2 start index.js'
+      - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@192.168.75.36 'cd api && cp -r public/* /usr/share/nginx/html/secret/ && pm2 delete all &&  pm2 start index.js'
