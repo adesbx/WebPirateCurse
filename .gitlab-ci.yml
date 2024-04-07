@@ -31,6 +31,7 @@ deploy-api:
     stage: api
     image: node:21
     before_script:
+      - chmod 400 $CI_SSH_KEY
       - cd admin
       - npm install && npm run build
     script:
