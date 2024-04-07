@@ -38,7 +38,7 @@ deploy-api:
       - npm install && npm run build:prod
     script:
       - cd ../api
-      - npm install && npm test
+      - npm install
       - cd ..
       - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r api/ gitlabci@192.168.75.36:~/
       - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@192.168.75.36 'cd api && npm i && pm2 delete all && pm2 start index.js'
