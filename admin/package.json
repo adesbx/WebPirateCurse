@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo 'non au test dans le front!'",
     "prebuild": "npx eslint src/index.js --fix && npm run test",
-    "build": "export PATHAPI='https://192.168.75.36:3376' && webpack --mode=production --node-env=production",
-    "build:dev": "export PATHAPI='https://localhost:3376' && webpack --mode=development",
-    "build:prod": "export PATHAPI='https://192.168.75.36:3376' && webpack --mode=production --node-env=production",
+    "build": "./script_prod_dev.sh prod && webpack --mode=production --node-env=production",
+    "build:dev": "./script_prod_dev.sh dev && webpack --mode=development",
+    "build:prod": "./script_prod_dev.sh prod && webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
     "serve": "webpack serve",
     "postbuild": "echo 'Everything is done' && cp -r dist/* ../api/public"
