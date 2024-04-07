@@ -1,5 +1,24 @@
-[
-    {
+global.zrr = {
+    "positionNO": {
+        "lat": 45.799485997405384,
+        "lng": 4.762830734252931
+    },
+    "positionNE": {
+        "lat": 45.799485997405384,
+        "lng": 4.90891456604004
+    },
+    "positionSE": {
+        "lat": 45.77554537118828,
+        "lng": 4.90891456604004
+    },
+    "positionSO": {
+        "lat": 45.77554537118828,
+        "lng": 4.762830734252931
+    }
+}
+
+export let resources = [
+        {
         "id": "toto",
         "position": [
             "45.78196433811854",
@@ -14,8 +33,8 @@
     {
         "id": "John",
         "position": [
-            "45.78216635696405",
-            "4.864507913589478"
+            "45.78220619944915",
+            "4.865867793560029"
         ],
         "role": "VILLAGEOIS",
         "ttl": 0,
@@ -115,42 +134,6 @@
         ],
         "role": "FLASK",
         "ttl": 60,
-        "potions": 0,
-        "terminated": 0,
-        "turned": 0
-    },
-    {
-        "id": "potionTest",
-        "position": [
-            "45.78220619944917",
-            "4.865867793560029"
-        ],
-        "role": "FLASK",
-        "ttl": 50,
-        "potions": 0,
-        "terminated": 0,
-        "turned": 0
-    },
-    {
-        "id": "potionTest",
-        "position": [
-            "45.78220619944917",
-            "4.865867793560029"
-        ],
-        "role": "FLASK",
-        "ttl": 50,
-        "potions": 0,
-        "terminated": 0,
-        "turned": 0
-    },
-    {
-        "id": "potionTest",
-        "position": [
-            "45.78220619944917",
-            "4.865867793560029"
-        ],
-        "role": "FLASK",
-        "ttl": 50,
         "potions": 0,
         "terminated": 0,
         "turned": 0
