@@ -10,10 +10,11 @@ router.get('/', async (req, res, next) => {
   let options = { 
   };
 
-
+  const origin = req.protocol + "s://" + req.headers.host;
+  console.log(origin);
   try {
-    const result = await getResources(options, req.headers.origin, req.headers.authentication);
-    res.status(result.status || 200).send(result.data);
+    const result = await getResources(options, origin, req.headers.authentication);
+    res.status(result.status).send(result.data);
   }
   catch (err) {
     return res.status(500).send({

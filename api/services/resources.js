@@ -1,122 +1,88 @@
 import axios from 'axios';
-import fs from 'fs';
+import globalTtl from './admin.js';
 
-function distance(x1, y1, x2, y2) {
+import {resources} from "../data/data.js";
+
+
+export function distance(x1, y1, x2, y2) {
   const X = x2 - x1;
   const Y = y2 - y1;
   return Math.sqrt(X * X + Y * Y);
 }
 
-async function verifyUserExist(id) {
+export async function verifyUserExist(id) {
   return new Promise((resolve, reject) => {
+    const user = resources.find(user => user.id === id);
 
-    fs.readFile('./data/data.json', 'utf8', (err, data) => {
-      if (err) {
-        throw new Error(400);
-      }
-
-      let users = JSON.parse(data);
-      const user = users.find(user => user.id === id);
-
-      if (!user || user === undefined ) {
-        resolve(false);
-      } else {
-        resolve(true);
-      }
-    });
-  });
-}
-
-async function getAllresources() {
-  return new Promise((resolve, reject) => {
-    fs.readFile('./data/data.json', 'utf8', (err, json) => {
-
-      if (err) {
-          console.error('Erreur lors de la lecture du fichier :', err);
-          return;
-      }
-      
-      try {
-
-        let resources = JSON.parse(json);
-
-        if (!resources) {
-            throw new Error('resources vide');
-        }
-
-        resources = resources.filter(resource => resource.position && resource.position.length > 0);
-
-        resolve(resources)
-      } catch(error) {
-        reject(error);
-      }
-    });
-  })  
-}
-
-async function grabPotion(userSource, potion) {
-  return new Promise((resolve, reject) => {
-    fs.readFile('./data/data.json', 'utf8', (err, data) => {
-      if (err) {
-        throw new Error(400);
-      }
-      try {
-        let users = JSON.parse(data);
-        const userS = users.find(user => user.id === userSource);
-        const userD = users.find(user => user.id === potion);
-
-        if (!userS || !userD) {
-          throw new Error(404);
-        }
-
-        const [x1, y1] = userS.position.map(Number);
-        const [x2, y2] = userD.position.map(Number);
-        
-        const dist = distance(x1, y1, x2, y2);
-
-        if(userD.role == "FLASK") {
-          if (dist <= 5) {
-            userS.potions += 1;
-
-            //l'utilisateur prends le ttl de la potion
-            userS.ttl = userD.ttl;
-    
-            //supprimer la potion
-            const userDIndex = users.findIndex(user => user.id === potion);
-            users.splice(userDIndex, 1);
-          } else {
-            throw new Error(403);
-          }
-        } else {
-          throw new Error(400)
-        }
-
-        let newUser = JSON.stringify(users, null, 4);
-
-        fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
-            if (err) {
-                console.error('Erreur écriture dans le fichier :', err);
-                return;
-            }
-        });
-        resolve();
-      } catch(error) {
-        reject(error);
-      }
-    });
-  });
-}
-
-async function terminatePirate(userSource, userDestine) {
-  return new Promise((resolve, reject) => {
-    fs.readFile('./data/data.json', 'utf8', (err, data) => {
-    if (err) {
-      throw new Error(400);
+    if (!user || user === undefined ) {
+      resolve(false);
+    } else {
+      resolve(true);
     }
+  });
+}
+
+export async function getAllresources() {
+  return new Promise((resolve, reject) => {
     try {
-      let users = JSON.parse(data);
-      const userS = users.find(user => user.id === userSource);
-      const userD = users.find(user => user.id === userDestine);
+      if (!resources) {
+          throw new Error('resources vide');
+      }
+
+      const filteredResources = resources.filter(resource => resource.position && resource.position.length > 0);
+
+      resolve(filteredResources);
+    } catch(error) {
+      reject(error);
+    }
+  });
+}
+
+export async function grabPotion(userSource, potion) {
+  return new Promise((resolve, reject) => {
+    try {
+      const userS = resources.find(user => user.id === userSource);
+      const userDIndex = resources.findIndex(user => user.id === potion);
+      const userD = resources[userDIndex];
+
+      if (!userS || !userD) {
+        throw new Error(404);
+      }
+
+      const [x1, y1] = userS.position.map(Number);
+      const [x2, y2] = userD.position.map(Number);
+      
+      const dist = distance(x1, y1, x2, y2);
+
+      if(userD.role == "FLASK") {
+        if (dist <= 5) {
+          userS.potions += 1;
+
+          //l'utilisateur prends le ttl de la potion
+          userS.ttl = userD.ttl;
+
+          //supprimer la potion
+          resources.splice(userDIndex, 1);
+        } else {
+          throw new Error(403);
+        }
+      } else {
+        throw new Error(400)
+      }
+
+      resolve();
+    } catch(error) {
+      reject(error);
+    }
+  });
+}
+
+export async function terminatePirate(userSource, userDestine) {
+  return new Promise((resolve, reject) => {
+    try {
+      const userS = resources.find(user => user.id === userSource);
+      const userDIndex = resources.findIndex(user => user.id === userDestine);
+      const userD = resources[userDIndex];
 
       if (!userS || !userD) {
         throw new Error(404);
@@ -127,100 +93,60 @@ async function terminatePirate(userSource, userDestine) {
         userS.terminated += 1;
 
         //supprimer le pirate
-        const userDIndex = users.findIndex(user => user.id === userDestine);
-        users.splice(userDIndex, 1);
+        resources.splice(userDIndex, 1);
       } else {
         throw new Error(400)
       }
 
-      let newUser = JSON.stringify(users, null, 4);
-
-      fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
-          if (err) {
-              console.error('Erreur écriture dans le fichier :', err);
-              return;
-          }
-      });
       resolve();
     } catch(error) {
       reject(error);
     }
   });
- });
 }
 
-async function villagerIntoPirate(userSource, userDestine) {
+export async function villagerIntoPirate(userSource, userDestine) {
   return new Promise((resolve, reject) => {
-    fs.readFile('./data/data.json', 'utf8', (err, data) => {
-      if (err) {
-        throw new Error(400);
+    try {
+      const userS = resources.find(user => user.id === userSource);
+      const userD = resources.find(user => user.id === userDestine);
+
+      if (!userS || !userD) {
+        throw new Error(404);
       }
-      try {
-        let users = JSON.parse(data);
-        const userS = users.find(user => user.id === userSource);
-        const userD = users.find(user => user.id === userDestine);
 
-        if (!userS || !userD) {
-          throw new Error(404);
-        }
-
-        if(userS.role == "PIRATE" && userD.role == "VILLAGEOIS" && userS.potions > 0) {
-          userS.potions -= 1;
-          userS.turned += 1;
-      
-          userD.role = "PIRATE";
-          userD.terminated = 0;
-        } else {
-          //TODO mal géré stop le programme
-          throw new Error(400)
-        }
-
-        let newUser = JSON.stringify(users, null, 4);
-
-        fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
-            if (err) {
-                console.error('Erreur écriture dans le fichier :', err);
-                return;
-            }
-        });
-        resolve();
-      } catch(error) {
-        reject(error);
+      if(userS.role == "PIRATE" && userD.role == "VILLAGEOIS" && userS.potions > 0) {
+        userS.potions -= 1;
+        userS.turned += 1;
+    
+        userD.role = "PIRATE";
+        userD.terminated = 0;
+      } else {
+        throw new Error(400)
       }
-    });
+
+      resolve();
+    } catch(error) {
+      reject(error);
+    }
   });
 }
 
-async function modifyPosition(id, position) {
+export async function modifyPosition(id, position) {
   return new Promise((resolve, reject) => {
-    fs.readFile('./data/data.json', 'utf8', (err, data) => {
-      if (err) {
-        throw new Error(400);
-      }
-
-      let users = JSON.parse(data);
-      const user = users.find(user => user.id === id);
+    try {
+      const user = resources.find(user => user.id === id);
 
       if (!user) {
         throw new Error(404);
       }
 
-      try {
-        user.position = position; 
+      user.position = position;
 
-        let newUser = JSON.stringify(users, null, 4);
-    
-        fs.writeFile('./data/data.json', newUser, 'utf8', (err) => {
-            if (err) {
-                console.error('Erreur écriture dans le fichier :', err);
-                return;
-            }
-        });
-        resolve();
-      } catch(error) {
-        reject(error);
-      }
-    });
+      resolve();
+    } catch(error) {
+      reject(error);
+    }
   });
 }
 
@@ -240,7 +166,6 @@ export async function getResources(options, origin, token) {
     });
     
     const resources = await getAllresources();
-
     return {
       status: '200',
       data: resources
@@ -387,3 +312,29 @@ export async function putResourceIdPosition(options, origin, token) {
     }
   }
 }
+
+export async function decreaseTTL() {
+  try {
+    const resources = await getAllresources();
+
+    resources.forEach(resource => {
+      if(resource.role === "PIRATE" || resource.role === "VILLAGEOIS" ) {
+        if(resource.ttl >= 5) {
+          resource.ttl = resource.ttl - 5;
+        }
+        else {
+          resource.ttl = 0;
+          if (resource.potions >= 1) {
+            resource.potions = resource.potions - 1;
+            resource.ttl = globalTtl;
+          }
+        }
+      }
+    });
+
+  } catch(error) {
+    console.error('Erreur lors de la mise à jour du TTL :', error);
+  }
+}
+
+setInterval(decreaseTTL, 5000);

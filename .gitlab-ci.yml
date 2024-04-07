@@ -10,9 +10,12 @@ variables:
   # Use the cached directory above.
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
-deploy:
-    # only:
-    #    - master
+stages:
+  - users
+  - api
+
+deploy-users:
+    stage: users
     image: maven:3.9.6-eclipse-temurin-21 # docker image with Maven
     before_script:
         - ./ci/setup-mvn-proxy.sh
@@ -23,6 +26,17 @@ deploy:
         - mvn clean package
         - which scp
         - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY target/users.war gitlabci@192.168.75.36:/opt/tomcat/webapps/users.war
-        - cd ..
-        - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r api/ gitlabci@192.168.75.36:~/
-        - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@192.168.75.36 'cd api && npm i && pm2 delete all && pm2 start index.js'
+
+deploy-api:
+    stage: api
+    image: node:21
+    before_script:
+      - chmod 400 $CI_SSH_KEY
+      - cd admin
+      - npm install && npm run build
+    script:
+      - cd ../api
+      - npm install && npm test
+      - cd ..
+      - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r api/ gitlabci@192.168.75.36:~/
+      - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@192.168.75.36 'cd api && cp -r public/* /usr/share/nginx/html/secret/ && pm2 delete all && pm2 start index.js'
