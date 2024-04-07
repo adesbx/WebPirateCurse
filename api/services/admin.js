@@ -103,7 +103,7 @@ async function verifyRole(login, origin) {
   })
 }
 
-async function verifyPositionInZRR(position) {
+export async function verifyPositionInZRR(position) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/zrrdata.json', 'utf8', (err, data) => {
       if (err) {

@@ -55,7 +55,7 @@ export async function getAllresources() {
   })  
 }
 
-async function grabPotion(userSource, potion) {
+export async function grabPotion(userSource, potion) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
@@ -108,7 +108,7 @@ async function grabPotion(userSource, potion) {
   });
 }
 
-async function terminatePirate(userSource, userDestine) {
+export async function terminatePirate(userSource, userDestine) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
     if (err) {
@@ -192,7 +192,7 @@ async function villagerIntoPirate(userSource, userDestine) {
   });
 }
 
-async function modifyPosition(id, position) {
+export async function modifyPosition(id, position) {
   return new Promise((resolve, reject) => {
     fs.readFile('./data/data.json', 'utf8', (err, data) => {
       if (err) {
