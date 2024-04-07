@@ -93,7 +93,7 @@ public class UserRessourceController {
     @ResponseBody
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3376", "http://192.168.75.36:8080",
             "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
-            "https://192.168.75.36/game", "https://192.168.75.36/api"})
+            "https://192.168.75.36/game", "https://192.168.75.36/api", "https://192.168.75.36/secret"})
     @GetMapping(value = "/users/{login}", produces = {"application/json", "application/xml"})
     @Operation(summary = "Get one user in json/xml/html format",
             tags = "Operation REST",

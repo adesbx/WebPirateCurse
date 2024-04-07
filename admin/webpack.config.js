@@ -34,10 +34,6 @@ const config = {
             chunks: ['admin']
         }),
         new ESLintPlugin(),
-        // Add your plugins here
-        new webpack.DefinePlugin({
-            'process.env.PATHAPI': 'http://localhost:3376',//Surement ça mais ça fonctionne pas pour le moment
-        }),
         // Learn more about plugins from https://webpack.js.org/configuration/plugins/
     ],
     module: {

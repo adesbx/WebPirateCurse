@@ -48,7 +48,7 @@ public class UsersOperationsController {
      */
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3376", "http://192.168.75.36:8080",
             "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
-            "https://192.168.75.36/game", "https://192.168.75.36/api"})
+            "https://192.168.75.36/game", "https://192.168.75.36/api", "https://192.168.75.36/secret"})
     @ResponseBody
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "To let a user connect",
@@ -95,7 +95,7 @@ public class UsersOperationsController {
 
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3376", "http://192.168.75.36:8080",
             "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
-            "https://192.168.75.36/game", "https://192.168.75.36/api"})
+            "https://192.168.75.36/game", "https://192.168.75.36/api", "https://192.168.75.36/secret"})
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     @Operation(summary = "To let a user connect",
             tags = "Operation controller",
@@ -138,7 +138,7 @@ public class UsersOperationsController {
      */
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3376", "http://192.168.75.36:8080",
             "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
-            "https://192.168.75.36/game", "https://192.168.75.36/api"})
+            "https://192.168.75.36/game", "https://192.168.75.36/api", "https://192.168.75.36/secret"})
     @PostMapping("/logout")
     @Operation(summary = "To let a user disconnect",
             tags = "Operation controller",
