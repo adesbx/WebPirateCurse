@@ -101,7 +101,14 @@ async function getAllRessources() {
 		}
 		ressources.forEach(ressource => {
 			// console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
-			groupMarker.push(L.marker([ressource.position[0], ressource.position[1]]).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
+			groupMarker.push(
+				L.marker([ressource.position[0], ressource.position[1]])
+				.addTo(mymap)
+				.bindPopup(`${ressource.id}<br>${ressource.role}`)
+				.on('mouseover', function(e) {
+					this.openPopup();
+				})
+			);
 		});
 		mymap.setView(previousMapCenter, previousMapZoom);
 	} catch (err) {
