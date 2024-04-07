@@ -1,5 +1,5 @@
 import axios from 'axios';
-import fs from 'fs';
+import {resources} from "../data/data.js";
 
 let globalTtl=60;
 
@@ -20,19 +20,14 @@ async function authenticate(token, origin) {
   })
 }
 
-
 export async function setZRR(dataZRR) {
   return new Promise((resolve, reject) => {
     try {
-      const jsonDataZRR = JSON.stringify(dataZRR, null, 4);
-      fs.writeFile('./data/zrrdata.json', jsonDataZRR, { encoding: 'utf8', flag: 'w' }, (err) => {
-          if (err) {
-              console.error('Erreur écriture dans le fichier :', err);
-              reject(err);
-          }
-      });
+      global.zrr = dataZRR;
+
       resolve();
     } catch(error) {
+      console.error('Erreur lors de la mise à jour des données ZRR :', error);
       reject(error);
     }
   });
@@ -41,48 +36,32 @@ export async function setZRR(dataZRR) {
 
 export async function spawnFlask(dataFlask) {
   return new Promise((resolve, reject) => {
-    fs.readFile('./data/data.json', 'utf8', (err, data) => {
-      if (err) {
-        throw new Error(400);
-      }
-      try {
-        const existingData = JSON.parse(data);
-        existingData.push(dataFlask);
-        const jsonDataFlask = JSON.stringify(existingData, null, 4);
-        fs.writeFile('./data/data.json', jsonDataFlask, 'utf8', (err) => {
-            if (err) {
-                console.error('Erreur écriture dans le fichier :', err);
-                reject(err);
-            }
-        });
-        resolve();
-      } catch(error) {
-        reject(error);
-      }
-    });
+    try {
+      resources.push(dataFlask);
+
+      resolve();
+    } catch(error) {
+      console.error('Erreur lors de l\'ajout du flacon :', error);
+      reject(error);
+    }
   });
 }
 
 
-async function newFlaskId() {
+export async function newFlaskId() {
   return new Promise((resolve, reject) => {
-    fs.readFile('./data/data.json', 'utf8', (err, data) => {
-      if (err) {
-        throw new Error(400);
-      }
-      try {
-        let flasks = JSON.parse(data)
-        // Filtrer les objets de rôle "FLASK" et extraire leurs ID
-        let flaskIds = flasks.filter(item => item.role === 'FLASK').map(item => item.id);
+    try {
+      // Filtrer les objets de rôle "FLASK" et extraire leurs ID
+      let flaskIds = resources.filter(item => item.role === 'FLASK').map(item => item.id);
 
-        // Extraire les nombres des ID et trouver le dernier nombre
-        let numbers = flaskIds.map(id => parseInt(id.match(/\d+/)[0])).sort((a, b) => a - b);
-        let lastNumber = numbers.length > 0 ? numbers[numbers.length - 1] : 0;
-        resolve(lastNumber + 1);
-      } catch(error) {
-        reject(error);
-      }
-    });
+      // Extraire les nombres des ID et trouver le dernier nombre
+      let numbers = flaskIds.map(id => parseInt(id.match(/\d+/)[0])).sort((a, b) => a - b);
+      let lastNumber = numbers.length > 0 ? numbers[numbers.length - 1] : 0;
+      resolve(lastNumber + 1);
+    } catch(error) {
+      console.error('Erreur lors de la génération d\'un nouvel ID de flacon :', error);
+      reject(error);
+    }
   });
 }
 
@@ -105,22 +84,17 @@ async function verifyRole(login, origin) {
 
 export async function verifyPositionInZRR(position) {
   return new Promise((resolve, reject) => {
-    fs.readFile('./data/zrrdata.json', 'utf8', (err, data) => {
-      if (err) {
-        throw new Error(400);
-      }
-      try {
-        const zrrdata = JSON.parse(data);
-        if(position[0] < zrrdata.positionNE[0] && position[0] > zrrdata.positionSO[0]
-          && position[1] < zrrdata.positionNE[1] && position[1] > zrrdata.positionSO[1]) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-      } catch(error) {
-        reject(error);
-      }
-    });
+    try {
+      if(position[0] < global.zrr.positionNE.lat && position[0] > global.zrr.positionSO.lat
+        && position[1] < global.zrr.positionNE.lng && position[1] > global.zrr.positionSO.lng) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+    } catch(error) {
+      console.error('Erreur lors de la vérification de la position dans la ZRR :', error);
+      reject(error);
+    }
   });
 }
 
@@ -129,6 +103,8 @@ export async function postInitZRR(options, origin, token) {
    const login = await authenticate(token, origin);
    if(await verifyRole(login, origin)) {
     let SO,NE,SE,NO;
+    console.log(options);
+    console.log(options.latLng1.lat);
     if(options.latLng1.lat<options.latLng2.lat) { // c'est O
       if(options.latLng1.lng<options.latLng2.lng) { // c'est SO
         SO = options.latLng1;
