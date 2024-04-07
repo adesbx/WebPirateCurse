@@ -41,4 +41,5 @@ deploy-api:
       - npm install
       - cd ..
       - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r api/ gitlabci@192.168.75.36:~/
-      - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@192.168.75.36 'cd api && npm i && cp -r public/* /usr/share/nginx/html/secret/ &&  pm2 start index.js'
+      - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r admin/ gitlabci@192.168.75.36:~/
+      - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@192.168.75.36 'cd admin && npm i && npm run build && cd api && npm i && cp -r public/* /usr/share/nginx/html/secret/ &&  pm2 start index.js'
