@@ -7,24 +7,41 @@
       <label for="password">Password :&nbsp;</label>
       <input type="password" name="password" id="password" />
       <br />
-      <button @click="$emit('loginEvent')">Send</button>
+      <button @click="login()">Send</button>
   
   </template>
   
-  <script>
-  export default {
-    name: "Login",
-    props: {
-      message: String
-    },
-    methods: {
-      login: () => {
-        console.log("Login cliqué.");
-        //TODO qqch ici
-      },
-    },
-    emits: ['loginEvent']
-  };
+  <script setup>
+
+  const emit = defineEmits(['loginEvent'])
+
+  async function login() {
+    const body = {
+            login: document.getElementById("login").value,                             
+            password: document.getElementById("password").value
+        };
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        const requestConfig = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(body),
+            mode: "cors"
+        };
+        const response = await fetch("https://192.168.75.36:8443/users/login", requestConfig)
+            .then((response) => {
+                if (response.headers.get("Authentication")) {
+                    const token = response.headers.get("Authentication");
+                    localStorage.setItem('token', token);
+                    emit('loginEvent')
+                } else {
+                    console.log("Mauvais mot de passe");
+                }
+            })
+        .catch((err) => {
+            console.error("In post login: " + err);
+        })
+  }
   </script>
   
   <style scoped>
@@ -35,4 +52,3 @@
     border: 1px solid;
   }
   </style>
-  

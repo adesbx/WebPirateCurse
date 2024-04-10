@@ -1,7 +1,11 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-var logged = false;
+import Login from './views/Login.vue'
+import { ref } from 'vue'
+
+var logged = ref(false);
+var message = undefined;
 </script>
 
 <template>
@@ -18,7 +22,9 @@ var logged = false;
     </div>
   </header> -->
 
-  <RouterView />
+  <p v-if="logged">  <HelloWorld msg="connected" /> </p>
+  <p v-else>  <Login @loginEvent ='logged = !logged'/> </p>
+  <!-- <RouterView /> -->
 </template>
 
 <style scoped>
