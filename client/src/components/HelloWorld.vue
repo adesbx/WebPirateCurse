@@ -9,13 +9,14 @@ defineProps({
 
 <template>
   <div class="greetings">
-    <h1 class="green">Instruction Pour WC</h1>
+    <h1>{{ msg }}</h1>
+    <!-- <h1 class="green">Instruction Pour WC</h1>
     <h3>
       {{ msg }}
       CACA +
       <a href="https://vitejs.dev/" target="_blank" rel="noopener">Vite</a> + PROUT +
       <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>.
-    </h3>
+    </h3> -->
   </div>
 </template>
 

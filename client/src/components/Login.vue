@@ -1,6 +1,4 @@
 <template>
-    <h2>{{ message }}</h2>
-  
       <label for="login">Login :&nbsp;</label>
       <input type="text" name="login" id="login" />
       <br />
@@ -13,7 +11,7 @@
   
   <script setup>
 
-  const emit = defineEmits(['loginEvent'])
+  const emit = defineEmits(['loginEvent', 'messageError'])
 
   async function login() {
     const body = {
@@ -35,11 +33,11 @@
                     localStorage.setItem('token', token);
                     emit('loginEvent')
                 } else {
-                    console.log("Mauvais mot de passe");
+                    emit('messageError', 'Mauvais mot de passe')
                 }
             })
         .catch((err) => {
-            console.error("In post login: " + err);
+            emit('messageError', 'Erreur lors de la connexion')
         })
   }
   </script>

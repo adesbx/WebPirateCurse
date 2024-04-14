@@ -1,11 +1,12 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import Login from './views/Login.vue'
+import Login from './components/Login.vue'
+import MyView from './components/MyView.vue'
 import { ref } from 'vue'
 
 var logged = ref(false);
-var message = undefined;
+const errorMessage = ref("");
 </script>
 
 <template>
@@ -22,8 +23,16 @@ var message = undefined;
     </div>
   </header> -->
 
-  <p v-if="logged">  <HelloWorld msg="connected" /> </p>
-  <p v-else>  <Login @loginEvent ='logged = !logged'/> </p>
+  <p v-if="logged">  
+    <HelloWorld msg="Vous êtes bien connecté" />  
+    <MyView />
+    <button @click="logged = !logged">Loggout</button>
+  </p>
+  <p v-else> 
+    <HelloWorld msg="Veuillez vous connectez" /> 
+    <h2>{{ errorMessage }}</h2>
+    <Login @loginEvent ='logged = !logged' @messageError="errorMessage = $event"/> 
+  </p>
   <!-- <RouterView /> -->
 </template>
 

@@ -71,6 +71,23 @@
         lng = e.latlng.lng;
         this.updateMap();
       });
+      
+      const headers = new Headers();
+        headers.append("Authorization", localStorage.getItem('token'))
+        headers.append("Accept", "application/json");
+        const requestConfig = {
+            method: "GET",
+            headers: headers,
+            mode: "cors"
+        };
+      await fetch("https://192.168.75.36/game/api/zrr", requestConfig)
+            .then((response) => {
+              console.log(response)
+              L.rectangle(response, {color: "#ff7800", weight: 1}).addTo(mymap);
+            })
+        .catch((err) => {
+            console.log(err)
+        })
     },
   };
   </script>
