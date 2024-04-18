@@ -80,14 +80,16 @@
             method: "GET",
             headers: headers,
         };
-      await fetch("https://192.168.75.36/game/api/zrr", requestConfig)
+      var bounds = await fetch("https://192.168.75.36/game/api/zrr", requestConfig)
             .then((response) => {
-              console.log(response)
-              L.rectangle(response, {color: "#ff7800", weight: 1}).addTo(mymap);
+              return response.json()
             })
         .catch((err) => {
             console.log(err)
         })
+      const zrr = L.latLngBounds(L.latLng(bounds.positionSO.lat, bounds.positionSO.lng),
+                           L.latLng(bounds.positionNE.lat, bounds.positionNE.lng));
+      L.rectangle(zrr, {color: "#ff7800", weight: 1}).addTo(mymap);
     },
   };
   </script>
