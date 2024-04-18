@@ -8,17 +8,61 @@
       <div id="map" class="map" ref="map"></div>
     </section>
   </template>
-  
+
   <script>
   import "leaflet/dist/leaflet.css";
   //import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
-  
+
   // initialisation de la map
   let lat = 45.782,
     lng = 4.8656,
     zoom = 19;
   let mymap = {};
-  
+
+
+  async function getAllRessources() {
+    const headers = new Headers();
+    headers.append("Authentication", localStorage.getItem('token'));
+    headers.append("Accept", "application/json");
+    headers.append("Origin", "http://localhost:5173/");
+    const requestConfig = {
+      method: "GET",
+      headers: headers,
+    };
+    try {
+      const result = await fetch(`https://192.168.75.36/game/api/resources`, requestConfig)
+      .then((response) => {
+        return response;
+      })
+      .catch((err) => {
+        console.error("In get ressources: " + err);
+      })
+
+      const ressources = await result.json();
+      let previousMapCenter = mymap.getCenter();
+      let previousMapZoom = mymap.getZoom();
+
+      while (groupMarker.length > 0) {
+        let layer = groupMarker.pop();
+        mymap.removeLayer(layer);	
+      }
+      ressources.forEach(ressource => {
+        // console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
+        groupMarker.push(
+          L.marker([ressource.position[0], ressource.position[1]])
+          .addTo(mymap)
+          .bindPopup(`${ressource.id}<br>${ressource.role}`)
+          .on('mouseover', function(e) {
+            this.openPopup();
+          })
+        );
+      });
+      mymap.setView(previousMapCenter, previousMapZoom);
+    } catch (err) {
+          console.error("In get ressources: " + err);
+      }
+  }
+
   export default {
     name: "MyMap",
     methods: {
@@ -58,7 +102,9 @@
             "pk.eyJ1IjoieGFkZXMxMDExNCIsImEiOiJjbGZoZTFvbTYwM29sM3ByMGo3Z3Mya3dhIn0.df9VnZ0zo7sdcqGNbfrAzQ",
         }
       ).addTo(mymap);
-  
+      
+      getAllRessources();
+
       // Ajout d'un marker
       L.marker([45.78207, 4.86559])
         .addTo(mymap)
@@ -73,9 +119,9 @@
       });
       
       const headers = new Headers();
-        headers.append("Authentication", localStorage.getItem('token'))
+        headers.append("Authentication", localStorage.getItem('token'));
         headers.append("Accept", "application/json");
-        headers.append("Origin", "http://localhost:5173/")
+        headers.append("Origin", "http://localhost:5173/");
         const requestConfig = {
             method: "GET",
             headers: headers,
@@ -92,6 +138,9 @@
       L.rectangle(zrr, {color: "#ff7800", weight: 1}).addTo(mymap);
     },
   };
+
+  setInterval(getAllRessources, 5000);
+
   </script>
   
   <style scoped>
