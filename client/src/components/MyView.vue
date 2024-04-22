@@ -18,6 +18,177 @@
     lng = 4.8656,
     zoom = 19;
   let mymap = {};
+  let groupMarker = [];
+
+  let mockZRR = {
+    "positionNE": {
+        "lat": 45.799485997405384,
+        "lng": 4.90891456604004
+    },
+    "positionSO": {
+        "lat": 45.77554537118828,
+        "lng": 4.762830734252931
+    }
+  }
+  
+  let ressource = [
+      {
+          "id": "toto",
+          "position": [
+              "45.78196433811854",
+              "4.865881204605103"
+          ],
+          "role": "PIRATE",
+          "ttl": 0,
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+      },
+      {
+          "id": "John",
+          "position": [
+              "45.78216635696405",
+              "4.864507913589478"
+          ],
+          "role": "VILLAGEOIS",
+          "ttl": 0,
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+      },
+      {
+          "id": "titi",
+          "position": [
+              "45.78282104245197",
+              "4.864250421524049"
+          ],
+          "role": "PIRATE",
+          "ttl": 0,
+          "potions": 0,
+          "terminated": 10,
+          "turned": 0
+      },
+      {
+          "id": "potion1",
+          "position": [
+              "45.78220619944917",
+              "4.865867793560029"
+          ],
+          "role": "FLASK",
+          "ttl": 50,
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+      },
+      {
+          "id": "potion2",
+          "position": [
+              "45.78163137968618",
+              "4.865838289260865"
+          ],
+          "role": "FLASK",
+          "ttl": 60,
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+      },
+      {
+          "id": "potion3",
+          "position": [
+              "45.781825917472084",
+              "4.868005514144898"
+          ],
+          "role": "FLASK",
+          "ttl": 60,
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+      },
+      {
+          "id": "potion4",
+          "position": [
+              45.78276866789585,
+              4.868021607398988
+          ],
+          "role": "FLASK",
+          "ttl": 60,
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+      },
+      {
+          "id": "potion5",
+          "position": [
+              45.78346075627386,
+              4.866701960563661
+          ],
+          "role": "FLASK",
+          "ttl": "20",
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+      },
+      {
+          "id": "ADMIN",
+          "position": [
+              "45.78159022737526",
+              "4.86721158027649"
+          ],
+          "role": "ADMIN",
+          "ttl": 0,
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+      },
+      {
+          "id": "potion6",
+          "position": [
+              45.78114877340201,
+              4.866026043891908
+          ],
+          "role": "FLASK",
+          "ttl": 60,
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+      },
+      {
+          "id": "potionTest",
+          "position": [
+              "45.78220619944917",
+              "4.865867793560029"
+          ],
+          "role": "FLASK",
+          "ttl": 50,
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+      },
+      {
+          "id": "potionTest",
+          "position": [
+              "45.78220619944917",
+              "4.865867793560029"
+          ],
+          "role": "FLASK",
+          "ttl": 50,
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+      },
+      {
+          "id": "potionTest",
+          "position": [
+              "45.78220619944917",
+              "4.865867793560029"
+          ],
+          "role": "FLASK",
+          "ttl": 50,
+          "potions": 0,
+          "terminated": 0,
+          "turned": 0
+      }
+  ];
 
 
   async function getAllRessources() {
@@ -78,6 +249,7 @@
     async beforeMount() {
       // HERE is where to load Leaflet components!
       const L = await import("leaflet");
+
       // Procédure d'initialisation
       mymap = L.map("map", {
         center: [lat, lng],
@@ -102,8 +274,8 @@
             "pk.eyJ1IjoieGFkZXMxMDExNCIsImEiOiJjbGZoZTFvbTYwM29sM3ByMGo3Z3Mya3dhIn0.df9VnZ0zo7sdcqGNbfrAzQ",
         }
       ).addTo(mymap);
-      
-      getAllRessources();
+      //TODO FIX THIS
+      // getAllRessources();
 
       // Ajout d'un marker
       L.marker([45.78207, 4.86559])
@@ -118,28 +290,71 @@
         this.updateMap();
       });
       
-      const headers = new Headers();
-        headers.append("Authentication", localStorage.getItem('token'));
-        headers.append("Accept", "application/json");
-        headers.append("Origin", "http://localhost:5173/");
-        const requestConfig = {
-            method: "GET",
-            headers: headers,
-        };
-      var bounds = await fetch("https://192.168.75.36/game/api/zrr", requestConfig)
-            .then((response) => {
-              return response.json()
-            })
-        .catch((err) => {
-            console.log(err)
-        })
-      const zrr = L.latLngBounds(L.latLng(bounds.positionSO.lat, bounds.positionSO.lng),
-                           L.latLng(bounds.positionNE.lat, bounds.positionNE.lng));
-      L.rectangle(zrr, {color: "#ff7800", weight: 1}).addTo(mymap);
+      // const headers = new Headers();
+      //   headers.append("Authentication", localStorage.getItem('token'));
+      //   headers.append("Accept", "application/json");
+      //   headers.append("Origin", "http://localhost:5173/");
+      //   const requestConfig = {
+      //       method: "GET",
+      //       headers: headers,
+      //   };
+      // var bounds = await fetch("https://192.168.75.36/game/api/zrr", requestConfig)
+      //       .then((response) => {
+      //         return response.json()
+      //       })
+      //   .catch((err) => {
+      //       console.log(err)
+      //   })
+      // const zrr = L.latLngBounds(L.latLng(bounds.positionSO.lat, bounds.positionSO.lng),
+      //                      L.latLng(bounds.positionNE.lat, bounds.positionNE.lng));
+      // L.rectangle(zrr, {color: "#ff7800", weight: 1}).addTo(mymap);
+
+      
+      var corner1 = L.latLng(mockZRR.positionNE.lat,
+          mockZRR.positionNE.lng)
+		  var corner2 = L.latLng(mockZRR.positionSO.lat,
+          mockZRR.positionSO.lng)
+      let bounds = L.latLngBounds(corner1, corner2);
+      L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(mymap);
+      mymap.fitBounds(bounds);
+
+      while (groupMarker.length > 0) {
+        let layer = groupMarker.pop();
+        mymap.removeLayer(layer);	
+		  }
+      const pirateIcons = ["pirate-1", "pirate-2", "pirate-3", "pirate-4"];
+      const villagerIcon = ["villageois-1", "villageois-2", "villageois-3", "villageois-4"];
+      ressource.forEach(ressource => {
+        // console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
+        if(ressource.role == "PIRATE") {
+          //IMAGE RANDOM DE PIRATE
+          const randomIndex = Math.floor(Math.random() * pirateIcons.length);
+          const randomPirateIcon = pirateIcons[randomIndex];
+
+          const icon = L.icon({
+            iconUrl: `../assets/img/${randomPirateIcon}.png`,
+          });
+
+          groupMarker.push(L.marker([ressource.position[0], ressource.position[1]], {icon: icon}).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
+        }
+        else if( ressource.role == "VILLAGEOIS") {
+          //IMAGE RANDOM DE VILLAGEOIS
+          const randomIndex = Math.floor(Math.random() * villagerIcon.length);
+          const randomVillageoisIcon = villagerIcon[randomIndex];
+
+          const icon = L.icon({
+            iconUrl: `../assets/img/${randomVillageoisIcon}.png`,
+          });
+          groupMarker.push(L.marker([ressource.position[0], ressource.position[1]], {icon: icon}).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
+        } else if(ressource.role == "FLASK") {
+          groupMarker.push(L.marker([ressource.position[0], ressource.position[1]]).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
+        }
+      });
+
     },
   };
 
-  setInterval(getAllRessources, 5000);
+  // setInterval(getAllRessources, 5000);
 
   </script>
   
