@@ -1,61 +1,24 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import Login from './components/Login.vue'
-import MyView from './components/MyView.vue'
-import { ref } from 'vue'
-
-var logged = ref(false);
-const errorMessage = ref("");
-
-async function authenticate() {
-  const headers = new Headers();
-  headers.append("Content-Type", "application/json");
-  headers.append("Accept", "application/json");
-  const requestConfig = {
-      method: "GET",
-      headers: headers
-  };
-  const params = new URLSearchParams();
-  params.append('jwt', localStorage.getItem('token'));
-  params.append('origin', window.location.origin);
-  await fetch("http://192.168.75.36:8080/users/authenticate?" + params , requestConfig)
-      .then((response) => {
-          if (response.headers.get("Authentication")) {
-            console.log(response.data)
-          } 
-      })
-  .catch((err) => {
-      console.log(err)
-  })
-}
 </script>
 
 <template>
-  <!-- <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <header>
+    <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <!-- <HelloWorld msg="You did it!" /> -->
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        
+        <RouterLink to="/profile">Profile</RouterLink>
       </nav>
     </div>
-  </header> -->
+  </header>
 
-  <p v-if="logged">  
-    <HelloWorld msg="Vous êtes bien connecté" />  
-    <MyView />
-    <button @click="logged = !logged">Loggout</button>
-  </p>
-  <p v-else> 
-    <HelloWorld msg="Veuillez vous connectez" /> 
-    <h2>{{ errorMessage }}</h2>
-    <Login @loginEvent ='logged = !logged' @messageError="errorMessage = $event"/> 
-  </p>
-  <!-- <RouterView /> -->
+  <RouterView />
 </template>
 
 <style scoped>
@@ -112,6 +75,8 @@ nav a:first-of-type {
   }
 
   nav {
+    display: flex;
+    flex-direction: row;
     text-align: left;
     margin-left: -1rem;
     font-size: 1rem;
