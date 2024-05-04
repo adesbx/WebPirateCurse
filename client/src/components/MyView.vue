@@ -51,7 +51,7 @@
               "4.864507913589478"
           ],
           "role": "VILLAGEOIS",
-          "ttl": 0,
+          "ttl": 20,
           "potions": 0,
           "terminated": 0,
           "turned": 0
@@ -328,26 +328,65 @@
         // console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
         if(ressource.role == "PIRATE") {
           //IMAGE RANDOM DE PIRATE
-          const randomIndex = Math.floor(Math.random() * pirateIcons.length);
-          const randomPirateIcon = pirateIcons[randomIndex];
+          let icon;
+          if(ressource.ttl > 0) {
+      
+            icon = L.icon({
+              iconUrl: `src/assets/img/pirate-ttl.png`,
+              iconSize: [30, 30],
+              iconAnchor: [15, 15],
+              popupAnchor: [0, -15]
+            });
 
-          const icon = L.icon({
-            iconUrl: `../assets/img/${randomPirateIcon}.png`,
-          });
+          } else {
+            const randomIndex = Math.floor(Math.random() * pirateIcons.length);
+            const randomPirateIcon = pirateIcons[randomIndex];
+
+            icon = L.icon({
+              iconUrl: `src/assets/img/${randomPirateIcon}.png`,
+              iconSize: [30, 30],
+              iconAnchor: [15, 15],
+              popupAnchor: [0, -15]
+            });
+          }
 
           groupMarker.push(L.marker([ressource.position[0], ressource.position[1]], {icon: icon}).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
         }
         else if( ressource.role == "VILLAGEOIS") {
           //IMAGE RANDOM DE VILLAGEOIS
-          const randomIndex = Math.floor(Math.random() * villagerIcon.length);
-          const randomVillageoisIcon = villagerIcon[randomIndex];
+          let icon;
+          if(ressource.ttl > 0) {
+              
+            icon = L.icon({
+              iconUrl: `src/assets/img/villageois-ttl.png`,
+              iconSize: [30, 30],
+              iconAnchor: [15, 15],
+              popupAnchor: [0, -15]
+            });
 
-          const icon = L.icon({
-            iconUrl: `../assets/img/${randomVillageoisIcon}.png`,
-          });
+          } else {
+            const randomIndex = Math.floor(Math.random() * villagerIcon.length);
+            const randomVillageoisIcon = villagerIcon[randomIndex];
+
+            icon = L.icon({
+              iconUrl: `src/assets/img/${randomVillageoisIcon}.png`,
+              iconSize: [30, 30],
+              iconAnchor: [15, 15],
+              popupAnchor: [0, -15]
+            });
+          }
+
           groupMarker.push(L.marker([ressource.position[0], ressource.position[1]], {icon: icon}).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
         } else if(ressource.role == "FLASK") {
-          groupMarker.push(L.marker([ressource.position[0], ressource.position[1]]).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
+
+          const icon = L.icon({
+            iconUrl: `src/assets/img/potion.png`,
+            iconSize: [30, 60],
+            iconAnchor: [15, 15],
+            popupAnchor: [0, -15]
+          });
+
+          groupMarker.push(L.marker([ressource.position[0], ressource.position[1]], {icon: icon}).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
         }
       });
 
