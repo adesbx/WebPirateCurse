@@ -94,8 +94,7 @@ public class UsersOperationsController {
      * login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
      */
 
-    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:5173",
-            "http://localhost:8080", "http://localhost:3376",
+    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:5173", "http://localhost:8080", "http://localhost:3376",
             "http://192.168.75.36:8080",
             "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
             "https://192.168.75.36/game", "https://192.168.75.36/api", "https://192.168.75.36/secret"})
@@ -139,8 +138,7 @@ public class UsersOperationsController {
      * stockée dans le token JWT)
      *@return Une réponse vide avec un code de statut approprié (204, 400, 401).
      */
-    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:8080", 
-            "http://localhost:3376",
+    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:5173", "http://localhost:8080", "http://localhost:3376",
             "http://192.168.75.36:8080",
             "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
             "https://192.168.75.36/game", "https://192.168.75.36/api", "https://192.168.75.36/secret"})
@@ -182,6 +180,10 @@ public class UsersOperationsController {
      *               stockée dans le token JWT)
      * @return Une réponse vide avec un code de statut approprié (204, 400, 401).
      */
+    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:5173", "http://localhost:8080", "http://localhost:3376",
+            "http://192.168.75.36:8080",
+            "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
+            "https://192.168.75.36/game", "https://192.168.75.36/api", "https://192.168.75.36/secret"})
     @GetMapping("/authenticate")
     @Operation(summary = "To let a user authentificate",
             tags = "Operation controller",
