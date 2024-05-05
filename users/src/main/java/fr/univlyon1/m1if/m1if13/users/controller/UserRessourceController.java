@@ -173,12 +173,12 @@ public class UserRessourceController {
     public void modifyUser(@PathVariable final String login,
                            @RequestBody final UserModifyDto userDto) {
         String[] tab = new String[2];
-        if(userDto.getSpecies() != null) {
+        if (userDto.getSpecies() != null) {
             tab[0] = String.valueOf(userDto.getSpecies());
         } else {
             tab[0] = null;
         }
-        if(userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
             System.out.println(userDto.getPassword());
             tab[1] = userDto.getPassword();
         } else {
@@ -212,12 +212,12 @@ public class UserRessourceController {
     public void modifyUserURL(@PathVariable final String login,
                               @ModelAttribute final UserModifyDto userDto) {
         String[] tab = new String[2];
-        if(userDto.getSpecies() != null) {
+        if (userDto.getSpecies() != null) {
             tab[0] = String.valueOf(userDto.getSpecies());
         } else {
             tab[0] = null;
         }
-        if(userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
             System.out.println(userDto.getPassword());
             tab[1] = userDto.getPassword();
         } else {
