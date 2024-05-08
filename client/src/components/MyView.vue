@@ -396,7 +396,7 @@
   };
 
   //TODO cette fonction devra également envoyer la nouvelle position au serveur
-  function mouvPlayer() {
+  function moovPlayer() {
     ressource.forEach(ressource => {
       if(ressource.id == login) {
         let posFloat = parseFloat(ressource.position[0]) + 0.001
@@ -407,30 +407,58 @@
 
   function majPositionPlayer() {
     for (let i = 0; i < groupMarker.length; i++) {
-    const marker = groupMarker[i];
-    const popupContent = marker.getPopup().getContent();
-    if (popupContent.includes(login)) {
-        const oldIcon = marker.getIcon();
-        mymap.removeLayer(marker);
+      const marker = groupMarker[i];
+      const popupContent = marker.getPopup().getContent();
+      if (popupContent.includes(login)) {
+          const oldIcon = marker.getIcon();
+          mymap.removeLayer(marker);
 
-        const userResource = ressource.find(resource => resource.id === login);
+          const userResource = ressource.find(resource => resource.id === login);
 
-        const newUserMarker = L.marker([userResource.position[0], userResource.position[1]])
-          .addTo(mymap)
-          .bindPopup(`${userResource.id}<br>${userResource.role}`);
-        
-        newUserMarker.setIcon(oldIcon);
-        groupMarker[i] = newUserMarker;
+          const newUserMarker = L.marker([userResource.position[0], userResource.position[1]])
+            .addTo(mymap)
+            .bindPopup(`${userResource.id}<br>${userResource.role}`);
+          
+          newUserMarker.setIcon(oldIcon);
+          groupMarker[i] = newUserMarker;
 
-        break;
+          break;
       }
     }
   }
 
+  async function sendNewPosition() {
+    let userPosition = ressource.find(resource => resource.id === login).position
+    console.log(userPosition)
+    const headers = new Headers();
+    headers.append("Authentication", localStorage.getItem('token'));
+    headers.append("Content-Type", "application/json");
+    const requestConfig = {
+        method: "PUT",
+        headers: headers,
+        body: JSON.stringify(userPosition),
+        mode: "cors"
+    };
+    await fetch(`https://192.168.75.36/game/api/resources/${login}/position`, requestConfig)
+        .then((response) => {
+            if (response.status == 204) {
+              console.log("position modifié")
+            } else {
+              console.log("erreur")
+            }
+        })
+    .catch((err) => {
+        console.log(err)
+    })
+  }
+
   // setInterval(getAllRessources, 5000);
-  //maj position du joueur connecté
-  setInterval(mouvPlayer, 1000);
+
+  setInterval(moovPlayer, 1000);
   setInterval(majPositionPlayer, 1000)
+
+  //fonction bien décommenter lors du deploy ou des test
+  // setInterval(await sendNewPosition, 5000);
   </script>
   
   <style scoped>
