@@ -20,6 +20,8 @@
   let mymap = {};
   let groupMarker = [];
 
+  let login = "John";
+
   let mockZRR = {
     "positionNE": {
         "lat": 45.799485997405384,
@@ -393,8 +395,42 @@
     },
   };
 
-  // setInterval(getAllRessources, 5000);
+  //TODO cette fonction devra également envoyer la nouvelle position au serveur
+  function mouvPlayer() {
+    ressource.forEach(ressource => {
+      if(ressource.id == login) {
+        let posFloat = parseFloat(ressource.position[0]) + 0.001
+        ressource.position[0] = posFloat.toString()
+      }
+    })
+  }
 
+  function majPositionPlayer() {
+    for (let i = 0; i < groupMarker.length; i++) {
+    const marker = groupMarker[i];
+    const popupContent = marker.getPopup().getContent();
+    if (popupContent.includes(login)) {
+        const oldIcon = marker.getIcon();
+        mymap.removeLayer(marker);
+
+        const userResource = ressource.find(resource => resource.id === login);
+
+        const newUserMarker = L.marker([userResource.position[0], userResource.position[1]])
+          .addTo(mymap)
+          .bindPopup(`${userResource.id}<br>${userResource.role}`);
+        
+        newUserMarker.setIcon(oldIcon);
+        groupMarker[i] = newUserMarker;
+
+        break;
+      }
+    }
+  }
+
+  // setInterval(getAllRessources, 5000);
+  //maj position du joueur connecté
+  setInterval(mouvPlayer, 1000);
+  setInterval(majPositionPlayer, 1000)
   </script>
   
   <style scoped>
