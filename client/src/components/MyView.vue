@@ -26,6 +26,8 @@
   let mymap = {};
   let groupMarker = [];
 
+  let login = "John";
+
   let mockZRR = {
     "positionNE": {
         "lat": 45.799485997405384,
@@ -330,6 +332,7 @@
 		  }
       const pirateIcons = ["pirate-1", "pirate-2", "pirate-3", "pirate-4"];
       const villagerIcon = ["villageois-1", "villageois-2", "villageois-3", "villageois-4"];
+
       ressource.forEach(ressource => {
         // console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
         if(ressource.role == "PIRATE") {
@@ -399,8 +402,101 @@
     },
   };
 
-  // setInterval(getAllRessources, 5000);
+  //TODO cette fonction devra également envoyer la nouvelle position au serveur
+  function moovPlayer() {
+    ressource.forEach(ressource => {
+      if(ressource.id == login) {
+        let posFloat = parseFloat(ressource.position[0]) + 0.001
+        ressource.position[0] = posFloat.toString()
+      }
+    })
+  }
 
+  function majPositionPlayer() {
+    for (let i = 0; i < groupMarker.length; i++) {
+      const marker = groupMarker[i];
+      const popupContent = marker.getPopup().getContent();
+      if (popupContent.includes(login)) {
+          const oldIcon = marker.getIcon();
+          mymap.removeLayer(marker);
+
+          const userResource = ressource.find(resource => resource.id === login);
+
+          const newUserMarker = L.marker([userResource.position[0], userResource.position[1]])
+            .addTo(mymap)
+            .bindPopup(`${userResource.id}<br>${userResource.role}`);
+          
+          if(userResource.ttl > 0 ) {
+            newUserMarker.setIcon(oldIcon);
+          } else {
+            if( userResource.role == "VILLAGEOIS") {
+              const icon = L.icon({
+                iconUrl: `src/assets/img/villageois-1.png`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+                popupAnchor: [0, -15]
+              });
+
+              newUserMarker.setIcon(icon);
+            } else if (userResource.role == "PIRATE") {
+              const icon = L.icon({
+                iconUrl: `src/assets/img/pirate-1.png`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+                popupAnchor: [0, -15]
+              });
+
+              newUserMarker.setIcon(icon);
+            }
+          }
+
+          groupMarker[i] = newUserMarker;
+
+          break;
+      }
+    }
+  }
+
+  async function sendNewPosition() {
+    let userPosition = ressource.find(resource => resource.id === login).position
+    console.log(userPosition)
+    const headers = new Headers();
+    headers.append("Authentication", localStorage.getItem('token'));
+    headers.append("Content-Type", "application/json");
+    const requestConfig = {
+        method: "PUT",
+        headers: headers,
+        body: JSON.stringify(userPosition),
+        mode: "cors"
+    };
+    await fetch(`https://192.168.75.36/game/api/resources/${login}/position`, requestConfig)
+        .then((response) => {
+            if (response.status == 204) {
+              console.log("position modifié")
+            } else {
+              console.log("erreur")
+            }
+        })
+    .catch((err) => {
+        console.log(err)
+    })
+  }
+
+  function tst(){
+    ressource.forEach(ressource => {
+      if(ressource.id == login) {
+        ressource.ttl = 0
+      }
+    })
+  }
+
+  // setInterval(getAllRessources, 5000);
+  setInterval(tst, 10000);
+  setInterval(moovPlayer, 10000);
+  setInterval(majPositionPlayer, 1000)
+
+  //fonction bien décommenter lors du deploy ou des test
+  // setInterval(await sendNewPosition, 5000);
   </script>
   
   <style scoped>
