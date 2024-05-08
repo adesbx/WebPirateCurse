@@ -326,6 +326,7 @@
 		  }
       const pirateIcons = ["pirate-1", "pirate-2", "pirate-3", "pirate-4"];
       const villagerIcon = ["villageois-1", "villageois-2", "villageois-3", "villageois-4"];
+
       ressource.forEach(ressource => {
         // console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
         if(ressource.role == "PIRATE") {
@@ -419,7 +420,30 @@
             .addTo(mymap)
             .bindPopup(`${userResource.id}<br>${userResource.role}`);
           
-          newUserMarker.setIcon(oldIcon);
+          if(userResource.ttl > 0 ) {
+            newUserMarker.setIcon(oldIcon);
+          } else {
+            if( userResource.role == "VILLAGEOIS") {
+              const icon = L.icon({
+                iconUrl: `src/assets/img/villageois-1.png`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+                popupAnchor: [0, -15]
+              });
+
+              newUserMarker.setIcon(icon);
+            } else if (userResource.role == "PIRATE") {
+              const icon = L.icon({
+                iconUrl: `src/assets/img/pirate-1.png`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+                popupAnchor: [0, -15]
+              });
+
+              newUserMarker.setIcon(icon);
+            }
+          }
+
           groupMarker[i] = newUserMarker;
 
           break;
@@ -452,9 +476,17 @@
     })
   }
 
-  // setInterval(getAllRessources, 5000);
+  function tst(){
+    ressource.forEach(ressource => {
+      if(ressource.id == login) {
+        ressource.ttl = 0
+      }
+    })
+  }
 
-  setInterval(moovPlayer, 1000);
+  // setInterval(getAllRessources, 5000);
+  setInterval(tst, 10000);
+  setInterval(moovPlayer, 10000);
   setInterval(majPositionPlayer, 1000)
 
   //fonction bien décommenter lors du deploy ou des test
