@@ -7,6 +7,12 @@
       </p>
       <div id="map" class="map" ref="map"></div>
     </section>
+    <section>
+      <h2>actions</h2>
+      <div v-for="r in ressource">
+        {{ r.id }}, {{ r.role }}
+      </div>
+    </section>
   </template>
 
   <script>
