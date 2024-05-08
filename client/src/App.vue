@@ -1,5 +1,8 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { ref } from 'vue'
+
+var logged = ref(true);
 </script>
 
 <template>
@@ -10,14 +13,14 @@ import { RouterLink, RouterView } from 'vue-router'
       <!-- <HelloWorld msg="You did it!" /> -->
 
       <nav>
-        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/" :logged="logged" >Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/profil">Profil</RouterLink>
+        <RouterLink v-if="logged" to="/profil">Profil</RouterLink>
       </nav>
     </div>
   </header>
 
-  <RouterView />
+  <RouterView :logged="logged"  @loginEvent="logged = true" @logoutEvent="logged = false"/>
 </template>
 
 <style scoped>
