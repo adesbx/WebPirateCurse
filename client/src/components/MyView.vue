@@ -11,6 +11,8 @@
       <h2>actions</h2>
       <div v-for="r in ressource">
         {{ r.id }}, {{ r.role }}
+        <button v-if="r.role === 'PIRATE'">kill</button>
+        <br>
       </div>
     </section>
   </template>
@@ -253,6 +255,11 @@
         // La fonction de validation du formulaire renvoie false pour bloquer le rechargement de la page.
         return false;
       },
+    },
+    data() {
+      return {
+        ressource: ressource
+      }
     },
     async beforeMount() {
       // HERE is where to load Leaflet components!
