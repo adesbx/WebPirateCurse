@@ -7,14 +7,6 @@
       </p>
       <div id="map" class="map" ref="map"></div>
     </section>
-    <section>
-      <h2>actions</h2>
-      <div v-for="r in ressource">
-        {{ r.id }}, {{ r.role }}
-        <button v-if="r.role === 'PIRATE'">kill</button>
-        <br>
-      </div>
-    </section>
   </template>
 
   <script>
@@ -40,7 +32,6 @@
         "lng": 4.762830734252931
     }
   }
-  
   let ressource = [
       {
           "id": "toto",
