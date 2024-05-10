@@ -14,17 +14,6 @@
 
   let login = "John";
 
-  let mockZRR = {
-    "positionNE": {
-        "lat": 45.799485997405384,
-        "lng": 4.90891456604004
-    },
-    "positionSO": {
-        "lat": 45.77554537118828,
-        "lng": 4.762830734252931
-    }
-  }
-
   async function getAllRessources() {
     const headers = new Headers();
     headers.append("Authentication", localStorage.getItem('token'));
@@ -34,7 +23,7 @@
       headers: headers,
     };
     try {
-      const result = await fetch(`https://192.168.75.36/game/api/resources`, requestConfig)
+      const result = await fetch(`http://localhost:3376/api/resources`, requestConfig)
       .then((response) => {
         return response;
       })
@@ -48,6 +37,7 @@
           console.error("In get ressources: " + err);
       }
   }
+
   let name = "MyMap";
 
   // Procédure de mise à jour de la map
@@ -121,24 +111,21 @@
     //                      L.latLng(bounds.positionNE.lat, bounds.positionNE.lng));
     // L.rectangle(zrr, {color: "#ff7800", weight: 1}).addTo(mymap);
 
-    
-    var corner1 = L.latLng(mockZRR.positionNE.lat,
-        mockZRR.positionNE.lng)
-    var corner2 = L.latLng(mockZRR.positionSO.lat,
-        mockZRR.positionSO.lng)
-    let bounds = L.latLngBounds(corner1, corner2);
-    L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(mymap);
-    mymap.fitBounds(bounds);
-
     while (groupMarker.length > 0) {
       let layer = groupMarker.pop();
       mymap.removeLayer(layer);	
     }
+  });
+
+  function majPositionPlayer() {
+    for (let i = 0; i < groupMarker.length; i++) {
+      mymap.removeLayer(groupMarker[i]);
+    }
+
     const pirateIcons = ["pirate-1", "pirate-2", "pirate-3", "pirate-4"];
     const villagerIcon = ["villageois-1", "villageois-2", "villageois-3", "villageois-4"];
 
     storeResources.resources.forEach(ressource => {
-      // console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
       if(ressource.role == "PIRATE") {
         //IMAGE RANDOM DE PIRATE
         let icon;
@@ -202,9 +189,9 @@
         groupMarker.push(L.marker([ressource.position[0], ressource.position[1]], {icon: icon}).addTo(mymap).bindPopup(`${ressource.id}<br>${ressource.role}`));
       }
     });
-  });
+  }
 
-  //TODO cette fonction devra également envoyer la nouvelle position au serveur
+  //TEST METHOD 
   function moovPlayer() {
     ressource.forEach(ressource => {
       if(ressource.id == login) {
@@ -214,7 +201,8 @@
     })
   }
 
-  function majPositionPlayer() {
+  //TODO
+  function TODOMODIFYTHIS() {
     for (let i = 0; i < groupMarker.length; i++) {
       const marker = groupMarker[i];
       const popupContent = marker.getPopup().getContent();
@@ -284,18 +272,51 @@
     })
   }
 
-  function tst(){
-    ressource.forEach(ressource => {
-      if(ressource.id == login) {
-        ressource.ttl = 0
+  async function getZRR(){
+    const headers = new Headers();
+    headers.append("Authentication", localStorage.getItem('token'));
+    headers.append("Accept", "application/json");
+    const requestConfig = {
+      method: "GET",
+      headers: headers,
+    };
+    try {
+      const result = await fetch(`http://localhost:3376/api/zrr`, requestConfig)
+      .then((response) => {
+        return response;
+      })
+      .catch((err) => {
+        console.error("In get ressources: " + err);
+      })
+      const res = await result.json();
+      storeResources.positionNE = [res.positionNE.lat, res.positionNE.lng];
+      storeResources.positionSO = [res.positionSO.lat, res.positionSO.lng];
+      console.log(storeResources.positionNE);
+      console.log(storeResources.positionSO);
+    } catch (err) {
+          console.error("In get ressources: " + err);
+    }
+
+    mymap.eachLayer(function(layer) {
+      if (layer instanceof L.Rectangle) {
+        mymap.removeLayer(layer);
       }
-    })
+    });
+
+    mymap.invalidateSize();
+    var corner1 = L.latLng(storeResources.positionNE[0],
+      storeResources.positionNE[1])
+    var corner2 = L.latLng(storeResources.positionSO[0],
+      storeResources.positionSO[1])
+    let bounds = L.latLngBounds(corner1, corner2);
+    L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(mymap);
+    // mymap.fitBounds(bounds);
   }
 
   setInterval(getAllRessources, 5000);
-
+  setInterval(getZRR, 5000);
   // setInterval(moovPlayer, 10000);
-  // setInterval(majPositionPlayer, 5000)
+  setInterval(majPositionPlayer, 5000)
 
   //fonction bien décommenter lors du deploy ou des test
   // setInterval(await sendNewPosition, 5000);
