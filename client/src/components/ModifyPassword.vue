@@ -2,37 +2,19 @@
    <label for="password">Entrez un nouveau mot de passe : </label>
    <input type="text" id="password">
    <br />
-   <button @click="changePassword()">Send</button>
+   <button @click="changePassword()">Modifié</button>
   </template>
   
   <script setup>
 
   const emit = defineEmits(['msg'])
 
-  async function changePassword() {
-    
-    // let headersTest = new Headers();
-    // headersTest.append("Content-Type", "application/json");
-    // headersTest.append("Accept", "application/json");
-    // let requestConfigTest = {
-    //     method: "GET",
-    //     headers: headersTest
-    // };
-    // let params = new URLSearchParams();
-    // params.append('jwt', localStorage.getItem('token'));
-    // params.append('origin', window.location.origin);
-    // await fetch("https://192.168.75.36:8443/users/authenticate?" + params , requestConfigTest)
-    //     .then((response) => {
-    //         if (response.status == 200) {
-    //           // localStorage.setItem(response.data)
-    //           console.log(response)
-    //         } 
-    //     })
-    // .catch((err) => {
-    //     console.log(err)
-    // })
+  import { useUserStore } from '@/stores/user';
 
-    let login  = 'John';
+  const storeUser = useUserStore();
+
+  async function changePassword() {
+    let login  = storeUser.login;
     let body = {
       species: null,
       password: document.getElementById("password").value

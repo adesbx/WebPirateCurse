@@ -35,6 +35,7 @@
                     const token = response.headers.get("Authentication");
                     localStorage.setItem('token', token);
                     storeUser.connected = true;
+                    storeUser.login = document.getElementById("login").value;
                     emit('loginEvent')
                 } else {
                     emit('messageError', 'Mauvais mot de passe')
