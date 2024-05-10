@@ -1,4 +1,5 @@
 <script async setup>
+
   let joueurJohn = {
     "id": "John",
     "position": [
@@ -11,6 +12,7 @@
     "terminated": 0,
     "turned": 0
   }
+
   let ressource = [
     {
         "id": "toto",

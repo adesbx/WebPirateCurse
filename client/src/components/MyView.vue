@@ -10,6 +10,7 @@
   </template>
 
   <script>
+  import { useResourcesStore } from '@/stores/resources';
   import "leaflet/dist/leaflet.css";
   //import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
 
@@ -19,6 +20,8 @@
     zoom = 19;
   let mymap = {};
   let groupMarker = [];
+
+  const ressources = useResourcesStore();
 
   let login = "John";
 
@@ -32,171 +35,11 @@
         "lng": 4.762830734252931
     }
   }
-  let ressource = [
-      {
-          "id": "toto",
-          "position": [
-              "45.78196433811854",
-              "4.865881204605103"
-          ],
-          "role": "PIRATE",
-          "ttl": 0,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      },
-      {
-          "id": "John",
-          "position": [
-              "45.78216635696405",
-              "4.864507913589478"
-          ],
-          "role": "VILLAGEOIS",
-          "ttl": 20,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      },
-      {
-          "id": "titi",
-          "position": [
-              "45.78282104245197",
-              "4.864250421524049"
-          ],
-          "role": "PIRATE",
-          "ttl": 0,
-          "potions": 0,
-          "terminated": 10,
-          "turned": 0
-      },
-      {
-          "id": "potion1",
-          "position": [
-              "45.78220619944917",
-              "4.865867793560029"
-          ],
-          "role": "FLASK",
-          "ttl": 50,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      },
-      {
-          "id": "potion2",
-          "position": [
-              "45.78163137968618",
-              "4.865838289260865"
-          ],
-          "role": "FLASK",
-          "ttl": 60,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      },
-      {
-          "id": "potion3",
-          "position": [
-              "45.781825917472084",
-              "4.868005514144898"
-          ],
-          "role": "FLASK",
-          "ttl": 60,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      },
-      {
-          "id": "potion4",
-          "position": [
-              45.78276866789585,
-              4.868021607398988
-          ],
-          "role": "FLASK",
-          "ttl": 60,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      },
-      {
-          "id": "potion5",
-          "position": [
-              45.78346075627386,
-              4.866701960563661
-          ],
-          "role": "FLASK",
-          "ttl": "20",
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      },
-      {
-          "id": "ADMIN",
-          "position": [
-              "45.78159022737526",
-              "4.86721158027649"
-          ],
-          "role": "ADMIN",
-          "ttl": 0,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      },
-      {
-          "id": "potion6",
-          "position": [
-              45.78114877340201,
-              4.866026043891908
-          ],
-          "role": "FLASK",
-          "ttl": 60,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      },
-      {
-          "id": "potionTest",
-          "position": [
-              "45.78220619944917",
-              "4.865867793560029"
-          ],
-          "role": "FLASK",
-          "ttl": 50,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      },
-      {
-          "id": "potionTest",
-          "position": [
-              "45.78220619944917",
-              "4.865867793560029"
-          ],
-          "role": "FLASK",
-          "ttl": 50,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      },
-      {
-          "id": "potionTest",
-          "position": [
-              "45.78220619944917",
-              "4.865867793560029"
-          ],
-          "role": "FLASK",
-          "ttl": 50,
-          "potions": 0,
-          "terminated": 0,
-          "turned": 0
-      }
-  ];
-
 
   async function getAllRessources() {
     const headers = new Headers();
     headers.append("Authentication", localStorage.getItem('token'));
     headers.append("Accept", "application/json");
-    headers.append("Origin", "http://localhost:5173/");
     const requestConfig = {
       method: "GET",
       headers: headers,
@@ -210,26 +53,8 @@
         console.error("In get ressources: " + err);
       })
 
-      const ressources = await result.json();
-      let previousMapCenter = mymap.getCenter();
-      let previousMapZoom = mymap.getZoom();
-
-      while (groupMarker.length > 0) {
-        let layer = groupMarker.pop();
-        mymap.removeLayer(layer);	
-      }
-      ressources.forEach(ressource => {
-        // console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
-        groupMarker.push(
-          L.marker([ressource.position[0], ressource.position[1]])
-          .addTo(mymap)
-          .bindPopup(`${ressource.id}<br>${ressource.role}`)
-          .on('mouseover', function(e) {
-            this.openPopup();
-          })
-        );
-      });
-      mymap.setView(previousMapCenter, previousMapZoom);
+      ressources.resources = await result.json();
+      console.log(ressources);
     } catch (err) {
           console.error("In get ressources: " + err);
       }
@@ -488,10 +313,10 @@
     })
   }
 
-  // setInterval(getAllRessources, 5000);
-  setInterval(tst, 10000);
-  setInterval(moovPlayer, 10000);
-  setInterval(majPositionPlayer, 1000)
+  setInterval(getAllRessources, 5000);
+
+  // setInterval(moovPlayer, 10000);
+  // setInterval(majPositionPlayer, 5000)
 
   //fonction bien décommenter lors du deploy ou des test
   // setInterval(await sendNewPosition, 5000);
