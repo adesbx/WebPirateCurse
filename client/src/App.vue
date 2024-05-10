@@ -1,8 +1,8 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { useUserStore } from '@/stores/user';
+import { useUserStore } from '@/stores/user'
 
-const storeUser = useUserStore();
+const storeUser = useUserStore()
 </script>
 
 <template>
@@ -13,14 +13,14 @@ const storeUser = useUserStore();
       <!-- <HelloWorld msg="You did it!" /> -->
 
       <nav>
-        <RouterLink to="/" :logged="storeUser.connected" >Home</RouterLink>
+        <RouterLink to="/" :logged="storeUser.connected">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink v-if="storeUser.connected" to="/profil">Profil</RouterLink>
       </nav>
     </div>
   </header>
 
-  <RouterView :logged="storeUser.connected"  @logoutEvent="storeUser.connected = false"/>
+  <RouterView :logged="storeUser.connected" @logoutEvent="storeUser.connected = false" />
 </template>
 
 <style scoped>

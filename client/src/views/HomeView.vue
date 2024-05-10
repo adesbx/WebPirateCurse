@@ -26,9 +26,7 @@ function logout() {
       <HelloWorld msg="Vous êtes bien connecté" />  
       <div style="display: flex;">
         <MyView />
-        <Suspense>
-          <Actions />
-        </Suspense>
+        <Actions />
       </div>
       <button @click="logout()">Loggout</button>
     </p>
