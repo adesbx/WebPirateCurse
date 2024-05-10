@@ -10,6 +10,9 @@
   </template>
   
   <script setup>
+  import { useUserStore } from '@/stores/user';
+
+  const storeUser = useUserStore();
 
   const emit = defineEmits(['loginEvent', 'messageError'])
 
@@ -31,6 +34,7 @@
                 if (response.headers.get("Authentication")) {
                     const token = response.headers.get("Authentication");
                     localStorage.setItem('token', token);
+                    storeUser.connected = true;
                     emit('loginEvent')
                 } else {
                     emit('messageError', 'Mauvais mot de passe')
