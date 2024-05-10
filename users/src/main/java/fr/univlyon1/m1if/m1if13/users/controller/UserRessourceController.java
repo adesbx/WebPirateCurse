@@ -73,10 +73,10 @@ public class UserRessourceController {
      * @return une vue
      */
     @ResponseBody
-    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:8080", "http://localhost:3376",
+    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:5173", "http://localhost:8080", "http://localhost:3376",
             "http://192.168.75.36:8080",
             "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
-            "https://192.168.75.36/game", "https://192.168.75.36/api"})
+            "https://192.168.75.36/game", "https://192.168.75.36/api", "https://192.168.75.36/secret"})
     @GetMapping(value = "/users/{login}", produces = {"text/html"})
     public ModelAndView getUsersHTML(@PathVariable final String login) {
         ModelAndView mav = new ModelAndView();
@@ -159,6 +159,10 @@ public class UserRessourceController {
      * @param login login de l'utilisateur
      * @param userDto l'utilisateur
      */
+    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:5173", "http://localhost:8080", "http://localhost:3376",
+            "http://192.168.75.36:8080",
+            "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
+            "https://192.168.75.36/game", "https://192.168.75.36/api", "https://192.168.75.36/secret"})
     @ResponseBody
     @PutMapping(value = "/users/{login}", consumes =  {"application/json"})
     @Operation(summary = "Modify a user",
@@ -169,8 +173,17 @@ public class UserRessourceController {
     public void modifyUser(@PathVariable final String login,
                            @RequestBody final UserModifyDto userDto) {
         String[] tab = new String[2];
-        tab[0] = String.valueOf(userDto.getSpecies());
-        tab[1] = userDto.getPassword();
+        if (userDto.getSpecies() != null) {
+            tab[0] = String.valueOf(userDto.getSpecies());
+        } else {
+            tab[0] = null;
+        }
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+            System.out.println(userDto.getPassword());
+            tab[1] = userDto.getPassword();
+        } else {
+            tab[1] = null;
+        }
         Optional<User> user = userDao.get(login);
         if (user.isPresent()) {
             userDao.update(user.get(), tab);
@@ -184,6 +197,10 @@ public class UserRessourceController {
      * @param login login de l'utilisateur
      * @param userDto l'utilisateur
      */
+    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:5173", "http://localhost:8080", "http://localhost:3376",
+            "http://192.168.75.36:8080",
+            "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
+            "https://192.168.75.36/game", "https://192.168.75.36/api", "https://192.168.75.36/secret"})
     @ResponseBody
     @PutMapping(value = "/users/{login}", consumes =  {
             MediaType.APPLICATION_FORM_URLENCODED_VALUE})
@@ -195,8 +212,17 @@ public class UserRessourceController {
     public void modifyUserURL(@PathVariable final String login,
                               @ModelAttribute final UserModifyDto userDto) {
         String[] tab = new String[2];
-        tab[0] = String.valueOf(userDto.getSpecies());
-        tab[1] = userDto.getPassword();
+        if (userDto.getSpecies() != null) {
+            tab[0] = String.valueOf(userDto.getSpecies());
+        } else {
+            tab[0] = null;
+        }
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+            System.out.println(userDto.getPassword());
+            tab[1] = userDto.getPassword();
+        } else {
+            tab[1] = null;
+        }
         Optional<User> user = userDao.get(login);
         if (user.isPresent()) {
             userDao.update(user.get(), tab);
