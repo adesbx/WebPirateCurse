@@ -10,7 +10,7 @@
   let mymap = {};
   let groupMarker = [];
 
-  const ressources = useResourcesStore();
+  const storeResources = useResourcesStore();
 
   let login = "John";
 
@@ -42,8 +42,8 @@
         console.error("In get ressources: " + err);
       })
 
-      ressources.resources = await result.json();
-      console.log(ressources);
+      storeResources.resources = await result.json();
+      console.log(storeResources.resources);
     } catch (err) {
           console.error("In get ressources: " + err);
       }
@@ -137,7 +137,7 @@
     const pirateIcons = ["pirate-1", "pirate-2", "pirate-3", "pirate-4"];
     const villagerIcon = ["villageois-1", "villageois-2", "villageois-3", "villageois-4"];
 
-    ressource.forEach(ressource => {
+    storeResources.resources.forEach(ressource => {
       // console.log(ressource.id + " : " + ressource.position[0] + " " + ressource.position[1]);
       if(ressource.role == "PIRATE") {
         //IMAGE RANDOM DE PIRATE
