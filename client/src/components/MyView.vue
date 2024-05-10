@@ -115,6 +115,7 @@
       let layer = groupMarker.pop();
       mymap.removeLayer(layer);	
     }
+    getAllRessources();
   });
 
   function majPositionPlayer() {
@@ -291,8 +292,8 @@
       const res = await result.json();
       storeResources.positionNE = [res.positionNE.lat, res.positionNE.lng];
       storeResources.positionSO = [res.positionSO.lat, res.positionSO.lng];
-      console.log(storeResources.positionNE);
-      console.log(storeResources.positionSO);
+      // console.log(storeResources.positionNE);
+      // console.log(storeResources.positionSO);
     } catch (err) {
           console.error("In get ressources: " + err);
     }
