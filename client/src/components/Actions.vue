@@ -200,7 +200,7 @@
 </script>
 
 <template>
-  <section :key="forceReload">
+  <section>
     <h2>actions</h2>
     <br>
     <div v-for="r in ressource">
