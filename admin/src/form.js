@@ -23,8 +23,8 @@ function initListeners(mymap) {
 
 // MàJ des inputs du formulaire
 async function addFlask() {
-	const lat = document.getElementById("lat");
-	const lng = document.getElementById("lon");
+	const lat = document.getElementById("lat").value;
+	const lng = document.getElementById("lon").value;
 	const body = {
 		"latLng": L.latLng(lat, lng)
 	};

@@ -128,12 +128,14 @@ watch(
     <div v-if="storeResources.resources">
       <div v-for="r in storeResources.resources">
         <span v-if="r.role !== player.role">
-          <span v-if="isNearFromMe(r.position)">
-            {{ r.id }}, {{ r.role }}
-            <button @click="aTuer(r.id)" v-if="r.role === 'PIRATE'">tuer</button>
-            <button @click="aConvert(r.id)" v-else-if="r.role === 'VILLAGEOIS'">convertir</button>
-            <button @click="aBoire(r.id)" v-else-if="r.role === 'FLASK'">boire</button>
-            <br />
+          <span v-if="player.ttl > 0">
+            <span v-if="isNearFromMe(r.position)">
+              {{ r.id }}, {{ r.role }}
+              <button @click="aTuer(r.id)" v-if="r.role === 'PIRATE'">tuer</button>
+              <button @click="aConvert(r.id)" v-else-if="r.role === 'VILLAGEOIS'">convertir</button>
+              <button @click="aBoire(r.id)" v-else-if="r.role === 'FLASK'">boire</button>
+              <br />
+            </span>
           </span>
         </span>
       </div>

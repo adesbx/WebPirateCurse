@@ -88,7 +88,7 @@ onBeforeMount(async () => {
   mymap.on('click', (e) => {
     lat = e.latlng.lat
     lng = e.latlng.lng
-    this.updateMap()
+    updateMap()
   })
 
   // const headers = new Headers();
