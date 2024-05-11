@@ -22,7 +22,7 @@ async function getAllRessources() {
     headers: headers
   }
   try {
-    const result = await fetch(`http://localhost:3376/api/resources`, requestConfig)
+    const result = await fetch(`https://192.168.75.36/game/api/resources`, requestConfig)
       .then((response) => {
         return response
       })
@@ -75,7 +75,6 @@ onBeforeMount(async () => {
         'pk.eyJ1IjoieGFkZXMxMDExNCIsImEiOiJjbGZoZTFvbTYwM29sM3ByMGo3Z3Mya3dhIn0.df9VnZ0zo7sdcqGNbfrAzQ'
     }
   ).addTo(mymap)
-  getAllRessources();
 
   // Ajout d'un marker
   L.marker([45.78207, 4.86559])
@@ -90,30 +89,12 @@ onBeforeMount(async () => {
     updateMap()
   })
 
-  // const headers = new Headers();
-  //   headers.append("Authentication", localStorage.getItem('token'));
-  //   headers.append("Accept", "application/json");
-  //   headers.append("Origin", "http://localhost:5173/");
-  //   const requestConfig = {
-  //       method: "GET",
-  //       headers: headers,
-  //   };
-  // var bounds = await fetch("https://192.168.75.36/game/api/zrr", requestConfig)
-  //       .then((response) => {
-  //         return response.json()
-  //       })
-  //   .catch((err) => {
-  //       console.log(err)
-  //   })
-  // const zrr = L.latLngBounds(L.latLng(bounds.positionSO.lat, bounds.positionSO.lng),
-  //                      L.latLng(bounds.positionNE.lat, bounds.positionNE.lng));
-  // L.rectangle(zrr, {color: "#ff7800", weight: 1}).addTo(mymap);
-
   while (groupMarker.length > 0) {
     let layer = groupMarker.pop()
     mymap.removeLayer(layer)
   }
-  getAllRessources()
+  getAllRessources();
+  getZRR();
 })
 
 function majPositionPlayer() {
@@ -286,7 +267,7 @@ async function getZRR() {
     headers: headers
   }
   try {
-    const result = await fetch(`http://localhost:3376/api/zrr`, requestConfig)
+    const result = await fetch(`https://192.168.75.36/game/api/zrr`, requestConfig)
       .then((response) => {
         return response
       })
@@ -316,10 +297,10 @@ async function getZRR() {
   // mymap.fitBounds(bounds);
 }
 
-setInterval(getAllRessources, 5000)
+setInterval(getAllRessources, 2000)
 setInterval(getZRR, 10000)
 // setInterval(moovPlayer, 10000);
-setInterval(majPositionPlayer, 5000)
+setInterval(majPositionPlayer, 1000)
 
 //fonction bien décommenter lors du deploy ou des test
 // setInterval(await sendNewPosition, 5000);

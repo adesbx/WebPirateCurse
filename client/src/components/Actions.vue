@@ -37,7 +37,7 @@ async function aTuer(id) {
     body: JSON.stringify(body),
     mode: 'cors'
   }
-  await fetch(`http://localhost:3376/api/resources/${id}`, requestConfig)
+  await fetch(`https://192.168.75.36/game/api/resources/${id}`, requestConfig)
     .then((response) => {
       if (response.status == 204) {
         console.log('pirate tué')
@@ -63,7 +63,7 @@ async function aConvert(id) {
     body: JSON.stringify(body),
     mode: 'cors'
   }
-  await fetch(`http://localhost:3376/api/resources/${id}`, requestConfig)
+  await fetch(`https://192.168.75.36/game/api/resources/${id}`, requestConfig)
     .then((response) => {
       if (response.status == 204) {
         console.log('pirate transformer')
@@ -89,7 +89,7 @@ async function aBoire(id) {
     body: JSON.stringify(body),
     mode: 'cors'
   }
-  await fetch(`http://localhost:3376/api/resources/${id}`, requestConfig)
+  await fetch(`https://192.168.75.36/game/api/resources/${id}`, requestConfig)
     .then((response) => {
       if (response.status == 204) {
         console.log('potion prise')
