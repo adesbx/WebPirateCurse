@@ -15,13 +15,11 @@ stages:
   - api
   - client
 
-before_script:
-  - chmod 400 $CI_SSH_KEY
-
 deploy-users:
     stage: users
     image: maven:3.9.6-eclipse-temurin-21 # docker image with Maven
     before_script:
+        - chmod 400 $CI_SSH_KEY
         - ./ci/setup-mvn-proxy.sh
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     script:
@@ -34,6 +32,7 @@ deploy-api:
     stage: api
     image: node:21
     before_script:
+      - chmod 400 $CI_SSH_KEY
       - cd admin
       - npm install && npm run build
     script:
@@ -47,6 +46,7 @@ deploy-client:
     stage: client
     image: node:21
     script:
+      - chmod 400 $CI_SSH_KEY
       - cd client
       - npm install && npm run build
       - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r dist/ gitlabci@192.168.75.36:~/
