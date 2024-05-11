@@ -75,8 +75,7 @@ onBeforeMount(async () => {
         'pk.eyJ1IjoieGFkZXMxMDExNCIsImEiOiJjbGZoZTFvbTYwM29sM3ByMGo3Z3Mya3dhIn0.df9VnZ0zo7sdcqGNbfrAzQ'
     }
   ).addTo(mymap)
-  //TODO FIX THIS
-  // getAllRessources();
+  getAllRessources();
 
   // Ajout d'un marker
   L.marker([45.78207, 4.86559])
@@ -317,8 +316,8 @@ async function getZRR() {
   // mymap.fitBounds(bounds);
 }
 
-setInterval(getAllRessources, 5000)
-setInterval(getZRR, 5000)
+setInterval(getAllRessources, 2000)
+setInterval(getZRR, 10000)
 // setInterval(moovPlayer, 10000);
 setInterval(majPositionPlayer, 5000)
 
@@ -330,7 +329,7 @@ setInterval(majPositionPlayer, 5000)
   <section>
     <h2>Carte</h2>
     <p class="content">
-      <strong>TODO :</strong> mettre à jour les positions des différents objets sur la carte.
+      -------------------------------------------------------------------------------------------------
     </p>
     <div id="map" class="map" ref="map"></div>
   </section>

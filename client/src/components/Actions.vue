@@ -108,11 +108,6 @@ function isNearFromMe(position) {
   return dist <= 100
 }
 
-function test() {
-  console.log('player')
-  console.log(player)
-}
-
 watch(
   () => storeResources.resources,
   () => {
@@ -123,7 +118,7 @@ watch(
 
 <template>
   <section>
-    <h2>actions</h2>
+    <h2>Actions</h2>
     <br />
     <div v-if="storeResources.resources">
       <div v-for="r in storeResources.resources">

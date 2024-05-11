@@ -3,6 +3,7 @@ import HelloWorld from '../components/HelloWorld.vue'
 import Login from '../components/Login.vue'
 import MyView from '../components/MyView.vue'
 import Actions from '../components/Actions.vue'
+import InfoPerso from '../components/InfoPerso.vue'
 import { ref, defineProps } from 'vue'
 
 const emit = defineEmits(['logoutEvent'])
@@ -25,9 +26,10 @@ function logout() {
     <p v-if="logged">  
       <HelloWorld msg="Vous êtes bien connecté" />  
       <div style="display: flex;">
-        <MyView />
         <Actions />
+        <MyView />
       </div>
+      <!--TODO <InfoPerso /> -->
       <button @click="logout()">Loggout</button>
     </p>
     <p v-else> 
