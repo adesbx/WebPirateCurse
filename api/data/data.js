@@ -33,12 +33,12 @@ export let resources = [
     {
         "id": "John",
         "position": [
-            45.78220619944915,
+            45.78220619944905,
             4.865867793560029
         ],
         "role": "VILLAGEOIS",
         "ttl": 0,
-        "potions": 0,
+        "potions": 10,
         "terminated": 0,
         "turned": 0
     },
@@ -57,8 +57,8 @@ export let resources = [
     {
         "id": "potion1",
         "position": [
-            45.78220619944917,
-            4.865867793560029
+            45.7842355111,
+            4.869046211242677
         ],
         "role": "FLASK",
         "ttl": 50,

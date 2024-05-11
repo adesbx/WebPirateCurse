@@ -25,11 +25,11 @@ function logout() {
   <main>
     <p v-if="logged">  
       <HelloWorld msg="Vous êtes bien connecté" />  
-      <div style="display: flex;">
+      <div style="display: flex; flex-direction: column;">
         <Actions />
         <MyView />
+        <InfoPerso />
       </div>
-      <!--TODO <InfoPerso /> -->
       <button @click="logout()">Loggout</button>
     </p>
     <p v-else> 

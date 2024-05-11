@@ -31,7 +31,7 @@ async function getAllRessources() {
       })
 
     storeResources.resources = await result.json()
-    console.log(storeResources.resources)
+  console.log(storeResources.resources)
   } catch (err) {
     console.error('In get ressources: ' + err)
   }
@@ -206,7 +206,7 @@ function moovPlayer() {
   })
 }
 
-//TODO
+/* 
 function TODOMODIFYTHIS() {
   for (let i = 0; i < groupMarker.length; i++) {
     const marker = groupMarker[i]
@@ -250,7 +250,7 @@ function TODOMODIFYTHIS() {
       break
     }
   }
-}
+} */
 
 async function sendNewPosition() {
   let userPosition = ressource.find((resource) => resource.id === login).position
@@ -316,7 +316,7 @@ async function getZRR() {
   // mymap.fitBounds(bounds);
 }
 
-setInterval(getAllRessources, 2000)
+setInterval(getAllRessources, 5000)
 setInterval(getZRR, 10000)
 // setInterval(moovPlayer, 10000);
 setInterval(majPositionPlayer, 5000)

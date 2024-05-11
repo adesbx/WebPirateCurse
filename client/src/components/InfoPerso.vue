@@ -1,36 +1,48 @@
 <script setup>
 import { useResourcesStore } from '@/stores/resources'
 import { useUserStore } from '@/stores/user'
-import { watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const storeResources = useResourcesStore()
 const storeUser = useUserStore()
 
-let player
+let player = ref(null)
 
 function majPlayer() {
-  storeResources.resources.forEach((resource) => {
-    if (resource.id === storeUser.login) {
-      player = resource
-    }
-  })
+  const ressources = computed(() => {
+      if (!storeResources) {
+        return null;
+      }
+      return storeResources.resources;
+    });
+  if (ressources.value) {
+    ressources.value.forEach((ressource) => {
+      if (ressource.id === storeUser.login) {
+        player.value = ressource
+      }
+    })
+  }
 }
-majPlayer()
+
 watch(
   () => storeResources.resources,
   () => {
     majPlayer()
   }
 )
+
+majPlayer()
 </script>
 
-<template>
-	<h2>Information Perso</h2><br />
-	<br /> <p><strong>Name: </strong>{{ player.id }}</p>
-	<br /> <p><strong>Role: </strong>{{ player.role }}</p>
-	<br /> <p><strong>Position:</strong> {{ player.position }}</p>
-	<br /> <p><strong>Nombre de potions: </strong>{{ player.potions }}</p>
-	<br /> <p><strong>Ttl: </strong>{{ player.ttl }}</p>
-	<br /> <p><strong>Terminated: </strong>{{ player.terminated }}</p>
-	<br /> <p><strong>Turned:</strong>{{ player.turned }}</p>
+<template style="">
+	<h2>Information Perso</h2>
+  <div v-if="player">
+    <p><strong>Name: </strong>{{ player.id }}</p>
+    <p><strong>Role: </strong>{{ player.role }}</p>
+    <p><strong>Position:</strong> {{ player.position }}</p>
+    <p><strong>Nombre de potions: </strong>{{ player.potions }}</p>
+    <p><strong>Ttl: </strong>{{ player.ttl }}</p>
+    <p><strong>Terminated: </strong>{{ player.terminated }}</p>
+    <p><strong>Turned:</strong>{{ player.turned }}</p>
+  </div>
 </template>
