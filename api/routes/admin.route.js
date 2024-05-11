@@ -49,7 +49,7 @@ router.put('/modifyTTL', async (req, res, next) => {
 
 router.post('/spawnFlask', async (req, res, next) => {
   let options = { }
-  options.latLng = req.body;
+  options.latLng = req.body.latLng;
   
   try {
     const result = await postSpawnFlask(options, req.headers.origin, req.headers.authentication);

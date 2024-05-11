@@ -3,7 +3,10 @@ import apiBase from "./apiBase.js";
 
 // Initialisation
 function initListeners(mymap) {
-	console.log("TODO: add more event listeners...");
+
+	document.getElementById("addFlask").addEventListener("click", () => {
+		addFlask();
+	});
 
 	document.getElementById("setZrrButton").addEventListener("click", () => {
 		setZrr(getBounds());
@@ -19,6 +22,34 @@ function initListeners(mymap) {
 }
 
 // MàJ des inputs du formulaire
+async function addFlask() {
+	const lat = document.getElementById("lat");
+	const lng = document.getElementById("lon");
+	const body = {
+		"latLng": L.latLng(lat, lng)
+	};
+	const headers = new Headers();
+	headers.append("Content-Type", "application/json");
+	headers.append("authentication", localStorage.getItem('token'));
+	const requestConfig = {
+		method: "POST",
+		headers: headers,
+		body: JSON.stringify(body),
+		mode: "cors"
+	};
+	const response = await fetch(`${apiBase}/admin/spawnFlask`, requestConfig)
+		.then((response) => {
+			if (response.ok) {
+				return true;
+			} else {
+				return false;
+			}
+		})
+	.catch((err) => {
+		console.error("In post initZRR: " + err);
+	})
+}
+
 function updateLatValue(lat) {
 	document.getElementById("lat").value = lat;
 }
