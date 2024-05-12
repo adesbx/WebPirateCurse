@@ -24,6 +24,8 @@ public class UserDao implements Dao<User> {
     public UserDao() {
         users.put("John", new User("John", Species.PIRATE, "1234"));
         users.put("Susan", new User("Susan", Species.VILLAGEOIS, "5678"));
+        users.put("titi", new User("titi", Species.PIRATE, "abcd"));
+        users.put("toto", new User("toto", Species.VILLAGEOIS, "efgh"));
         users.put("ADMIN", new User("ADMIN", Species.ADMIN, "ADMIN"));
     }
 
