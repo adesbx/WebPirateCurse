@@ -2,7 +2,7 @@
   <label for="password">Entrez un nouveau mot de passe : </label>
   <input type="text" id="password" />
   <br />
-  <button @click="changePassword()">Modifié</button>
+  <button @click="changePassword()">Modifié le mot de passe</button>
 </template>
 
 <script setup>

@@ -1,5 +1,6 @@
 <script setup>
 import { useResourcesStore } from '@/stores/resources'
+import { useUserStore } from '@/stores/user'
 import 'leaflet/dist/leaflet.css'
 import { onBeforeMount } from 'vue'
 // initialisation de la map
@@ -10,8 +11,7 @@ let mymap = {}
 let groupMarker = []
 
 const storeResources = useResourcesStore()
-
-let login = 'John'
+const storeUser = useUserStore()
 
 async function getAllRessources() {
   const headers = new Headers()
@@ -102,26 +102,23 @@ function majPositionPlayer() {
     mymap.removeLayer(groupMarker[i])
   }
 
-  const pirateIcons = ['pirate-1', 'pirate-2', 'pirate-3', 'pirate-4']
-  const villagerIcon = ['villageois-1', 'villageois-2', 'villageois-3', 'villageois-4']
-
   storeResources.resources.forEach((ressource) => {
     if (ressource.role == 'PIRATE') {
-      //IMAGE RANDOM DE PIRATE
+      let img = "pirate-1"
+      if (ressource.id == storeUser.login && storeUser.img != null) {
+        img = storeUser.img;
+      }
       let icon
       if (ressource.ttl > 0) {
         icon = L.icon({
-          iconUrl: `src/assets/img/pirate-ttl.png`,
+          iconUrl: `src/assets/img/${img}-ttl.png`,
           iconSize: [30, 30],
           iconAnchor: [15, 15],
           popupAnchor: [0, -15]
         })
       } else {
-        const randomIndex = Math.floor(Math.random() * pirateIcons.length)
-        const randomPirateIcon = pirateIcons[randomIndex]
-
         icon = L.icon({
-          iconUrl: `src/assets/img/${randomPirateIcon}.png`,
+          iconUrl: `src/assets/img/${img}.png`,
           iconSize: [30, 30],
           iconAnchor: [15, 15],
           popupAnchor: [0, -15]
@@ -134,21 +131,22 @@ function majPositionPlayer() {
           .bindPopup(`${ressource.id}<br>${ressource.role}`)
       )
     } else if (ressource.role == 'VILLAGEOIS') {
-      //IMAGE RANDOM DE VILLAGEOIS
+      let img = "villageois-1"
+      if (ressource.id == storeUser.login && storeUser.img != null) {
+        console.log(storeUser.img)
+        img = storeUser.img;
+      }
       let icon
       if (ressource.ttl > 0) {
         icon = L.icon({
-          iconUrl: `src/assets/img/villageois-ttl.png`,
+          iconUrl: `src/assets/img/${img}-ttl.png`,
           iconSize: [30, 30],
           iconAnchor: [15, 15],
           popupAnchor: [0, -15]
         })
       } else {
-        const randomIndex = Math.floor(Math.random() * villagerIcon.length)
-        const randomVillageoisIcon = villagerIcon[randomIndex]
-
         icon = L.icon({
-          iconUrl: `src/assets/img/${randomVillageoisIcon}.png`,
+          iconUrl: `src/assets/img/${img}.png`,
           iconSize: [30, 30],
           iconAnchor: [15, 15],
           popupAnchor: [0, -15]

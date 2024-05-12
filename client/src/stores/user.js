@@ -4,7 +4,8 @@ export const useUserStore = defineStore('user', () => {
   state: () => {
     return {
       login: '',
-      connected: false
+      connected: false,
+      img: null
     }
   }
 })
