@@ -14,8 +14,8 @@ const storeUser = useUserStore()
 
       <nav>
         <RouterLink to="/" :logged="storeUser.connected">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
         <RouterLink v-if="storeUser.connected" to="/profil">Profil</RouterLink>
+        <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
   </header>
