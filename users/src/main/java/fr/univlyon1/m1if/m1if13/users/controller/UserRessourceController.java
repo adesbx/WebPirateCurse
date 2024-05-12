@@ -92,7 +92,7 @@ public class UserRessourceController {
      * @return un ensemble de login
      */
     @ResponseBody
-    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:8080", "http://localhost:3376",
+    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:5173", "http://localhost:8080", "http://localhost:3376",
             "http://192.168.75.36:8080",
             "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
             "https://192.168.75.36/game", "https://192.168.75.36/api", "https://192.168.75.36/secret"})
