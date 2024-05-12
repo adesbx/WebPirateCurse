@@ -46,7 +46,7 @@ public class UserDaoTest {
     @Test
     void getAllUser() {
         Integer taille = userDao.getAll().toArray().length;
-        assertEquals(taille, 4);
+        assertEquals(taille, 6);
     }
 
     /**
