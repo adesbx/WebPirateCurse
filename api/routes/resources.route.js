@@ -9,9 +9,20 @@ router.use(express.json());
 router.get('/', async (req, res, next) => {
   let options = { 
   };
+  let origin;
 
-  const origin = req.protocol + "s://" + req.headers.host;
+  if (req.headers.origin === undefined) {
+    if (req.headers.host.includes('localhost')) {
+      origin = req.protocol + "://" + req.headers.host;
+    } else {
+      origin = req.protocol + "s://" + req.headers.host;
+    }
+  } else {
+    origin = req.headers.origin;
+  }
+  
   console.log(origin);
+  console.log(req.headers.origin)
   try {
     const result = await getResources(options, origin, req.headers.authentication);
     res.status(result.status).send(result.data);

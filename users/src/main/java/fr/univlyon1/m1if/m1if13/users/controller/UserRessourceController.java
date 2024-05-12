@@ -92,7 +92,7 @@ public class UserRessourceController {
      * @return un ensemble de login
      */
     @ResponseBody
-    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:8080", "http://localhost:3376",
+    @CrossOrigin(origins = {"https://192.168.75.36", "http://localhost:5173", "http://localhost:8080", "http://localhost:3376",
             "http://192.168.75.36:8080",
             "https://192.168.75.36:8443", "http://192.168.75.36:3376", "https://192.168.75.36:3376",
             "https://192.168.75.36/game", "https://192.168.75.36/api", "https://192.168.75.36/secret"})
@@ -172,7 +172,7 @@ public class UserRessourceController {
             })
     public void modifyUser(@PathVariable final String login,
                            @RequestBody final UserModifyDto userDto) {
-        String[] tab = new String[2];
+        String[] tab = new String[3];
         if (userDto.getSpecies() != null) {
             tab[0] = String.valueOf(userDto.getSpecies());
         } else {
@@ -183,6 +183,12 @@ public class UserRessourceController {
             tab[1] = userDto.getPassword();
         } else {
             tab[1] = null;
+        }
+        if (userDto.getImage() != null && !userDto.getImage().isEmpty()) {
+            System.out.println(userDto.getImage());
+            tab[2] = userDto.getImage();
+        } else {
+            tab[2] = null;
         }
         Optional<User> user = userDao.get(login);
         if (user.isPresent()) {
@@ -211,7 +217,7 @@ public class UserRessourceController {
             })
     public void modifyUserURL(@PathVariable final String login,
                               @ModelAttribute final UserModifyDto userDto) {
-        String[] tab = new String[2];
+        String[] tab = new String[3];
         if (userDto.getSpecies() != null) {
             tab[0] = String.valueOf(userDto.getSpecies());
         } else {
@@ -222,6 +228,12 @@ public class UserRessourceController {
             tab[1] = userDto.getPassword();
         } else {
             tab[1] = null;
+        }
+        if (userDto.getImage() != null && !userDto.getImage().isEmpty()) {
+            System.out.println(userDto.getImage());
+            tab[2] = userDto.getImage();
+        } else {
+            tab[2] = null;
         }
         Optional<User> user = userDao.get(login);
         if (user.isPresent()) {

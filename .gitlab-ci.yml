@@ -11,16 +11,16 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
 stages:
+  - client
   - users
   - api
-
 deploy-users:
     stage: users
     image: maven:3.9.6-eclipse-temurin-21 # docker image with Maven
     before_script:
+        - chmod 400 $CI_SSH_KEY
         - ./ci/setup-mvn-proxy.sh
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-        - chmod 400 $CI_SSH_KEY
     script:
         - cd users
         - mvn clean package
@@ -40,3 +40,15 @@ deploy-api:
       - cd ..
       - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r api/ gitlabci@192.168.75.36:~/
       - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@192.168.75.36 'cd api && cp -r public/* /usr/share/nginx/html/secret/ && pm2 delete all && pm2 start index.js'
+
+deploy-client:
+    stage: client
+    image: node:21
+    script:
+      - chmod 400 $CI_SSH_KEY
+      - cd client
+      - npm install && npm run build
+      - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r dist/ gitlabci@192.168.75.36:~/
+      - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r src/assets/img/ gitlabci@192.168.75.36:~/
+      - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@192.168.75.36 'cp -r dist/* /usr/share/nginx/html/ && cp -r img/* /usr/share/nginx/html/src/assets/img/'
+
