@@ -226,8 +226,8 @@ export async function postSpawnFlask(options, origin, token) {
         const dataFlask = {
             "id": "potion"+newId,
             "position": [
-                options.latLng[0],
-                options.latLng[1]
+                options.latLng.lat,
+                options.latLng.lng
             ],
             "role": "FLASK",
             "ttl": globalTtl,
