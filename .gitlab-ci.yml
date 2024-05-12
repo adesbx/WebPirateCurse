@@ -11,10 +11,9 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
 stages:
+  - client
   - users
   - api
-  - client
-
 deploy-users:
     stage: users
     image: maven:3.9.6-eclipse-temurin-21 # docker image with Maven
@@ -50,5 +49,6 @@ deploy-client:
       - cd client
       - npm install && npm run build
       - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r dist/ gitlabci@192.168.75.36:~/
-      - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@192.168.75.36 'cp -r dist/* /usr/share/nginx/html/'
+      - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r src/assets/img/ gitlabci@192.168.75.36:~/
+      - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@192.168.75.36 'cp -r dist/* /usr/share/nginx/html/ && cp -r img/* /usr/share/nginx/html/src/assets/img/'
 
