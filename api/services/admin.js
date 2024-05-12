@@ -85,8 +85,8 @@ async function verifyRole(login, origin) {
 export async function verifyPositionInZRR(position) {
   return new Promise((resolve, reject) => {
     try {
-      if(position[0] < global.zrr.positionNE.lat && position[0] > global.zrr.positionSO.lat
-        && position[1] < global.zrr.positionNE.lng && position[1] > global.zrr.positionSO.lng) {
+      if(position.lat < global.zrr.positionNE.lat && position.lat > global.zrr.positionSO.lat
+        && position.lng < global.zrr.positionNE.lng && position.lng > global.zrr.positionSO.lng) {
           resolve(true);
         } else {
           resolve(false);
