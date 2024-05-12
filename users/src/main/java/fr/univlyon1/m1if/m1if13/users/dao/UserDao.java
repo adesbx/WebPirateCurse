@@ -44,13 +44,25 @@ public class UserDao implements Dao<User> {
 
     @Override
     public void update(final User user, final String[] params) {
-        if (params[0] != null && params[1] != null) {
+        if (params[0] != null && params[1] != null && params[2] != null) {
             user.setSpecies(Species.valueOf(params[0]));
             user.setPassword(params[1]);
+            user.setImage(params[2]);
+        } else if (params[0] != null && params[1] != null) {
+            user.setSpecies(Species.valueOf(params[0]));
+            user.setPassword(params[1]);
+        } else if (params[0] != null && params[2] != null) {
+            user.setSpecies(Species.valueOf(params[0]));
+            user.setImage(params[2]);
+        } else if (params[1] != null && params[2] != null) {
+            user.setPassword(params[1]);
+            user.setImage(params[2]);
         } else if (params[0] != null) {
             user.setSpecies(Species.valueOf(params[0]));
         } else if (params[1] != null) {
             user.setPassword(params[1]);
+        } else if (params[2] != null) {
+            user.setImage(params[2]);
         }
         users.put(user.getLogin(), user);
     }

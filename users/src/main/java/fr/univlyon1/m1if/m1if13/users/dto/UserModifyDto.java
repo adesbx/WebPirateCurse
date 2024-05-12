@@ -10,6 +10,7 @@ import fr.univlyon1.m1if.m1if13.users.model.Species;
 public class UserModifyDto {
     private Species species;
     private String password;
+    private String image;
 
     /**
      * Basic constructor.
@@ -24,9 +25,11 @@ public class UserModifyDto {
      */
     @JsonCreator
     public UserModifyDto(@JsonProperty("species") final Species species,
-                   @JsonProperty("password") final String password) {
+                         @JsonProperty("password") final String password,
+                         @JsonProperty("image") final String image) {
         this.species = species;
         this.password = password;
+        this.image = image;
     }
 
     public Species getSpecies() {
@@ -43,5 +46,13 @@ public class UserModifyDto {
 
     public void setPassword(final String password) {
         this.password = password;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
