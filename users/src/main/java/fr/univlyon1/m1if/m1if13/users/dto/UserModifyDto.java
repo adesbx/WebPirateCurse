@@ -52,7 +52,7 @@ public class UserModifyDto {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(final String image) {
         this.image = image;
     }
 }

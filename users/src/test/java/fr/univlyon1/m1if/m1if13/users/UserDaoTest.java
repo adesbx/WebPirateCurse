@@ -71,7 +71,7 @@ public class UserDaoTest {
     void modifyUserPassword() throws AuthenticationException {
         User jl = new User("Columbo", Species.PIRATE, "JeanLuc");
         userDao.save(jl);
-        String[] params =  new String[2];
+        String[] params =  new String[3];
         params[1] = "1234";
         userDao.update(jl, params);
         User user = userDao.get("Columbo").get();
@@ -88,7 +88,7 @@ public class UserDaoTest {
     void modifyUserSpecies() {
         User jl = new User("Columbo", Species.PIRATE, "JeanLuc");
         userDao.save(jl);
-        String[] params =  new String[2];
+        String[] params =  new String[3];
         params[0] = "VILLAGEOIS";
         userDao.update(jl, params);
         User user = userDao.get("Columbo").get();
