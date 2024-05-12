@@ -76,18 +76,6 @@ onBeforeMount(async () => {
     }
   ).addTo(mymap)
 
-  let iconBasic = L.icon({
-          iconUrl: `https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png`,
-          iconSize: [30, 30],
-          iconAnchor: [15, 15],
-          popupAnchor: [0, -15]
-  })
-  // Ajout d'un marker
-  L.marker([45.78207, 4.86559])
-    .addTo(mymap, {icon: iconBasic})
-    .bindPopup('Entrée du bâtiment<br><strong>Nautibus</strong>.')
-    .openPopup().
-
   // Ajout d'un marker
   L.marker([45.78207, 4.86559])
     .addTo(mymap)
