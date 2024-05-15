@@ -31,10 +31,26 @@ async function getAllRessources() {
       })
 
     storeResources.resources = await result.json()
-  console.log(storeResources.resources)
+    // storeUser.position = storeResources.resources.find(user => user.id === storeUser.login).position;
+    // console.log(storeUser.position)
+  // console.log(storeResources.resources)
+
+    //TODO pour le moment fait comme ca mais faudra modifier
+    getPositionUser();
+    
   } catch (err) {
     console.error('In get ressources: ' + err)
   }
+}
+
+function getPositionUser() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(modifyPosition);
+  }
+}
+
+function modifyPosition(position) {
+  storeUser.position = [position.coords.latitude, position.coords.longitude];
 }
 
 let name = 'MyMap'
@@ -124,12 +140,19 @@ function majPositionPlayer() {
           popupAnchor: [0, -15]
         })
       }
-
-      groupMarker.push(
-        L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
-          .addTo(mymap)
-          .bindPopup(`${ressource.id}<br>${ressource.role}`)
-      )
+      if(ressource.id == storeUser.login) {
+        groupMarker.push(
+          L.marker([storeUser.position[0], storeUser.position[1]], { icon: icon })
+            .addTo(mymap)
+            .bindPopup(`${ressource.id}<br>${ressource.role}`)
+        )
+      } else {
+          groupMarker.push(
+          L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
+            .addTo(mymap)
+            .bindPopup(`${ressource.id}<br>${ressource.role}`)
+        )
+      }
     } else if (ressource.role == 'VILLAGEOIS') {
       let img = "villageois-1"
       if (ressource.id == storeUser.login && storeUser.img != null) {
@@ -153,11 +176,20 @@ function majPositionPlayer() {
         })
       }
 
-      groupMarker.push(
-        L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
-          .addTo(mymap)
-          .bindPopup(`${ressource.id}<br>${ressource.role}`)
-      )
+      if(ressource.id == storeUser.login) {
+        groupMarker.push(
+          L.marker([storeUser.position[0], storeUser.position[1]], { icon: icon })
+            .addTo(mymap)
+            .bindPopup(`${ressource.id}<br>${ressource.role}`)
+        )
+      } else {
+          groupMarker.push(
+          L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
+            .addTo(mymap)
+            .bindPopup(`${ressource.id}<br>${ressource.role}`)
+        )
+      }
+
     } else if (ressource.role == 'FLASK') {
       const icon = L.icon({
         iconUrl: `src/assets/img/potion.png`,
@@ -299,6 +331,9 @@ setInterval(getAllRessources, 2000)
 setInterval(getZRR, 10000)
 // setInterval(moovPlayer, 10000);
 setInterval(majPositionPlayer, 1000)
+
+// setInterval(getPositionUser, 1000)
+
 
 //fonction bien décommenter lors du deploy ou des test
 // setInterval(await sendNewPosition, 5000);
