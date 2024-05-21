@@ -35,25 +35,10 @@ async function getAllRessources() {
     // console.log(storeUser.position)
   // console.log(storeResources.resources)
 
-    //TODO pour le moment fait comme ca mais faudra modifier
-    getPositionUser();
-    
   } catch (err) {
     console.error('In get ressources: ' + err)
   }
 }
-
-function getPositionUser() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(modifyPosition);
-  }
-}
-
-function modifyPosition(position) {
-  storeUser.position = [position.coords.latitude, position.coords.longitude];
-}
-
-let name = 'MyMap'
 
 // Procédure de mise à jour de la map
 function updateMap() {
@@ -263,31 +248,6 @@ function TODOMODIFYTHIS() {
   }
 } */
 
-async function sendNewPosition() {
-  let userPosition = ressource.find((resource) => resource.id === login).position
-  console.log(userPosition)
-  const headers = new Headers()
-  headers.append('Authentication', localStorage.getItem('token'))
-  headers.append('Content-Type', 'application/json')
-  const requestConfig = {
-    method: 'PUT',
-    headers: headers,
-    body: JSON.stringify(userPosition),
-    mode: 'cors'
-  }
-  await fetch(`https://192.168.75.36/game/api/resources/${login}/position`, requestConfig)
-    .then((response) => {
-      if (response.status == 204) {
-        console.log('position modifié')
-      } else {
-        console.log('erreur')
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-}
-
 async function getZRR() {
   const headers = new Headers()
   headers.append('Authentication', localStorage.getItem('token'))
@@ -329,12 +289,12 @@ async function getZRR() {
 
 setInterval(getAllRessources, 2000)
 setInterval(getZRR, 10000)
-// setInterval(moovPlayer, 10000);
 setInterval(majPositionPlayer, 1000)
 
+
+// Fonction de test
 // setInterval(getPositionUser, 1000)
-
-
+// setInterval(moovPlayer, 10000);
 //fonction bien décommenter lors du deploy ou des test
 // setInterval(await sendNewPosition, 5000);
 </script>
