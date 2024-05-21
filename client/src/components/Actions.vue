@@ -40,6 +40,7 @@ async function aTuer(id) {
   await fetch(`https://192.168.75.36/game/api/resources/${id}`, requestConfig)
     .then((response) => {
       if (response.status == 204) {
+        navigator.vibrate(200);
         console.log('pirate tué')
       } else {
         console.log('erreur')
@@ -66,6 +67,7 @@ async function aConvert(id) {
   await fetch(`https://192.168.75.36/game/api/resources/${id}`, requestConfig)
     .then((response) => {
       if (response.status == 204) {
+        navigator.vibrate(200);
         console.log('pirate transformer')
       } else {
         console.log('erreur')
@@ -130,14 +132,14 @@ watch(
     <div v-if="storeResources.resources && player !== null && storeUser.login !== null">
       <div v-for="r in storeResources.resources">
         <span v-if="r.role !== player.role">
-          <span v-if="player.ttl > 0">
-            <span v-if="isNearFromMe(r.position, player.position)">
+          <span v-if="isNearFromMe(r.position, player.position)">
               {{ r.id }}, {{ r.role }}
-              <button @click="aTuer(r.id)" v-if="r.role === 'PIRATE'">tuer</button>
-              <button @click="aConvert(r.id)" v-else-if="r.role === 'VILLAGEOIS'">convertir</button>
+              <span v-if="player.ttl > 0">
+                <button @click="aTuer(r.id)" v-if="r.role === 'PIRATE'">tuer</button>
+                <button @click="aConvert(r.id)" v-else-if="r.role === 'VILLAGEOIS'">convertir</button>
+              </span>
               <button @click="aBoire(r.id)" v-else-if="r.role === 'FLASK'">boire</button>
               <br />
-            </span>
           </span>
         </span>
       </div>
