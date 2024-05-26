@@ -2,11 +2,14 @@
 import { useResourcesStore } from '@/stores/resources'
 import { useUserStore } from '@/stores/user'
 import { computed, ref, watch, onBeforeMount } from 'vue'
+import Modale from './Modale.vue'
 
 const storeResources = useResourcesStore()
 const storeUser = useUserStore()
 
 let player = ref(null)
+let notificationVisible = ref(false)
+let notificationMessage = ref('')
 
 function majPlayer() {
   const ressources = computed(() => {
@@ -42,6 +45,7 @@ async function aTuer(id) {
       if (response.status == 204) {
         navigator.vibrate(200);
         console.log('pirate tué')
+        showNotification('Pirate tué')
       } else {
         console.log('erreur')
       }
@@ -69,6 +73,7 @@ async function aConvert(id) {
       if (response.status == 204) {
         navigator.vibrate(200);
         console.log('pirate transformer')
+        showNotification('Pirate transformer')
       } else {
         console.log('erreur')
       }
@@ -95,6 +100,7 @@ async function aBoire(id) {
     .then((response) => {
       if (response.status == 204) {
         console.log('potion prise')
+        showNotification('Potion flask récupéré')
       } else {
         console.log('erreur')
       }
@@ -102,6 +108,11 @@ async function aBoire(id) {
     .catch((err) => {
       console.log(err)
     })
+}
+
+function showNotification(message) {
+  notificationMessage.value = message
+  notificationVisible.value = true
 }
 
 onBeforeMount(async () => {
@@ -134,7 +145,7 @@ watch(
         <span v-if="r.role !== player.role">
           <span v-if="isNearFromMe(r.position, player.position)">
               {{ r.id }}, {{ r.role }}
-              <span v-if="player.ttl > 0">
+              <span v-if="player.potion > 0">
                 <button @click="aTuer(r.id)" v-if="r.role === 'PIRATE'">tuer</button>
                 <button @click="aConvert(r.id)" v-else-if="r.role === 'VILLAGEOIS'">convertir</button>
               </span>
@@ -144,5 +155,10 @@ watch(
         </span>
       </div>
     </div>
+    <Modale 
+      :message="notificationMessage" 
+      :visible="notificationVisible" 
+      @close="notificationVisible = false" 
+    />
   </section>
 </template>

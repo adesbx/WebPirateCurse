@@ -13,6 +13,26 @@ let groupMarker = []
 const storeResources = useResourcesStore()
 const storeUser = useUserStore()
 
+function calcDist(lat1, lon1, lat2, lon2) {
+  const R = 6371e3; 
+  var dLat = toRad(lat2-lat1);
+  var dLon = toRad(lon2-lon1);
+  var lat1 = toRad(lat1);
+  var lat2 = toRad(lat2);
+
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c;
+  d = Math.round(d * 10) / 10;
+
+  return d;
+}
+
+function toRad(Value) {
+  return Value * Math.PI / 180;
+}
+
 async function getAllRessources() {
   const headers = new Headers()
   headers.append('Authentication', localStorage.getItem('token'))
@@ -135,7 +155,7 @@ function majPositionPlayer() {
           groupMarker.push(
           L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
             .addTo(mymap)
-            .bindPopup(`${ressource.id}<br>${ressource.role}`)
+            .bindPopup(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`)
         )
       }
     } else if (ressource.role == 'VILLAGEOIS') {
@@ -171,7 +191,7 @@ function majPositionPlayer() {
           groupMarker.push(
           L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
             .addTo(mymap)
-            .bindPopup(`${ressource.id}<br>${ressource.role}`)
+            .bindPopup(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`)
         )
       }
 
@@ -186,7 +206,7 @@ function majPositionPlayer() {
       groupMarker.push(
         L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
           .addTo(mymap)
-          .bindPopup(`${ressource.id}<br>${ressource.role}`)
+          .bindPopup(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`)
       )
     }
   })
