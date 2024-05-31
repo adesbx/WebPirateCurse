@@ -3,36 +3,40 @@ import { RouterLink, RouterView } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
 const storeUser = useUserStore()
+if ("AmbientLightSensor" in window) {
+  const sensor = new AmbientLightSensor();
+  const seuil = 50;
 
-const sensor = new AmbientLightSensor({ frequency: 60 });
-const seuil = 50;
+  sensor.addEventListener('reading', () => {
 
-sensor.addEventListener('reading', () => {
+    if (sensor.illuminance < seuil ) {
+      document.documentElement.style.setProperty('--color-background', 'var(--vt-c-black)');
+      document.documentElement.style.setProperty('--color-background-soft', 'var(--vt-c-black-soft)');
+      document.documentElement.style.setProperty('--color-background-mute', 'var(--vt-c-black-mute)');
 
-  if (sensor.illuminance < seuil ) {
-    document.documentElement.style.setProperty('--color-background', 'var(--vt-c-black)');
-    document.documentElement.style.setProperty('--color-background-soft', 'var(--vt-c-black-soft)');
-    document.documentElement.style.setProperty('--color-background-mute', 'var(--vt-c-black-mute)');
+      document.documentElement.style.setProperty('--color-border', 'var(--vt-c-divider-dark-2)');
+      document.documentElement.style.setProperty('--color-border-hover', 'var(--vt-c-divider-dark-1)');
 
-    document.documentElement.style.setProperty('--color-border', 'var(--vt-c-divider-dark-2)');
-    document.documentElement.style.setProperty('--color-border-hover', 'var(--vt-c-divider-dark-1)');
+      document.documentElement.style.setProperty('--color-heading', 'var(--vt-c-text-dark-1)');
+      document.documentElement.style.setProperty('--color-text', 'var(--vt-c-text-dark-2)');
+    } else {
+      document.documentElement.style.setProperty('--color-background', 'var(--vt-c-white)');
+      document.documentElement.style.setProperty('--color-background-soft', 'var(--vt-c-white-soft)');
+      document.documentElement.style.setProperty('--color-background-mute', 'var(--vt-c-white-mute)');
 
-    document.documentElement.style.setProperty('--color-heading', 'var(--vt-c-text-dark-1)');
-    document.documentElement.style.setProperty('--color-text', 'var(--vt-c-text-dark-2)');
-  } else {
-    document.documentElement.style.setProperty('--color-background', 'var(--vt-c-white)');
-    document.documentElement.style.setProperty('--color-background-soft', 'var(--vt-c-white-soft)');
-    document.documentElement.style.setProperty('--color-background-mute', 'var(--vt-c-white-mute)');
+      document.documentElement.style.setProperty('--color-border', 'var(--vt-c-divider-light-2)');
+      document.documentElement.style.setProperty('--color-border-hover', 'var(--vt-c-divider-light-1)');
 
-    document.documentElement.style.setProperty('--color-border', 'var(--vt-c-divider-light-2)');
-    document.documentElement.style.setProperty('--color-border-hover', 'var(--vt-c-divider-light-1)');
+      document.documentElement.style.setProperty('--color-heading', 'var(--vt-c-text-light-1)');
+      document.documentElement.style.setProperty('--color-text', 'var(--vt-c-text-light-1)');
+    }
+  });
+  sensor.addEventListener("error", (event) => {
+    console.log(event.error.name, event.error.message);
+  });
 
-    document.documentElement.style.setProperty('--color-heading', 'var(--vt-c-text-light-1)');
-    document.documentElement.style.setProperty('--color-text', 'var(--vt-c-text-light-1)');
-  }
-});
-
-sensor.start();
+  sensor.start();
+}
 </script>
 
 <template>
