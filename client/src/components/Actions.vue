@@ -145,11 +145,11 @@ watch(
         <span v-if="r.role !== player.role">
           <span v-if="isNearFromMe(r.position, player.position)">
               {{ r.id }}, {{ r.role }}
-              <span v-if="player.potion > 0">
+              <button @click="aBoire(r.id)" v-if="r.role === 'FLASK'">boire</button>
+              <span v-if="player.potion > 0 || player.ttl > 0">
                 <button @click="aTuer(r.id)" v-if="r.role === 'PIRATE'">tuer</button>
                 <button @click="aConvert(r.id)" v-else-if="r.role === 'VILLAGEOIS'">convertir</button>
               </span>
-              <button @click="aBoire(r.id)" v-else-if="r.role === 'FLASK'">boire</button>
               <br />
           </span>
         </span>

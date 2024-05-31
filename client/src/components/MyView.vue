@@ -51,6 +51,10 @@ async function getAllRessources() {
       })
 
     storeResources.resources = await result.json()
+    if(!storeResources.resources.find(user => user.id === storeUser.login)) {
+      console.log("test")
+      storeUser.isDead = true
+    }
     // storeUser.position = storeResources.resources.find(user => user.id === storeUser.login).position;
     // console.log(storeUser.position)
   // console.log(storeResources.resources)
@@ -322,6 +326,7 @@ setInterval(majPositionPlayer, 1000)
 <template>
   <section>
     <h2>Carte</h2>
+    <p v-if="storeUser.isDead">Vous êtes mort</p>
     <p class="content">
       -------------------------------------------------------------------------------------------------
     </p>

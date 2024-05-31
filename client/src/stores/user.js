@@ -6,7 +6,8 @@ export const useUserStore = defineStore('user', () => {
       login: '',
       connected: false,
       img: null,
-      position: null
+      position: null,
+      isDead: false
     }
   }
 })
