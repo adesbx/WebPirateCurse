@@ -2,7 +2,7 @@
 import { useResourcesStore } from '@/stores/resources'
 import { useUserStore } from '@/stores/user'
 import 'leaflet/dist/leaflet.css'
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, watch } from 'vue'
 // initialisation de la map
 let lat = 45.782,
   lng = 4.8656,
