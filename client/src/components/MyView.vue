@@ -29,39 +29,8 @@ function calcDist(lat1, lon1, lat2, lon2) {
   return d;
 }
 
-function calcDirection(lat1, lon1, lat2, lon2) {
-  lat1 = toRad(lat1);
-  lon1 = toRad(lon1);
-  lat2 = toRad(lat2);
-  lon2 = toRad(lon2);
-
-  let dLon = lon2 - lon1;
-  let x = Math.sin(dLon) * Math.cos(lat2);
-  let y = Math.cos(lat1) * Math.sin(lat2) - (Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon));
-  
-  let initialBearing = Math.atan2(x, y);
-
-  initialBearing = toDeg(initialBearing);
-  let compassBearing = (initialBearing + 360) % 360;
-  
-  return compassBearing;
-}
-
-function getCardinalDirection(bearing) {
-  const directions = [
-    "Nord", "Nord-Est", "Est", "Sud-Est", 
-    "Sud", "Sud-Ouest", "Ouest", "Nord-Ouest"
-  ];
-  const idx = Math.round(bearing / 45) % 8;
-  storeUser.direction = directions[idx];
-}
-
 function toRad(Value) {
   return Value * Math.PI / 180;
-}
-
-function toDeg(Value) {
-  return Value * ( 180 / Math.PI);
 }
 
 async function getAllRessources() {
@@ -85,9 +54,6 @@ async function getAllRessources() {
     if(!storeResources.resources.find(user => user.id === storeUser.login)) {
       storeUser.isDead = true
     }
-    const pos = storeResources.resources.find(user => user.id === storeUser.login).position;
-    const bearing = calcDirection(pos[0], pos[1], storeUser.position[0], storeUser.position[1]);
-    getCardinalDirection(bearing);
     // storeUser.position = storeResources.resources.find(user => user.id === storeUser.login).position;
     // console.log(storeUser.position)
   // console.log(storeResources.resources)
