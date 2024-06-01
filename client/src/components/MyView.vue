@@ -54,6 +54,9 @@ async function getAllRessources() {
     if(!storeResources.resources.find(user => user.id === storeUser.login)) {
       storeUser.isDead = true
     }
+    else {
+      storeUser.role = storeResources.resources.find(user => user.id === storeUser.login).role
+    }
     // storeUser.position = storeResources.resources.find(user => user.id === storeUser.login).position;
     // console.log(storeUser.position)
   // console.log(storeResources.resources)
@@ -314,6 +317,37 @@ setInterval(getAllRessources, 2000)
 setInterval(getZRR, 10000)
 setInterval(majPositionPlayer, 1000)
 
+watch(
+  () => storeUser.role,
+  () => {
+    Notification.requestPermission().then((result) => {
+    if (result === "granted") {
+      const notifTitle = "Tu es convertis";
+      const notifBody = `tu as changer de Rôle !!`;
+      const options = {
+        body: notifBody
+      };
+      new Notification(notifTitle, options);
+    }
+  });
+  }
+)
+
+watch(
+  () => storeUser.isDead,
+  () => {
+    Notification.requestPermission().then((result) => {
+    if (result === "granted") {
+      const notifTitle = "Tu es mort";
+      const notifBody = `Tu peux plus jouer !`;
+      const options = {
+        body: notifBody
+      };
+      new Notification(notifTitle, options);
+    }
+  });
+  }
+)
 
 // Fonction de test
 // setInterval(getPositionUser, 1000)

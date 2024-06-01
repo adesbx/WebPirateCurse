@@ -8,6 +8,7 @@ export const useUserStore = defineStore('user', () => {
       img: null,
       position: null,
       isDead: false,
+      role: '',
       direction: ''
     }
   }
