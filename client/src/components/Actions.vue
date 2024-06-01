@@ -44,7 +44,7 @@ async function aTuer(id) {
     .then((response) => {
       if (response.status == 204) {
         navigator.vibrate(200);
-        console.log('pirate tué')
+        // console.log('pirate tué')
         showNotification('Pirate tué')
       } else {
         console.log('erreur')
@@ -72,7 +72,7 @@ async function aConvert(id) {
     .then((response) => {
       if (response.status == 204) {
         navigator.vibrate(200);
-        console.log('pirate transformer')
+        // console.log('pirate transformer')
         showNotification('Pirate transformer')
       } else {
         console.log('erreur')
@@ -99,7 +99,7 @@ async function aBoire(id) {
   await fetch(`https://192.168.75.36/game/api/resources/${id}`, requestConfig)
     .then((response) => {
       if (response.status == 204) {
-        console.log('potion prise')
+        // console.log('potion prise')
         showNotification('Potion flask récupéré')
       } else {
         console.log('erreur')
@@ -124,7 +124,7 @@ function isNearFromMe(position, playerPos) {
   const posMe = L.latLng(playerPos)
   const posOther = L.latLng(position)
   const dist = posMe.distanceTo(posOther)
-  console.log(dist <= 100)
+  // console.log(dist <= 100)
   return dist <= 2
 }
 

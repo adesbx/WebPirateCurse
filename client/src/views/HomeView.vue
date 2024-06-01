@@ -73,7 +73,7 @@ function modifyPosition(position) {
   } else {
     storeUser.direction = "Vous ne bougez pas"
   }
-  
+
   if(!storeUser.isDead) {
     sendNewPosition();
   }  
@@ -95,9 +95,7 @@ async function sendNewPosition() {
   }
   await fetch(`https://192.168.75.36/game/api/resources/${storeUser.login}/position`, requestConfig)
     .then((response) => {
-      if (response.status == 204) {
-        console.log('position modifié')
-      } else {
+      if (response.status != 204) {
         console.log('erreur')
       }
     })

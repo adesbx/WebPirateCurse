@@ -45,8 +45,15 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
-      }
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        runtimeCaching: [{
+          urlPattern: /^https:\/\/api\.mapbox\.com\/v4\/.*/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'Benjamin le meilleur <3'
+          }
+        }]
+      },
     })
   ],
   resolve: {
