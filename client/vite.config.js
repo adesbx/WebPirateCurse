@@ -43,6 +43,9 @@ export default defineConfig({
             purpose: 'maskable any'
           }
         ]
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
       }
     })
   ],
