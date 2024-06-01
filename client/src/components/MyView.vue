@@ -318,7 +318,7 @@ setInterval(getZRR, 10000)
 setInterval(majPositionPlayer, 1000)
 
 watch(
-  () => storeUser.role,
+  () => storeUser.role !== '',
   () => {
     Notification.requestPermission().then((result) => {
     if (result === "granted") {
