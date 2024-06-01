@@ -7,7 +7,8 @@ export const useUserStore = defineStore('user', () => {
       connected: false,
       img: null,
       position: null,
-      isDead: false
+      isDead: false,
+      direction: ''
     }
   }
 })
