@@ -318,18 +318,20 @@ setInterval(getZRR, 10000)
 setInterval(majPositionPlayer, 1000)
 
 watch(
-  () => storeUser.role !== '',
-  () => {
-    Notification.requestPermission().then((result) => {
-    if (result === "granted") {
-      const notifTitle = "Tu es convertis";
-      const notifBody = `tu as changer de Rôle !!`;
-      const options = {
-        body: notifBody
-      };
-      new Notification(notifTitle, options);
+  () => storeUser.role,
+  (newRole, oldRole) => {
+    if (oldRole !== '' && newRole !== '' && newRole !== oldRole) {
+      Notification.requestPermission().then((result) => {
+      if (result === "granted") {
+        const notifTitle = "Tu es convertis";
+        const notifBody = `tu as changer de Rôle !!`;
+        const options = {
+          body: notifBody
+          };
+        new Notification(notifTitle, options);
+        }
+      });
     }
-  });
   }
 )
 
