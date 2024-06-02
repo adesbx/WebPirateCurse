@@ -320,7 +320,7 @@ setInterval(majPositionPlayer, 1000)
 watch(
   () => storeUser.role,
   (newRole, oldRole) => {
-    if (oldRole !== '' && newRole !== '' && newRole !== oldRole) {
+    if (oldRole !== '' && newRole !== '' && newRole !== oldRole && oldRole !== undefined) {
       Notification.requestPermission().then((result) => {
       if (result === "granted") {
         const notifTitle = "Tu es convertis";
