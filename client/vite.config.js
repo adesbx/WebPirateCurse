@@ -20,7 +20,7 @@ export default defineConfig({
         name: 'The pirate curse',
         short_name: 'Pirate curse',
         description: 'A game to play with your friends, very funny',
-        start_url: '/',
+        start_url: '.',
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#42b883',
@@ -49,8 +49,9 @@ export default defineConfig({
         runtimeCaching: [{
           urlPattern: /^https:\/\/api\.mapbox\.com\/v4\/.*/i,
           handler: 'CacheFirst',
+          method: 'GET',
           options: {
-            cacheName: 'Benjamin le meilleur <3'
+            cacheName: 'Caching-map'
           }
         }]
       },
