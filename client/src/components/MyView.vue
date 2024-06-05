@@ -14,15 +14,15 @@ const storeResources = useResourcesStore()
 const storeUser = useUserStore()
 
 function calcDist(lat1, lon1, lat2, lon2) {
-  const R = 6371e3; 
-  var dLat = toRad(lat2-lat1);
-  var dLon = toRad(lon2-lon1);
+  const R = 6371e3;
+  var dLat = toRad(lat2 - lat1);
+  var dLon = toRad(lon2 - lon1);
   var lat1 = toRad(lat1);
   var lat2 = toRad(lat2);
 
-  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c;
   d = Math.round(d * 10) / 10;
 
@@ -51,12 +51,12 @@ async function getAllRessources() {
       })
 
     storeResources.resources = await result.json()
-    if(!storeResources.resources.find(user => user.id === storeUser.login)) {
+    if (!storeResources.resources.find(user => user.id === storeUser.login)) {
       storeUser.isDead = true
     }
     // storeUser.position = storeResources.resources.find(user => user.id === storeUser.login).position;
     // console.log(storeUser.position)
-  // console.log(storeResources.resources)
+    // console.log(storeResources.resources)
 
   } catch (err) {
     console.error('In get ressources: ' + err)
@@ -122,17 +122,27 @@ onBeforeMount(async () => {
 })
 
 function majPositionPlayer() {
-  for (let i = 0; i < groupMarker.length; i++) {
-    mymap.removeLayer(groupMarker[i])
+  function markerExistFct(id) {
+    let markerExist = null;
+    groupMarker.forEach(marker => {
+      if (marker.getPopup().getContent().includes(id)) {
+        markerExist = marker;
+      }
+    });
+    return markerExist;
   }
 
   storeResources.resources.forEach((ressource) => {
+    const markerExist = markerExistFct(ressource.id);
+    if (!markerExist) {
+
+    }
+    let icon = null
     if (ressource.role == 'PIRATE') {
       let img = "pirate-1"
       if (ressource.id == storeUser.login && storeUser.img != null) {
         img = storeUser.img;
       }
-      let icon
       if (ressource.ttl > 0) {
         icon = L.icon({
           iconUrl: `src/assets/img/${img}-ttl.png`,
@@ -148,18 +158,30 @@ function majPositionPlayer() {
           popupAnchor: [0, -15]
         })
       }
-      if(ressource.id == storeUser.login) {
-        groupMarker.push(
-          L.marker([storeUser.position[0], storeUser.position[1]], { icon: icon })
-            .addTo(mymap)
-            .bindPopup(`${ressource.id}<br>${ressource.role}`)
-        )
-      } else {
+      if (ressource.id == storeUser.login) {
+        if (markerExist) {
+          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa")
+          markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
+          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}`);
+        } else {
           groupMarker.push(
-          L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
-            .addTo(mymap)
-            .bindPopup(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`)
-        )
+            L.marker([storeUser.position[0], storeUser.position[1]], { icon: icon })
+              .addTo(mymap)
+              .bindPopup(`${ressource.id}<br>${ressource.role}`)
+          )
+        }
+      } else {
+        if (markerExist) {
+          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa")
+          markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
+          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}`);
+        } else {
+          groupMarker.push(
+            L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
+              .addTo(mymap)
+              .bindPopup(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`)
+          )
+        }
       }
     } else if (ressource.role == 'VILLAGEOIS') {
       let img = "villageois-1"
@@ -167,7 +189,6 @@ function majPositionPlayer() {
         console.log(storeUser.img)
         img = storeUser.img;
       }
-      let icon
       if (ressource.ttl > 0) {
         icon = L.icon({
           iconUrl: `src/assets/img/${img}-ttl.png`,
@@ -184,33 +205,51 @@ function majPositionPlayer() {
         })
       }
 
-      if(ressource.id == storeUser.login) {
-        groupMarker.push(
-          L.marker([storeUser.position[0], storeUser.position[1]], { icon: icon })
-            .addTo(mymap)
-            .bindPopup(`${ressource.id}<br>${ressource.role}`)
-        )
-      } else {
+      if (ressource.id == storeUser.login) {
+        if (markerExist) {
+          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa")
+          markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
+          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}`);
+        } else {
           groupMarker.push(
-          L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
-            .addTo(mymap)
-            .bindPopup(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`)
-        )
+            L.marker([storeUser.position[0], storeUser.position[1]], { icon: icon })
+              .addTo(mymap)
+              .bindPopup(`${ressource.id}<br>${ressource.role}`)
+          )
+        }
+      } else {
+        if (markerExist) {
+          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa")
+          markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
+          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}`);
+        } else {
+          groupMarker.push(
+            L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
+              .addTo(mymap)
+              .bindPopup(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`)
+          )
+        }
       }
 
     } else if (ressource.role == 'FLASK') {
-      const icon = L.icon({
+      icon = L.icon({
         iconUrl: `src/assets/img/potion.png`,
         iconSize: [30, 60],
         iconAnchor: [15, 15],
         popupAnchor: [0, -15]
       })
 
-      groupMarker.push(
-        L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
-          .addTo(mymap)
-          .bindPopup(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`)
-      )
+      if (markerExist) {
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
+        markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}`);
+      } else {
+        groupMarker.push(
+          L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
+            .addTo(mymap)
+            .bindPopup(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`)
+        )
+      }
     }
   })
 }
