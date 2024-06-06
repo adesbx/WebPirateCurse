@@ -175,7 +175,7 @@ function majPositionPlayer() {
       } else {
         if (markerExist) {
           markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
-          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}`);
+          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`);
         } else {
           groupMarker.push(
             L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
@@ -220,7 +220,7 @@ function majPositionPlayer() {
       } else {
         if (markerExist) {
           markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
-          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}`);
+          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`);
         } else {
           groupMarker.push(
             L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
@@ -240,7 +240,7 @@ function majPositionPlayer() {
 
       if (markerExist) {
         markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
-        markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}`);
+        markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`);
       } else {
         groupMarker.push(
           L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
