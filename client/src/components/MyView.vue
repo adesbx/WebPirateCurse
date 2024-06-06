@@ -262,52 +262,6 @@ function moovPlayer() {
   })
 }
 
-/* 
-function TODOMODIFYTHIS() {
-  for (let i = 0; i < groupMarker.length; i++) {
-    const marker = groupMarker[i]
-    const popupContent = marker.getPopup().getContent()
-    if (popupContent.includes(login)) {
-      const oldIcon = marker.getIcon()
-      mymap.removeLayer(marker)
-
-      const userResource = ressource.find((resource) => resource.id === login)
-
-      const newUserMarker = L.marker([userResource.position[0], userResource.position[1]])
-        .addTo(mymap)
-        .bindPopup(`${userResource.id}<br>${userResource.role}`)
-
-      if (userResource.ttl > 0) {
-        newUserMarker.setIcon(oldIcon)
-      } else {
-        if (userResource.role == 'VILLAGEOIS') {
-          const icon = L.icon({
-            iconUrl: `src/assets/img/villageois-1.png`,
-            iconSize: [30, 30],
-            iconAnchor: [15, 15],
-            popupAnchor: [0, -15]
-          })
-
-          newUserMarker.setIcon(icon)
-        } else if (userResource.role == 'PIRATE') {
-          const icon = L.icon({
-            iconUrl: `src/assets/img/pirate-1.png`,
-            iconSize: [30, 30],
-            iconAnchor: [15, 15],
-            popupAnchor: [0, -15]
-          })
-
-          newUserMarker.setIcon(icon)
-        }
-      }
-
-      groupMarker[i] = newUserMarker
-
-      break
-    }
-  }
-} */
-
 async function getZRR() {
   const headers = new Headers()
   headers.append('Authentication', localStorage.getItem('token'))
