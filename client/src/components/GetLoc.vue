@@ -41,7 +41,7 @@ function toDeg(Value) {
 
 //position de l'utilisateur mise a jour
 function getPositionUser() {
-  if (navigator.geolocation) {
+  if (navigator.geolocation && !storeUser.isDead) {
     navigator.geolocation.getCurrentPosition(modifyPosition);
   }
 }

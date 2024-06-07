@@ -53,6 +53,12 @@ async function getAllRessources() {
     storeResources.resources = await result.json()
     if (!storeResources.resources.find(user => user.id === storeUser.login)) {
       storeUser.isDead = true
+      //retirer de la map
+      for (let i = 0; i < groupMarker.length; i++) {
+        if (groupMarker[i].getPopup().getContent().includes(storeUser.login)) {
+          mymap.removeLayer(groupMarker[i]);
+        }
+      }
     }
     else {
       storeUser.role = storeResources.resources.find(user => user.id === storeUser.login).role
@@ -173,14 +179,15 @@ function majPositionPlayer() {
           )
         }
       } else {
+        const distanceText = storeUser.isDead ? "" : `<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`;
         if (markerExist) {
           markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
-          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`);
+          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}${distanceText}`);
         } else {
           groupMarker.push(
             L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
               .addTo(mymap)
-              .bindPopup(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`)
+              .bindPopup(`${ressource.id}<br>${ressource.role}${distanceText}`)
           )
         }
       }
@@ -218,14 +225,15 @@ function majPositionPlayer() {
           )
         }
       } else {
+        const distanceText = storeUser.isDead ? "" : `<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`;
         if (markerExist) {
           markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
-          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`);
+          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}${distanceText}`);
         } else {
           groupMarker.push(
             L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
               .addTo(mymap)
-              .bindPopup(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`)
+              .bindPopup(`${ressource.id}<br>${ressource.role}${distanceText}`)
           )
         }
       }
@@ -238,14 +246,15 @@ function majPositionPlayer() {
         popupAnchor: [0, -15]
       })
 
+      const distanceText = storeUser.isDead ? "" : `<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`;
       if (markerExist) {
         markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
-        markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`);
+        markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}${distanceText}`);
       } else {
         groupMarker.push(
           L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
             .addTo(mymap)
-            .bindPopup(`${ressource.id}<br>${ressource.role}<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`)
+            .bindPopup(`${ressource.id}<br>${ressource.role}${distanceText}`)
         )
       }
     }
