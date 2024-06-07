@@ -9,7 +9,7 @@ if ("AmbientLightSensor" in window) {
 
   sensor.addEventListener('reading', () => {
 
-    if (sensor.illuminance < seuil ) {
+    if (sensor.illuminance < seuil) {
       document.documentElement.style.setProperty('--color-background', 'var(--vt-c-black)');
       document.documentElement.style.setProperty('--color-background-soft', 'var(--vt-c-black-soft)');
       document.documentElement.style.setProperty('--color-background-mute', 'var(--vt-c-black-mute)');
@@ -47,14 +47,14 @@ if ("AmbientLightSensor" in window) {
       <!-- <HelloWorld msg="You did it!" /> -->
 
       <nav>
-        <RouterLink to="/" :logged="storeUser.connected">Home</RouterLink>
+        <RouterLink to="/">Home</RouterLink>
         <RouterLink v-if="storeUser.connected" to="/profil">Profil</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
   </header>
 
-  <RouterView :logged="storeUser.connected" @logoutEvent="storeUser.connected = false" />
+  <RouterView @logoutEvent="storeUser.connected = false" />
 </template>
 
 <style scoped>

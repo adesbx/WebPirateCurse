@@ -38,12 +38,12 @@ function closeNotification() {
   padding: 20px 30px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  
+
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  
+
   z-index: 1000;
 }
 </style>

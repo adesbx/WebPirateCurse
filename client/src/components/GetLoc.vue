@@ -13,18 +13,18 @@ function calcDirection(lat1, lon1, lat2, lon2) {
   let dLon = lon2 - lon1;
   let x = Math.sin(dLon) * Math.cos(lat2);
   let y = Math.cos(lat1) * Math.sin(lat2) - (Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon));
-  
+
   let initialBearing = Math.atan2(x, y);
 
   initialBearing = toDeg(initialBearing);
   let compassBearing = (initialBearing + 360) % 360;
-  
+
   return compassBearing;
 }
 
 function getCardinalDirection(bearing) {
   const directions = [
-    "Nord", "Nord-Est", "Est", "Sud-Est", 
+    "Nord", "Nord-Est", "Est", "Sud-Est",
     "Sud", "Sud-Ouest", "Ouest", "Nord-Ouest"
   ];
   const idx = Math.round(bearing / 45) % 8;
@@ -36,7 +36,7 @@ function toRad(Value) {
 }
 
 function toDeg(Value) {
-  return Value * ( 180 / Math.PI);
+  return Value * (180 / Math.PI);
 }
 
 //position de l'utilisateur mise a jour
@@ -49,16 +49,16 @@ function getPositionUser() {
 function modifyPosition(position) {
   storeUser.position = [position.coords.latitude, position.coords.longitude];
   const pos = storeResources.resources.find(user => user.id === storeUser.login).position;
-  if(pos[0] != storeUser.position[0] && pos[1] && storeUser.position[1]) {
+  if (pos[0] != storeUser.position[0] && pos[1] && storeUser.position[1]) {
     const bearing = calcDirection(pos[0], pos[1], storeUser.position[0], storeUser.position[1]);
     getCardinalDirection(bearing);
   } else {
     storeUser.direction = "Vous ne bougez pas"
   }
 
-  if(!storeUser.isDead) {
+  if (!storeUser.isDead) {
     sendNewPosition();
-  }  
+  }
 }
 
 function errorLocal() {

@@ -10,11 +10,11 @@ let player = ref(null)
 
 function majPlayer() {
   const ressources = computed(() => {
-      if (!storeResources) {
-        return null;
-      }
-      return storeResources.resources;
-    });
+    if (!storeResources) {
+      return null;
+    }
+    return storeResources.resources;
+  });
   if (ressources.value) {
     ressources.value.forEach((ressource) => {
       if (ressource.id === storeUser.login) {
@@ -35,7 +35,7 @@ majPlayer()
 </script>
 
 <template style="">
-	<h2>Information Perso</h2>
+  <h2>Information Perso</h2>
   <div v-if="player">
     <p><strong>Name: </strong>{{ player.id }}</p>
     <p><strong>Role: </strong>{{ player.role }}</p>

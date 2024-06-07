@@ -1,49 +1,49 @@
 <template>
   <div v-if="player">
-    <fieldset v-if="player.role == 'PIRATE' ">
+    <fieldset v-if="player.role == 'PIRATE'">
       <legend>Choisir une image :</legend>
-        <div>
-        <input type="radio" name="pirate" value="pirate-1"/>
-        <img for="huey" src="../assets/img/pirate-1.png"/>
-        </div>
+      <div>
+        <input type="radio" name="pirate" value="pirate-1" />
+        <img for="huey" src="../assets/img/pirate-1.png" />
+      </div>
 
-        <div>
-          <input type="radio" name="pirate" value="pirate-2"/>
-          <img for="huey" src="../assets/img/pirate-2.png"/>
-        </div>
-        
-        <div>
-          <input type="radio" name="pirate" value="pirate-3"/>
-          <img for="huey" src="../assets/img/pirate-3.png"/>
-        </div>
+      <div>
+        <input type="radio" name="pirate" value="pirate-2" />
+        <img for="huey" src="../assets/img/pirate-2.png" />
+      </div>
 
-        <div>
-          <input type="radio" name="pirate" value="pirate-4"/>
-          <img for="huey" src="../assets/img/pirate-4.png"/>
-        </div>
+      <div>
+        <input type="radio" name="pirate" value="pirate-3" />
+        <img for="huey" src="../assets/img/pirate-3.png" />
+      </div>
+
+      <div>
+        <input type="radio" name="pirate" value="pirate-4" />
+        <img for="huey" src="../assets/img/pirate-4.png" />
+      </div>
     </fieldset>
 
-    <fieldset v-if="player.role == 'VILLAGEOIS' ">
-        <div>
-          <input type="radio" name="villageois" value="villageois-1"/>
-          <img for="huey" src="../assets/img/villageois-1.png"/>
-        </div>
+    <fieldset v-if="player.role == 'VILLAGEOIS'">
+      <div>
+        <input type="radio" name="villageois" value="villageois-1" />
+        <img for="huey" src="../assets/img/villageois-1.png" />
+      </div>
 
-        <div>
-          <input type="radio" name="villageois" value="villageois-2"/>
-          <img for="huey" src="../assets/img/villageois-2.png"/>
-        </div>
-        
-        <div>
-          <input type="radio" name="villageois" value="villageois-3"/>
-          <img for="huey" src="../assets/img/villageois-3.png"/>
-        </div>
+      <div>
+        <input type="radio" name="villageois" value="villageois-2" />
+        <img for="huey" src="../assets/img/villageois-2.png" />
+      </div>
 
-        <div>
-          <input type="radio" name="villageois" value="villageois-4"/>
-          <img for="huey" src="../assets/img/villageois-4.png"/>
-        </div>
-      </fieldset>
+      <div>
+        <input type="radio" name="villageois" value="villageois-3" />
+        <img for="huey" src="../assets/img/villageois-3.png" />
+      </div>
+
+      <div>
+        <input type="radio" name="villageois" value="villageois-4" />
+        <img for="huey" src="../assets/img/villageois-4.png" />
+      </div>
+    </fieldset>
     <br />
     <button @click="changeImage()">Modifié l'image</button>
   </div>
@@ -63,11 +63,11 @@ const emit = defineEmits(['msgImage'])
 
 function majPlayer() {
   const ressources = computed(() => {
-      if (!storeResources) {
-        return null;
-      }
-      return storeResources.resources;
-    });
+    if (!storeResources) {
+      return null;
+    }
+    return storeResources.resources;
+  });
   if (ressources.value) {
     ressources.value.forEach((ressource) => {
       if (ressource.id === storeUser.login) {

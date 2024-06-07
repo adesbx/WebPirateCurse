@@ -13,11 +13,11 @@ let notificationMessage = ref('')
 
 function majPlayer() {
   const ressources = computed(() => {
-      if (!storeResources) {
-        return null;
-      }
-      return storeResources.resources;
-    });
+    if (!storeResources) {
+      return null;
+    }
+    return storeResources.resources;
+  });
   if (ressources.value) {
     ressources.value.forEach((ressource) => {
       if (ressource.id === storeUser.login) {
@@ -144,21 +144,17 @@ watch(
       <div v-for="r in storeResources.resources">
         <span v-if="r.role !== player.role">
           <span v-if="isNearFromMe(r.position, player.position)">
-              {{ r.id }}, {{ r.role }}
-              <button @click="aBoire(r.id)" v-if="r.role === 'FLASK'">boire</button>
-              <span v-if="player.potion > 0 || player.ttl > 0">
-                <button @click="aTuer(r.id)" v-if="r.role === 'PIRATE'">tuer</button>
-                <button @click="aConvert(r.id)" v-else-if="r.role === 'VILLAGEOIS'">convertir</button>
-              </span>
-              <br />
+            {{ r.id }}, {{ r.role }}
+            <button @click="aBoire(r.id)" v-if="r.role === 'FLASK'">boire</button>
+            <span v-if="player.potion > 0 || player.ttl > 0">
+              <button @click="aTuer(r.id)" v-if="r.role === 'PIRATE'">tuer</button>
+              <button @click="aConvert(r.id)" v-else-if="r.role === 'VILLAGEOIS'">convertir</button>
+            </span>
+            <br />
           </span>
         </span>
       </div>
     </div>
-    <Modale 
-      :message="notificationMessage" 
-      :visible="notificationVisible" 
-      @close="notificationVisible = false" 
-    />
+    <Modale :message="notificationMessage" :visible="notificationVisible" @close="notificationVisible = false" />
   </section>
 </template>
