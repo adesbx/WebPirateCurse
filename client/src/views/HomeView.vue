@@ -15,8 +15,6 @@ const errorMessage = ref("");
 function logout() {
   emit("logoutEvent")
 }
-
-Notification.requestPermission()
 </script>
 
 <template>

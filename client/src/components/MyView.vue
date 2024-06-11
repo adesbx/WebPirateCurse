@@ -128,6 +128,7 @@ onBeforeMount(async () => {
   }
   getAllRessources();
   getZRR();
+  Notification.requestPermission();
 })
 
 function majPositionPlayer() {
