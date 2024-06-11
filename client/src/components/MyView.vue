@@ -320,15 +320,20 @@ watch(
   (newRole, oldRole) => {
     if (oldRole !== '' && newRole !== '' && newRole !== oldRole && oldRole !== undefined) {
       navigator.permissions.query({name : 'notifications'}).then((result) => {
-        if (result === "granted") {
+      if (result === "granted") {
+        navigator.serviceWorker.ready.then((registration) => {
           const notifTitle = "Tu es convertis";
           const notifBody = `tu as changer de Rôle !!`;
           const options = {
             body: notifBody
           };
-          new Notification(notifTitle, options);
-        }
-      });
+          registration.showNotification(notifTitle,
+            options
+          )
+        })
+        new Notification(notifTitle, options);
+      }
+    });
     }
   }
 )
@@ -338,11 +343,16 @@ watch(
   () => {
     navigator.permissions.query({name : 'notifications'}).then((result) => {
       if (result === "granted") {
-        const notifTitle = "Tu es mort";
-        const notifBody = `Tu peux plus jouer !`;
-        const options = {
-          body: notifBody
-        };
+        navigator.serviceWorker.ready.then((registration) => {
+          const notifTitle = "Tu es mort";
+          const notifBody = `Tu peux plus jouer !`;
+          const options = {
+            body: notifBody
+          };
+          registration.showNotification(notifTitle,
+            options
+          )
+        })
         new Notification(notifTitle, options);
       }
     });
