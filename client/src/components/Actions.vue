@@ -125,7 +125,7 @@ function isNearFromMe(position, playerPos) {
   const posOther = L.latLng(position)
   const dist = posMe.distanceTo(posOther)
   // console.log(dist <= 100)
-  return dist <= 10
+  return dist <= 500
 }
 
 watch(
