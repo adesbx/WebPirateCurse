@@ -40,9 +40,11 @@ async function aTuer(id) {
     body: JSON.stringify(body),
     mode: 'cors'
   }
+
   await fetch(`https://192.168.75.36/game/api/resources/${id}`, requestConfig)
     .then((response) => {
       if (response.status == 204) {
+        navigator.vibrate(100);
         navigator.vibrate(200);
         // console.log('pirate tué')
         showNotification('Pirate tué')
@@ -71,6 +73,7 @@ async function aConvert(id) {
   await fetch(`https://192.168.75.36/game/api/resources/${id}`, requestConfig)
     .then((response) => {
       if (response.status == 204) {
+        navigator.vibrate(100);
         navigator.vibrate(200);
         // console.log('pirate transformer')
         showNotification('Pirate transformer')
