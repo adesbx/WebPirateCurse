@@ -128,6 +128,7 @@ onBeforeMount(async () => {
   }
   getAllRessources();
   getZRR();
+  Notification.requestPermission();
 })
 
 function majPositionPlayer() {
@@ -318,16 +319,21 @@ watch(
   () => storeUser.role,
   (newRole, oldRole) => {
     if (oldRole !== '' && newRole !== '' && newRole !== oldRole && oldRole !== undefined) {
-      Notification.requestPermission().then((result) => {
-        if (result === "granted") {
+      navigator.permissions.query({name : 'notifications'}).then((result) => {
+      if (result === "granted") {
+        navigator.serviceWorker.ready.then((registration) => {
           const notifTitle = "Tu es convertis";
           const notifBody = `tu as changer de Rôle !!`;
           const options = {
             body: notifBody
           };
-          new Notification(notifTitle, options);
-        }
-      });
+          registration.showNotification(notifTitle,
+            options
+          )
+        })
+        new Notification(notifTitle, options);
+      }
+    });
     }
   }
 )
@@ -335,13 +341,18 @@ watch(
 watch(
   () => storeUser.isDead,
   () => {
-    Notification.requestPermission().then((result) => {
+    navigator.permissions.query({name : 'notifications'}).then((result) => {
       if (result === "granted") {
-        const notifTitle = "Tu es mort";
-        const notifBody = `Tu peux plus jouer !`;
-        const options = {
-          body: notifBody
-        };
+        navigator.serviceWorker.ready.then((registration) => {
+          const notifTitle = "Tu es mort";
+          const notifBody = `Tu peux plus jouer !`;
+          const options = {
+            body: notifBody
+          };
+          registration.showNotification(notifTitle,
+            options
+          )
+        })
         new Notification(notifTitle, options);
       }
     });
