@@ -318,7 +318,7 @@ watch(
   () => storeUser.role,
   (newRole, oldRole) => {
     if (oldRole !== '' && newRole !== '' && newRole !== oldRole && oldRole !== undefined) {
-      Notification.requestPermission().then((result) => {
+      navigator.permissions.query({name : 'notifications'}).then((result) => {
         if (result === "granted") {
           const notifTitle = "Tu es convertis";
           const notifBody = `tu as changer de Rôle !!`;
@@ -335,7 +335,7 @@ watch(
 watch(
   () => storeUser.isDead,
   () => {
-    Notification.requestPermission().then((result) => {
+    navigator.permissions.query({name : 'notifications'}).then((result) => {
       if (result === "granted") {
         const notifTitle = "Tu es mort";
         const notifBody = `Tu peux plus jouer !`;
