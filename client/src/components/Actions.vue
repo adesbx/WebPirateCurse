@@ -142,7 +142,7 @@ watch(
     <br />
     <div v-if="storeResources.resources && player !== null && storeUser.login !== null">
       <div v-for="r in storeResources.resources">
-        <span v-if="r.role !== player.role">
+        <span v-if="r.role !== player.role && r.role !== 'ADMIN'">
           <span v-if="isNearFromMe(r.position, player.position)">
             {{ r.id }}, {{ r.role }}
             <button @click="aBoire(r.id)" v-if="r.role === 'FLASK'">boire</button>
