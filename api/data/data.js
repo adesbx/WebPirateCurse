@@ -38,7 +38,19 @@ export let resources = [
         ],
         "role": "VILLAGEOIS",
         "ttl": 0,
-        "potions": 10,
+        "potions": 0,
+        "terminated": 0,
+        "turned": 0
+    },
+    {
+        "id": "Susan",
+        "position": [
+            45.78220619944905,
+            4.865867793560029
+        ],
+        "role": "VILLAGEOIS",
+        "ttl": 0,
+        "potions": 0,
         "terminated": 0,
         "turned": 0
     },

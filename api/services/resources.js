@@ -55,7 +55,7 @@ export async function grabPotion(userSource, potion) {
       const dist = distance(x1, y1, x2, y2);
 
       if(userD.role == "FLASK") {
-        if (dist <= 5) {
+        if (dist <= 20) {
           userS.potions += 1;
 
           //l'utilisateur prends le ttl de la potion

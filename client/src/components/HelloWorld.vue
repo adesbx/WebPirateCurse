@@ -10,13 +10,6 @@ defineProps({
 <template>
   <div class="greetings">
     <h1>{{ msg }}</h1>
-    <!-- <h1 class="green">Instruction Pour WC</h1>
-    <h3>
-      {{ msg }}
-      CACA +
-      <a href="https://vitejs.dev/" target="_blank" rel="noopener">Vite</a> + PROUT +
-      <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>.
-    </h3> -->
   </div>
 </template>
 
@@ -38,6 +31,7 @@ h3 {
 }
 
 @media (min-width: 1024px) {
+
   .greetings h1,
   .greetings h3 {
     text-align: left;

@@ -2,7 +2,7 @@
 import { useResourcesStore } from '@/stores/resources'
 import { useUserStore } from '@/stores/user'
 import 'leaflet/dist/leaflet.css'
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, watch } from 'vue'
 // initialisation de la map
 let lat = 45.782,
   lng = 4.8656,
@@ -12,6 +12,26 @@ let groupMarker = []
 
 const storeResources = useResourcesStore()
 const storeUser = useUserStore()
+
+function calcDist(lat1, lon1, lat2, lon2) {
+  const R = 6371e3;
+  var dLat = toRad(lat2 - lat1);
+  var dLon = toRad(lon2 - lon1);
+  var lat1 = toRad(lat1);
+  var lat2 = toRad(lat2);
+
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c;
+  d = Math.round(d * 10) / 10;
+
+  return d;
+}
+
+function toRad(Value) {
+  return Value * Math.PI / 180;
+}
 
 async function getAllRessources() {
   const headers = new Headers()
@@ -31,13 +51,26 @@ async function getAllRessources() {
       })
 
     storeResources.resources = await result.json()
-  console.log(storeResources.resources)
+    if (!storeResources.resources.find(user => user.id === storeUser.login)) {
+      storeUser.isDead = true
+      //retirer de la map
+      for (let i = 0; i < groupMarker.length; i++) {
+        if (groupMarker[i].getPopup().getContent().includes(storeUser.login)) {
+          mymap.removeLayer(groupMarker[i]);
+        }
+      }
+    }
+    else {
+      storeUser.role = storeResources.resources.find(user => user.id === storeUser.login).role
+    }
+    // storeUser.position = storeResources.resources.find(user => user.id === storeUser.login).position;
+    // console.log(storeUser.position)
+    // console.log(storeResources.resources)
+
   } catch (err) {
     console.error('In get ressources: ' + err)
   }
 }
-
-let name = 'MyMap'
 
 // Procédure de mise à jour de la map
 function updateMap() {
@@ -95,20 +128,31 @@ onBeforeMount(async () => {
   }
   getAllRessources();
   getZRR();
+  Notification.requestPermission();
 })
 
 function majPositionPlayer() {
-  for (let i = 0; i < groupMarker.length; i++) {
-    mymap.removeLayer(groupMarker[i])
+  function markerExistFct(id) {
+    let markerExist = null;
+    groupMarker.forEach(marker => {
+      if (marker.getPopup().getContent().includes(id)) {
+        markerExist = marker;
+      }
+    });
+    return markerExist;
   }
 
   storeResources.resources.forEach((ressource) => {
+    const markerExist = markerExistFct(ressource.id);
+    if (!markerExist) {
+
+    }
+    let icon = null
     if (ressource.role == 'PIRATE') {
       let img = "pirate-1"
       if (ressource.id == storeUser.login && storeUser.img != null) {
         img = storeUser.img;
       }
-      let icon
       if (ressource.ttl > 0) {
         icon = L.icon({
           iconUrl: `src/assets/img/${img}-ttl.png`,
@@ -124,19 +168,36 @@ function majPositionPlayer() {
           popupAnchor: [0, -15]
         })
       }
-
-      groupMarker.push(
-        L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
-          .addTo(mymap)
-          .bindPopup(`${ressource.id}<br>${ressource.role}`)
-      )
+      if (ressource.id == storeUser.login) {
+        if (markerExist) {
+          markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
+          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}`);
+        } else {
+          groupMarker.push(
+            L.marker([storeUser.position[0], storeUser.position[1]], { icon: icon })
+              .addTo(mymap)
+              .bindPopup(`${ressource.id}<br>${ressource.role}`)
+          )
+        }
+      } else {
+        const distanceText = storeUser.isDead ? "" : `<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`;
+        if (markerExist) {
+          markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
+          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}${distanceText}`);
+        } else {
+          groupMarker.push(
+            L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
+              .addTo(mymap)
+              .bindPopup(`${ressource.id}<br>${ressource.role}${distanceText}`)
+          )
+        }
+      }
     } else if (ressource.role == 'VILLAGEOIS') {
       let img = "villageois-1"
       if (ressource.id == storeUser.login && storeUser.img != null) {
         console.log(storeUser.img)
         img = storeUser.img;
       }
-      let icon
       if (ressource.ttl > 0) {
         icon = L.icon({
           iconUrl: `src/assets/img/${img}-ttl.png`,
@@ -153,24 +214,50 @@ function majPositionPlayer() {
         })
       }
 
-      groupMarker.push(
-        L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
-          .addTo(mymap)
-          .bindPopup(`${ressource.id}<br>${ressource.role}`)
-      )
+      if (ressource.id == storeUser.login) {
+        if (markerExist) {
+          markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
+          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}`);
+        } else {
+          groupMarker.push(
+            L.marker([storeUser.position[0], storeUser.position[1]], { icon: icon })
+              .addTo(mymap)
+              .bindPopup(`${ressource.id}<br>${ressource.role}`)
+          )
+        }
+      } else {
+        const distanceText = storeUser.isDead ? "" : `<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`;
+        if (markerExist) {
+          markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
+          markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}${distanceText}`);
+        } else {
+          groupMarker.push(
+            L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
+              .addTo(mymap)
+              .bindPopup(`${ressource.id}<br>${ressource.role}${distanceText}`)
+          )
+        }
+      }
+
     } else if (ressource.role == 'FLASK') {
-      const icon = L.icon({
+      icon = L.icon({
         iconUrl: `src/assets/img/potion.png`,
         iconSize: [30, 60],
         iconAnchor: [15, 15],
         popupAnchor: [0, -15]
       })
 
-      groupMarker.push(
-        L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
-          .addTo(mymap)
-          .bindPopup(`${ressource.id}<br>${ressource.role}`)
-      )
+      const distanceText = storeUser.isDead ? "" : `<br>${calcDist(storeUser.position[0], storeUser.position[1], ressource.position[0], ressource.position[1])}m`;
+      if (markerExist) {
+        markerExist.setLatLng([ressource.position[0], ressource.position[1]]);
+        markerExist.getPopup().setContent(`${ressource.id}<br>${ressource.role}${distanceText}`);
+      } else {
+        groupMarker.push(
+          L.marker([ressource.position[0], ressource.position[1]], { icon: icon })
+            .addTo(mymap)
+            .bindPopup(`${ressource.id}<br>${ressource.role}${distanceText}`)
+        )
+      }
     }
   })
 }
@@ -183,77 +270,6 @@ function moovPlayer() {
       ressource.position[0] = posFloat.toString()
     }
   })
-}
-
-/* 
-function TODOMODIFYTHIS() {
-  for (let i = 0; i < groupMarker.length; i++) {
-    const marker = groupMarker[i]
-    const popupContent = marker.getPopup().getContent()
-    if (popupContent.includes(login)) {
-      const oldIcon = marker.getIcon()
-      mymap.removeLayer(marker)
-
-      const userResource = ressource.find((resource) => resource.id === login)
-
-      const newUserMarker = L.marker([userResource.position[0], userResource.position[1]])
-        .addTo(mymap)
-        .bindPopup(`${userResource.id}<br>${userResource.role}`)
-
-      if (userResource.ttl > 0) {
-        newUserMarker.setIcon(oldIcon)
-      } else {
-        if (userResource.role == 'VILLAGEOIS') {
-          const icon = L.icon({
-            iconUrl: `src/assets/img/villageois-1.png`,
-            iconSize: [30, 30],
-            iconAnchor: [15, 15],
-            popupAnchor: [0, -15]
-          })
-
-          newUserMarker.setIcon(icon)
-        } else if (userResource.role == 'PIRATE') {
-          const icon = L.icon({
-            iconUrl: `src/assets/img/pirate-1.png`,
-            iconSize: [30, 30],
-            iconAnchor: [15, 15],
-            popupAnchor: [0, -15]
-          })
-
-          newUserMarker.setIcon(icon)
-        }
-      }
-
-      groupMarker[i] = newUserMarker
-
-      break
-    }
-  }
-} */
-
-async function sendNewPosition() {
-  let userPosition = ressource.find((resource) => resource.id === login).position
-  console.log(userPosition)
-  const headers = new Headers()
-  headers.append('Authentication', localStorage.getItem('token'))
-  headers.append('Content-Type', 'application/json')
-  const requestConfig = {
-    method: 'PUT',
-    headers: headers,
-    body: JSON.stringify(userPosition),
-    mode: 'cors'
-  }
-  await fetch(`https://192.168.75.36/game/api/resources/${login}/position`, requestConfig)
-    .then((response) => {
-      if (response.status == 204) {
-        console.log('position modifié')
-      } else {
-        console.log('erreur')
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    })
 }
 
 async function getZRR() {
@@ -297,9 +313,51 @@ async function getZRR() {
 
 setInterval(getAllRessources, 2000)
 setInterval(getZRR, 10000)
-// setInterval(moovPlayer, 10000);
 setInterval(majPositionPlayer, 1000)
 
+watch(
+  () => storeUser.role,
+  (newRole, oldRole) => {
+    if (oldRole !== '' && newRole !== '' && newRole !== oldRole && oldRole !== undefined) {
+      const notifTitle = "Tu es convertis";
+      const notifBody = `Tu as changé de rôle !!`;
+      const options = {
+        body: notifBody
+      };
+      navigator.permissions.query({ name: 'notifications' }).then((result) => {
+        if (result.state === "granted") {
+          navigator.serviceWorker.ready.then((registration) => {
+            registration.showNotification(notifTitle, options);
+          });
+          new Notification(notifTitle, options);
+        }
+      });
+    }
+  }
+)
+
+watch(
+  () => storeUser.isDead,
+  () => {
+    const notifTitle = "Tu es mort";
+    const notifBody = `Tu ne peux plus jouer !`;
+    const options = {
+      body: notifBody
+    };
+    navigator.permissions.query({ name: 'notifications' }).then((result) => {
+      if (result.state === "granted") {
+        navigator.serviceWorker.ready.then((registration) => {
+          registration.showNotification(notifTitle, options);
+        });
+        new Notification(notifTitle, options);
+      }
+    });
+  }
+)
+
+// Fonction de test
+// setInterval(getPositionUser, 1000)
+// setInterval(moovPlayer, 10000);
 //fonction bien décommenter lors du deploy ou des test
 // setInterval(await sendNewPosition, 5000);
 </script>
@@ -307,11 +365,13 @@ setInterval(majPositionPlayer, 1000)
 <template>
   <section>
     <h2>Carte</h2>
+    <p v-if="storeUser.isDead">Vous êtes mort</p>
     <p class="content">
       -------------------------------------------------------------------------------------------------
     </p>
     <div id="map" class="map" ref="map"></div>
   </section>
+  <p v-if="storeUser.direction">Direction: {{ storeUser.direction }}</p>
 </template>
 
 <style scoped>
